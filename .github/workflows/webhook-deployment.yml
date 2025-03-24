@@ -6,7 +6,7 @@ on:
     branches: ["main"]
     
   repository_dispatch:
-    types: [reflection-dev-trigger]
+    types: [janus-dev-trigger]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
   # Build job
   build:
     env:
-      BEDROCK_BRANCH: reflection-dev
+      BEDROCK_BRANCH: janus-dev
 
     runs-on: ubuntu-latest
     steps:
