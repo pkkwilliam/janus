@@ -81,6 +81,93 @@ function GlossaryTooltip({
   );
 }
 
+// Reusable Lucky Element Card component
+function LuckyElementCard({
+  icon,
+  title,
+  subtitle,
+  iconBgGradient,
+  iconTextColor,
+  subtitleColor,
+  delay,
+  renderContent,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  iconBgGradient: string;
+  iconTextColor: string;
+  subtitleColor: string;
+  delay: number;
+  renderContent: () => React.ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      whileHover={{ scale: 1.02, y: -5 }}
+      className="group"
+    >
+      <div
+        className="relative p-6 rounded-3xl h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
+          backdropFilter: "blur(30px)",
+          border: "1px solid transparent",
+          backgroundClip: "padding-box",
+          boxShadow:
+            "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
+        }}
+      >
+        {/* Gradient border using pseudo-element */}
+        <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{
+          background: "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
+          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          maskComposite: "xor",
+          WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMaskComposite: "xor",
+          padding: "1px"
+        }} />
+        
+        {/* Shimmer effect */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+        </div>
+
+        {/* Premium indicator with pulse */}
+        <div className="absolute top-3 right-3">
+          <motion.div
+            animate={{ scale: [1, 1.3, 1] }}
+            transition={{ duration: 2, repeat: Infinity, delay }}
+            className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg"
+          />
+        </div>
+
+        <div className="flex items-center gap-3 mb-4 relative z-10">
+          <div className={`p-2 rounded-xl ${iconBgGradient}`}>
+            <div className={iconTextColor}>
+              {icon}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-gray-900">
+              {title}
+            </h3>
+            <p className={`text-xs font-medium ${subtitleColor}`}>
+              {subtitle}
+            </p>
+          </div>
+        </div>
+        <div className="relative z-10">
+          {renderContent()}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // Single blur overlay component for entire Lucky Elements section
 function LuckyElementsBlurOverlay() {
   return (
@@ -464,17 +551,26 @@ export default function ReportPage() {
           className="mb-8"
         >
           <div
-            className="relative p-8 rounded-3xl border-2 overflow-hidden transition-all duration-500 hover:shadow-3xl"
+            className="relative p-8 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-3xl"
             style={{
               background:
                 "linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.15) 25%, rgba(138, 43, 226, 0.15) 75%, rgba(75, 0, 130, 0.2) 100%)",
               backdropFilter: "blur(25px)",
-              borderImage:
-                "linear-gradient(135deg, #FFD700, #FFA500, #8A2BE2, #4B0082) 1",
               boxShadow:
-                "0 25px 50px rgba(255, 215, 0, 0.25), 0 0 80px rgba(138, 43, 226, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+                "0 25px 50px rgba(255, 215, 0, 0.25), 0 0 80px rgba(138, 43, 226, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 0 0 2px transparent",
+              border: "2px solid transparent",
+              backgroundClip: "padding-box",
             }}
           >
+            {/* Gradient border using pseudo-element */}
+            <div className="absolute inset-0 rounded-3xl" style={{
+              background: "linear-gradient(135deg, #FFD700, #FFA500, #8A2BE2, #4B0082)",
+              mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              maskComposite: "xor",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              padding: "2px"
+            }} />
             {/* Animated background pattern */}
             <div className="absolute inset-0">
               <motion.div
@@ -486,10 +582,14 @@ export default function ReportPage() {
                     "radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.3) 0%, transparent 50%)",
                   ],
                 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               />
             </div>
-            
+
             {/* Floating sparkles */}
             {[...Array(12)].map((_, i) => (
               <motion.div
@@ -513,7 +613,7 @@ export default function ReportPage() {
                 }}
               />
             ))}
-            
+
             {/* Additional floating gems */}
             {[...Array(4)].map((_, i) => (
               <motion.div
@@ -540,13 +640,13 @@ export default function ReportPage() {
             <div className="text-center relative z-10">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <motion.div
-                  animate={{ 
+                  animate={{
                     rotate: [0, 360],
                     scale: [1, 1.1, 1],
                   }}
-                  transition={{ 
+                  transition={{
                     rotate: { duration: 8, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                   }}
                   className="p-3 rounded-full bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 relative"
                   style={{ boxShadow: "0 0 40px rgba(255, 215, 0, 0.5)" }}
@@ -573,7 +673,7 @@ export default function ReportPage() {
                     />
                   ))}
                 </motion.div>
-                <motion.div 
+                <motion.div
                   initial={{ scale: 0.9 }}
                   animate={{ scale: [0.9, 1, 0.9] }}
                   transition={{ duration: 3, repeat: Infinity }}
@@ -605,10 +705,10 @@ export default function ReportPage() {
                   className="px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-xs font-semibold flex items-center gap-2 shadow-lg cursor-pointer"
                   style={{ boxShadow: "0 0 20px rgba(16, 185, 129, 0.3)" }}
                 >
-                  <motion.div 
+                  <motion.div
                     animate={{ scale: [1, 1.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-2 h-2 rounded-full bg-white/90" 
+                    className="w-2 h-2 rounded-full bg-white/90"
                   />
                   FORTUNE UNLOCKED
                 </motion.div>
@@ -620,10 +720,10 @@ export default function ReportPage() {
                   className="px-3 py-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white text-xs font-semibold flex items-center gap-2 shadow-lg cursor-pointer"
                   style={{ boxShadow: "0 0 20px rgba(168, 85, 247, 0.3)" }}
                 >
-                  <motion.div 
+                  <motion.div
                     animate={{ scale: [1, 1.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                    className="w-2 h-2 rounded-full bg-white/90" 
+                    className="w-2 h-2 rounded-full bg-white/90"
                   />
                   WISDOM ACTIVATED
                 </motion.div>
@@ -635,10 +735,10 @@ export default function ReportPage() {
                   className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-semibold flex items-center gap-2 shadow-lg cursor-pointer"
                   style={{ boxShadow: "0 0 20px rgba(245, 158, 11, 0.3)" }}
                 >
-                  <motion.div 
+                  <motion.div
                     animate={{ scale: [1, 1.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 1.0 }}
-                    className="w-2 h-2 rounded-full bg-white/90" 
+                    className="w-2 h-2 rounded-full bg-white/90"
                   />
                   DESTINY REVEALED
                 </motion.div>
@@ -652,52 +752,15 @@ export default function ReportPage() {
       <div className="relative grid md:grid-cols-3 gap-6 mb-8">
         {displayType === "PARTIAL" && <LuckyElementsBlurOverlay />}
         {/* Lucky Colors */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          whileHover={{ scale: 1.02, y: -5 }}
-          className="group"
-        >
-          <div
-            className="relative p-6 rounded-3xl border h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
-              backdropFilter: "blur(30px)",
-              borderImage:
-                "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4)) 1",
-              boxShadow:
-                "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
-            }}
-          >
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-            </div>
-            
-            {/* Premium indicator with pulse */}
-            <div className="absolute top-3 right-3">
-              <motion.div 
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg" 
-              />
-            </div>
-
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-xl bg-gradient-to-r from-pink-100 to-purple-100">
-                <Palette className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">
-                  Lucky Colors
-                </h3>
-                <p className="text-xs text-purple-600 font-medium">
-                  Exclusively Yours
-                </p>
-              </div>
-            </div>
+        <LuckyElementCard
+          icon={<Palette className="w-5 h-5" />}
+          title="Lucky Colors"
+          subtitle="Exclusively Yours"
+          iconBgGradient="bg-gradient-to-r from-pink-100 to-purple-100"
+          iconTextColor="text-purple-600"
+          subtitleColor="text-purple-600"
+          delay={0.3}
+          renderContent={() => (
             <div className="space-y-2">
               {reportContent.luckyColors &&
               reportContent.luckyColors.length > 0 ? (
@@ -716,56 +779,19 @@ export default function ReportPage() {
                 </div>
               )}
             </div>
-          </div>
-        </motion.div>
+          )}
+        />
 
         {/* Lucky Numbers */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          whileHover={{ scale: 1.02, y: -5 }}
-          className="group"
-        >
-          <div
-            className="relative p-6 rounded-3xl border h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
-              backdropFilter: "blur(30px)",
-              borderImage:
-                "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4)) 1",
-              boxShadow:
-                "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
-            }}
-          >
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-            </div>
-            
-            {/* Premium indicator with pulse */}
-            <div className="absolute top-3 right-3">
-              <motion.div 
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-                className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg" 
-              />
-            </div>
-
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-xl bg-gradient-to-r from-blue-100 to-indigo-100">
-                <Hash className="w-5 h-5 text-indigo-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">
-                  Lucky Numbers
-                </h3>
-                <p className="text-xs text-indigo-600 font-medium">
-                  Power Numbers
-                </p>
-              </div>
-            </div>
+        <LuckyElementCard
+          icon={<Hash className="w-5 h-5" />}
+          title="Lucky Numbers"
+          subtitle="Power Numbers"
+          iconBgGradient="bg-gradient-to-r from-blue-100 to-indigo-100"
+          iconTextColor="text-indigo-600"
+          subtitleColor="text-indigo-600"
+          delay={0.4}
+          renderContent={() => (
             <div className="flex gap-2 flex-wrap">
               {reportContent.luckyNumbers &&
               reportContent.luckyNumbers.length > 0 ? (
@@ -783,56 +809,19 @@ export default function ReportPage() {
                 </div>
               )}
             </div>
-          </div>
-        </motion.div>
+          )}
+        />
 
         {/* Lucky Gemstones */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          whileHover={{ scale: 1.02, y: -5 }}
-          className="group"
-        >
-          <div
-            className="relative p-6 rounded-3xl border h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
-              backdropFilter: "blur(30px)",
-              borderImage:
-                "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4)) 1",
-              boxShadow:
-                "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
-            }}
-          >
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-            </div>
-            
-            {/* Premium indicator with pulse */}
-            <div className="absolute top-3 right-3">
-              <motion.div 
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
-                className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg" 
-              />
-            </div>
-
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-100 to-teal-100">
-                <Gem className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">
-                  Lucky Gemstones
-                </h3>
-                <p className="text-xs text-emerald-600 font-medium">
-                  Sacred Crystals
-                </p>
-              </div>
-            </div>
+        <LuckyElementCard
+          icon={<Gem className="w-5 h-5" />}
+          title="Lucky Gemstones"
+          subtitle="Sacred Crystals"
+          iconBgGradient="bg-gradient-to-r from-emerald-100 to-teal-100"
+          iconTextColor="text-emerald-600"
+          subtitleColor="text-emerald-600"
+          delay={0.5}
+          renderContent={() => (
             <div className="space-y-2">
               {reportContent.luckyGemstones &&
               reportContent.luckyGemstones.length > 0 ? (
@@ -847,8 +836,8 @@ export default function ReportPage() {
                 </div>
               )}
             </div>
-          </div>
-        </motion.div>
+          )}
+        />
 
         {/* Lucky Enhancer Section - if available */}
         {reportContent.luckyEnhancer &&
@@ -861,28 +850,37 @@ export default function ReportPage() {
               className="md:col-span-3 group"
             >
               <div
-                className="relative p-6 rounded-3xl border h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
+                className="relative p-6 rounded-3xl h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
                 style={{
                   background:
                     "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
                   backdropFilter: "blur(30px)",
-                  borderImage:
-                    "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4)) 1",
+                  border: "1px solid transparent", 
+                  backgroundClip: "padding-box",
                   boxShadow:
                     "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
                 }}
               >
+                {/* Gradient border using pseudo-element */}
+                <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{
+                  background: "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
+                  mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  maskComposite: "xor",
+                  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "xor",
+                  padding: "1px"
+                }} />
                 {/* Shimmer effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                 </div>
-                
+
                 {/* Premium indicator with pulse */}
                 <div className="absolute top-3 right-3">
-                  <motion.div 
+                  <motion.div
                     animate={{ scale: [1, 1.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 0.9 }}
-                    className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg" 
+                    className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg"
                   />
                 </div>
 
