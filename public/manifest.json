@@ -1,0 +1,23 @@
+{
+  "name": "Mystical - Your Spiritual Journey",
+  "short_name": "Mystical",
+  "description": "Discover your mystical path with personalized readings and spiritual insights",
+  "theme_color": "#ec4899",
+  "background_color": "#fdf2f8",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
