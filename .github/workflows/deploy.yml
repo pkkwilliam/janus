@@ -3,8 +3,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
-    
+    branches: ["feature/2.0"]
+
   repository_dispatch:
     types: [mystical-app-trigger]
 
@@ -30,14 +30,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
           # Automatically inject basePath in your Next.js configuration file and disable
           # server side image optimization (so it can work with static export).
           static_site_generator: next
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
