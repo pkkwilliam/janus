@@ -1,17 +1,32 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, Star, TrendingUp, Clock, Eye, ChevronRight, User, Settings, LogOut, Sparkles, Filter, Crown, Loader2, Package } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { BirthInfoForm } from '@/components/profile/BirthInfoForm';
-import { SubscriptionSelector } from '@/components/subscription/SubscriptionSelector';
-import { userAPI } from '@/lib/api/user';
-import { authAPI } from '@/lib/api/auth';
-import { apiClient } from '@/lib/api/client';
-import { reportsApi, Report } from '@/lib/api/reports';
-import { useAppInit } from '@/hooks/useAppInit';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Calendar,
+  Star,
+  TrendingUp,
+  Clock,
+  Eye,
+  ChevronRight,
+  User,
+  Settings,
+  LogOut,
+  Sparkles,
+  Filter,
+  Crown,
+  Loader2,
+  Package,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { BirthInfoForm } from "@/components/profile/BirthInfoForm";
+import { SubscriptionSelector } from "@/components/subscription/SubscriptionSelector";
+import { userAPI } from "@/lib/api/user";
+import { authAPI } from "@/lib/api/auth";
+import { apiClient } from "@/lib/api/client";
+import { reportsApi, Report } from "@/lib/api/reports";
+import { useAppInit } from "@/hooks/useAppInit";
 
 // Mock user data
 const mockUser = {
@@ -24,7 +39,7 @@ const mockUser = {
   birthDate: null,
   birthTime: null,
   birthCity: null,
-  birthCountry: null
+  birthCountry: null,
 };
 
 // Mock reports data - this would come from API
@@ -37,25 +52,35 @@ const mockReports = [
       month: 7,
       week: 30,
       weekStart: "2025-07-20",
-      weekEnd: "2025-07-26"
+      weekEnd: "2025-07-26",
     },
     fortuneScore: 75,
-    keyThemes: ["Career advancement", "Financial opportunities", "Health caution", "Relationship challenges"],
+    keyThemes: [
+      "Career advancement",
+      "Financial opportunities",
+      "Health caution",
+      "Relationship challenges",
+    ],
     createdAt: "2025-07-21T00:45:56.007Z",
-    status: "completed"
+    status: "completed",
   },
   {
     id: "687d8dc487151063bfe7dfbe",
-    type: "MONTHLY", 
+    type: "MONTHLY",
     period: {
       year: 2025,
       month: 7,
-      monthName: "July"
+      monthName: "July",
     },
     fortuneScore: 82,
-    keyThemes: ["Love & relationships", "Creative energy", "Financial stability", "Spiritual growth"],
+    keyThemes: [
+      "Love & relationships",
+      "Creative energy",
+      "Financial stability",
+      "Spiritual growth",
+    ],
     createdAt: "2025-07-14T00:45:56.007Z",
-    status: "completed"
+    status: "completed",
   },
   {
     id: "687d8dc487151063bfe7dfbd",
@@ -64,37 +89,53 @@ const mockReports = [
       year: 2025,
       month: 7,
       week: 28,
-      weekStart: "2025-07-06", 
-      weekEnd: "2025-07-12"
+      weekStart: "2025-07-06",
+      weekEnd: "2025-07-12",
     },
     fortuneScore: 68,
-    keyThemes: ["Career transition", "Health focus", "Family matters", "Learning opportunities"],
+    keyThemes: [
+      "Career transition",
+      "Health focus",
+      "Family matters",
+      "Learning opportunities",
+    ],
     createdAt: "2025-07-07T00:45:56.007Z",
-    status: "completed"
+    status: "completed",
   },
   {
     id: "687d8dc487151063bfe7dfc0",
     type: "YEARLY",
     period: {
-      year: 2025
+      year: 2025,
     },
     fortuneScore: 88,
-    keyThemes: ["Personal transformation", "Major life changes", "Spiritual awakening", "Success & prosperity", "Deep relationships"],
+    keyThemes: [
+      "Personal transformation",
+      "Major life changes",
+      "Spiritual awakening",
+      "Success & prosperity",
+      "Deep relationships",
+    ],
     createdAt: "2025-01-01T00:00:00.000Z",
-    status: "completed"
+    status: "completed",
   },
   {
     id: "687d8dc487151063bfe7dfc1",
-    type: "MONTHLY", 
+    type: "MONTHLY",
     period: {
       year: 2025,
       month: 6,
-      monthName: "June"
+      monthName: "June",
     },
     fortuneScore: 76,
-    keyThemes: ["Personal growth", "New beginnings", "Creative expression", "Inner wisdom"],
+    keyThemes: [
+      "Personal growth",
+      "New beginnings",
+      "Creative expression",
+      "Inner wisdom",
+    ],
     createdAt: "2025-06-01T00:00:00.000Z",
-    status: "completed"
+    status: "completed",
   },
   {
     id: "687d8dc487151063bfe7dfc2",
@@ -103,48 +144,55 @@ const mockReports = [
       year: 2025,
       month: 6,
       week: 25,
-      weekStart: "2025-06-15", 
-      weekEnd: "2025-06-21"
+      weekStart: "2025-06-15",
+      weekEnd: "2025-06-21",
     },
     fortuneScore: 72,
-    keyThemes: ["Professional development", "Communication skills", "Social connections", "Mental clarity"],
+    keyThemes: [
+      "Professional development",
+      "Communication skills",
+      "Social connections",
+      "Mental clarity",
+    ],
     createdAt: "2025-06-16T00:00:00.000Z",
-    status: "completed"
-  }
+    status: "completed",
+  },
 ];
 
 function ReportCard({ report, index }: { report: Report; index: number }) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50';
-    if (score >= 60) return 'text-yellow-600 bg-yellow-50';
-    return 'text-red-600 bg-red-50';
+    if (score >= 80) return "text-green-600 bg-green-50";
+    if (score >= 60) return "text-yellow-600 bg-yellow-50";
+    return "text-red-600 bg-red-50";
   };
 
   const getTypeBadge = (type: string) => {
     switch (type) {
-      case 'YEARLY':
+      case "YEARLY":
         return {
-          text: 'Yearly',
-          className: 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white',
-          icon: '🌟'
+          text: "Yearly",
+          className:
+            "bg-gradient-to-r from-purple-500 to-indigo-600 text-white",
+          icon: "🌟",
         };
-      case 'MONTHLY':
+      case "MONTHLY":
         return {
-          text: 'Monthly',
-          className: 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white',
-          icon: '🌙'
+          text: "Monthly",
+          className: "bg-gradient-to-r from-blue-500 to-cyan-600 text-white",
+          icon: "🌙",
         };
-      case 'WEEKLY':
+      case "WEEKLY":
         return {
-          text: 'Weekly',
-          className: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white',
-          icon: '⭐'
+          text: "Weekly",
+          className:
+            "bg-gradient-to-r from-green-500 to-emerald-600 text-white",
+          icon: "⭐",
         };
       default:
         return {
           text: type.charAt(0) + type.slice(1).toLowerCase(),
-          className: 'bg-gray-200 text-gray-700',
-          icon: '📅'
+          className: "bg-gray-200 text-gray-700",
+          icon: "📅",
         };
     }
   };
@@ -152,53 +200,67 @@ function ReportCard({ report, index }: { report: Report; index: number }) {
   const formatPeriod = (report: Report) => {
     const endDate = new Date(report.endTime);
     const year = endDate.getFullYear();
-    
+
     switch (report.type) {
-      case 'YEARLY':
+      case "YEARLY":
         return `${year}`;
-      case 'MONTHLY':
-        return endDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      case 'WEEKLY':
+      case "MONTHLY":
+        return endDate.toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+        });
+      case "WEEKLY":
         // Calculate week number
         const startOfYear = new Date(year, 0, 1);
-        const weekNum = Math.ceil(((endDate.getTime() - startOfYear.getTime()) / 86400000 + startOfYear.getDay() + 1) / 7);
+        const weekNum = Math.ceil(
+          ((endDate.getTime() - startOfYear.getTime()) / 86400000 +
+            startOfYear.getDay() +
+            1) /
+            7
+        );
         return `Week ${weekNum}, ${year}`;
       default:
-        return '';
+        return "";
     }
   };
 
   const formatSubPeriod = (report: Report) => {
     const endDate = new Date(report.endTime);
-    
+
     switch (report.type) {
-      case 'YEARLY':
-        return 'Full Year Analysis';
-      case 'MONTHLY':
-        return 'Month Overview';
-      case 'WEEKLY':
+      case "YEARLY":
+        return "Full Year Analysis";
+      case "MONTHLY":
+        return "Month Overview";
+      case "WEEKLY":
         // Show date range for the week
         const weekStart = new Date(endDate);
         weekStart.setDate(endDate.getDate() - endDate.getDay());
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekStart.getDate() + 6);
-        return `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        return `${weekStart.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })} - ${weekEnd.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })}`;
       default:
-        return '';
+        return "";
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
   const getCardSize = (type: string) => {
-    if (type === 'YEARLY') return 'md:col-span-2 lg:col-span-1';
-    return '';
+    if (type === "YEARLY") return "md:col-span-2 lg:col-span-1";
+    return "";
   };
 
   const fortuneScore = parseInt(report.reportContent.fortuneScore);
@@ -216,15 +278,17 @@ function ReportCard({ report, index }: { report: Report; index: number }) {
         <div
           className="group p-6 rounded-3xl border border-white/30 cursor-pointer h-full"
           style={{
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
           }}
         >
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${typeBadge.className} flex items-center gap-1`}>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${typeBadge.className} flex items-center gap-1`}
+                >
                   <span>{typeBadge.icon}</span>
                   {typeBadge.text}
                 </span>
@@ -237,28 +301,39 @@ function ReportCard({ report, index }: { report: Report; index: number }) {
                 {formatSubPeriod(report)}
               </div>
             </div>
-            <div className={`px-3 py-1 rounded-full text-xs font-medium ${getScoreColor(fortuneScore)}`}>
+            <div
+              className={`px-3 py-1 rounded-full text-xs font-medium ${getScoreColor(
+                fortuneScore
+              )}`}
+            >
               {fortuneScore}%
             </div>
           </div>
 
           <div className="space-y-3 mb-4">
             <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-700 transition-colors">
-              {report.type.charAt(0) + report.type.slice(1).toLowerCase()} Fortune Report
+              {report.type.charAt(0) + report.type.slice(1).toLowerCase()}{" "}
+              Fortune Report
             </h3>
-            
+
             <div className="flex flex-wrap gap-1">
-              {report.reportContent.keyThemes.slice(0, report.type === 'YEARLY' ? 3 : 2).map((theme: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="px-2 py-1 text-xs bg-indigo-50 text-indigo-600 rounded-full"
-                >
-                  {theme}
-                </span>
-              ))}
-              {report.reportContent.keyThemes.length > (report.type === 'YEARLY' ? 3 : 2) && (
+              {report.reportContent.keyThemes
+                .slice(0, report.type === "YEARLY" ? 3 : 2)
+                .map((theme: string, idx: number) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-1 text-xs bg-indigo-50 text-indigo-600 rounded-full"
+                  >
+                    {theme}
+                  </span>
+                ))}
+              {report.reportContent.keyThemes.length >
+                (report.type === "YEARLY" ? 3 : 2) && (
                 <span className="px-2 py-1 text-xs bg-gray-50 text-gray-500 rounded-full">
-                  +{report.reportContent.keyThemes.length - (report.type === 'YEARLY' ? 3 : 2)} more
+                  +
+                  {report.reportContent.keyThemes.length -
+                    (report.type === "YEARLY" ? 3 : 2)}{" "}
+                  more
                 </span>
               )}
             </div>
@@ -286,8 +361,11 @@ export default function DashboardPage() {
   const searchParams = useSearchParams();
   const { user, isLoading, refresh } = useAppInit({ requireAuth: true });
   const [showBirthInfoForm, setShowBirthInfoForm] = useState(false);
-  const [showSubscriptionSelector, setShowSubscriptionSelector] = useState(false);
-  const [reportFilter, setReportFilter] = useState<'ALL' | 'YEARLY' | 'MONTHLY' | 'WEEKLY'>('ALL');
+  const [showSubscriptionSelector, setShowSubscriptionSelector] =
+    useState(false);
+  const [reportFilter, setReportFilter] = useState<
+    "ALL" | "YEARLY" | "MONTHLY" | "WEEKLY"
+  >("ALL");
   const [reports, setReports] = useState<Report[]>([]);
   const [reportsLoading, setReportsLoading] = useState(true);
   const [reportsError, setReportsError] = useState<string | null>(null);
@@ -299,7 +377,7 @@ export default function DashboardPage() {
   const dashboardPageSize = 6;
 
   useEffect(() => {
-    if (searchParams.get('upgrade') === 'true') {
+    if (searchParams.get("upgrade") === "true") {
       setShowSubscriptionSelector(true);
     }
   }, [searchParams]);
@@ -316,27 +394,27 @@ export default function DashboardPage() {
       setCurrentPage(0);
     }
     setReportsError(null);
-    
+
     try {
       const pageToLoad = reset ? 0 : currentPage;
-      const response = await reportsApi.getUserReportsPagination({ 
-        pageRequest: pageToLoad, 
-        pageSize: dashboardPageSize 
+      const response = await reportsApi.getUserReportsPagination({
+        pageRequest: pageToLoad,
+        pageSize: dashboardPageSize,
       });
-      
+
       if (response.error) {
         setReportsError(response.error.message);
       } else if (response.data && response.data.content) {
         if (reset) {
           setReports(response.data.content);
         } else {
-          setReports(prev => [...prev, ...response.data.content]);
+          setReports((prev) => [...prev, ...(response?.data?.content ?? [])]);
         }
         setHasMoreReports(!response.data.last);
       }
     } catch (error) {
-      console.error('Failed to load reports:', error);
-      setReportsError('Failed to load reports');
+      console.error("Failed to load reports:", error);
+      setReportsError("Failed to load reports");
     } finally {
       if (reset) {
         setReportsLoading(false);
@@ -348,26 +426,26 @@ export default function DashboardPage() {
 
   const loadMoreReports = async () => {
     if (loadingMore || !hasMoreReports) return;
-    
+
     setLoadingMore(true);
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
-    
+
     try {
-      const response = await reportsApi.getUserReportsPagination({ 
-        pageRequest: nextPage, 
-        pageSize: dashboardPageSize 
+      const response = await reportsApi.getUserReportsPagination({
+        pageRequest: nextPage,
+        pageSize: dashboardPageSize,
       });
-      
+
       if (response.error) {
         setReportsError(response.error.message);
       } else if (response.data) {
-        setReports(prev => [...prev, ...response.data.content]);
+        setReports((prev) => [...prev, ...response.data.content]);
         setHasMoreReports(!response.data.last);
       }
     } catch (error) {
-      console.error('Failed to load more reports:', error);
-      setReportsError('Failed to load more reports');
+      console.error("Failed to load more reports:", error);
+      setReportsError("Failed to load more reports");
     } finally {
       setLoadingMore(false);
     }
@@ -375,24 +453,24 @@ export default function DashboardPage() {
 
   const generateYearlyReport = async () => {
     if (generatingReport) return;
-    
+
     setGeneratingReport(true);
     setGenerationError(null);
-    
+
     try {
-      const response = await reportsApi.generateReport('YEARLY');
-      
+      const response = await reportsApi.generateReport("YEARLY");
+
       if (response.error) {
         setGenerationError(response.error.message);
       } else if (response.data) {
         // Add the new report to the beginning of the list
-        setReports(prev => [response.data, ...prev]);
+        setReports((prev) => [response.data, ...prev]);
         // Navigate to the new report
         router.push(`/report?id=${response.data.id}`);
       }
     } catch (error) {
-      console.error('Failed to generate report:', error);
-      setGenerationError('Failed to generate report. Please try again.');
+      console.error("Failed to generate report:", error);
+      setGenerationError("Failed to generate report. Please try again.");
     } finally {
       setGeneratingReport(false);
     }
@@ -400,18 +478,20 @@ export default function DashboardPage() {
 
   // Check if user needs to complete profile using the utility function
   const profileStatus = user ? userAPI.checkProfileCompleteness(user) : null;
-  const needsProfileCompletion = profileStatus ? !profileStatus.isComplete : false;
+  const needsProfileCompletion = profileStatus
+    ? !profileStatus.isComplete
+    : false;
 
   // Filter reports based on selected filter
-  const filteredReports = reports.filter(report => 
-    reportFilter === 'ALL' || report.type === reportFilter
+  const filteredReports = reports.filter(
+    (report) => reportFilter === "ALL" || report.type === reportFilter
   );
 
   const handleProfileComplete = (profileData: any) => {
     // Profile update is already handled in the form component and auto-cached
     // Just close the form and refresh user data from cache
     setShowBirthInfoForm(false);
-    
+
     // Refresh the user data to get the updated profile
     refresh();
   };
@@ -440,16 +520,16 @@ export default function DashboardPage() {
   const handleLogout = () => {
     // Clear JWT token and cached user data
     authAPI.logout();
-    
+
     // Redirect to login
-    router.push('/auth/login');
+    router.push("/auth/login");
   };
 
   // If profile form is open, show it as overlay
   if (showBirthInfoForm) {
     return (
       <div className="min-h-screen px-4 py-8 max-w-7xl mx-auto">
-        <BirthInfoForm 
+        <BirthInfoForm
           onComplete={handleProfileComplete}
           onSkip={handleSkipProfile}
           showSkip={true}
@@ -457,10 +537,10 @@ export default function DashboardPage() {
             firstName: user.firstName,
             lastName: user.lastName,
             gender: user.gender,
-            birthDate: user.birthDate ? user.birthDate.replace(/\//g, '-') : '', // Convert from YYYY/MM/DD to YYYY-MM-DD for HTML input
+            birthDate: user.birthDate ? user.birthDate.replace(/\//g, "-") : "", // Convert from YYYY/MM/DD to YYYY-MM-DD for HTML input
             birthTime: user.birthTime,
             birthCity: user.birthCity,
-            birthCountry: user.birthCountry || '', // Fallback for missing country
+            birthCountry: user.birthCountry || "", // Fallback for missing country
           }}
         />
       </div>
@@ -484,20 +564,24 @@ export default function DashboardPage() {
         <div
           className="p-8 rounded-3xl border border-white/30"
           style={{
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
           }}
         >
           <div className="text-center mb-8">
             <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 w-fit mx-auto mb-4">
               <Crown className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-light text-gray-900 mb-2">Upgrade to Premium</h1>
-            <p className="text-gray-600">Unlock advanced insights and personalized guidance</p>
+            <h1 className="text-3xl font-light text-gray-900 mb-2">
+              Upgrade to Premium
+            </h1>
+            <p className="text-gray-600">
+              Unlock advanced insights and personalized guidance
+            </p>
           </div>
 
-          <SubscriptionSelector 
-            onSubscriptionStart={() => console.log('Subscription started')}
+          <SubscriptionSelector
+            onSubscriptionStart={() => console.log("Subscription started")}
           />
         </div>
       </div>
@@ -515,8 +599,8 @@ export default function DashboardPage() {
         <div
           className="p-6 rounded-3xl border border-white/30"
           style={{
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
           }}
         >
           <div className="flex justify-between items-start">
@@ -524,33 +608,45 @@ export default function DashboardPage() {
               <div
                 className="p-4 rounded-2xl"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.6)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  background: "rgba(255, 255, 255, 0.6)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
                 }}
               >
                 <Sparkles className="w-8 h-8 text-indigo-600" />
               </div>
               <div>
                 <h1 className="text-3xl font-light text-gray-900 mb-1">
-                  Welcome back, {user.firstName || user.name?.split(' ')[0] || user.username?.split('@')[0] || 'Friend'}
+                  Welcome back,{" "}
+                  {user.firstName ||
+                    user.name?.split(" ")[0] ||
+                    user.username?.split("@")[0] ||
+                    "Friend"}
                 </h1>
-                <p className="text-gray-600">Your spiritual journey continues</p>
+                <p className="text-gray-600">
+                  Your spiritual journey continues
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Link href="/orders">
-                <button className="p-2 rounded-xl hover:bg-white/50 transition-colors" title="Order History">
+                <button
+                  className="p-2 rounded-xl hover:bg-white/50 transition-colors"
+                  title="Order History"
+                >
                   <Package className="w-5 h-5 text-gray-600" />
                 </button>
               </Link>
               <Link href="/settings">
-                <button className="p-2 rounded-xl hover:bg-white/50 transition-colors" title="Settings">
+                <button
+                  className="p-2 rounded-xl hover:bg-white/50 transition-colors"
+                  title="Settings"
+                >
                   <Settings className="w-5 h-5 text-gray-600" />
                 </button>
               </Link>
-              <button 
+              <button
                 onClick={handleLogout}
                 className="p-2 rounded-xl hover:bg-white/50 transition-colors"
                 title="Logout"
@@ -573,8 +669,9 @@ export default function DashboardPage() {
           <div
             className="p-6 rounded-3xl border border-orange-200/50 cursor-pointer group"
             style={{
-              background: 'linear-gradient(135deg, rgba(251, 146, 60, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%)',
-              backdropFilter: 'blur(20px)',
+              background:
+                "linear-gradient(135deg, rgba(251, 146, 60, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%)",
+              backdropFilter: "blur(20px)",
             }}
             onClick={() => setShowBirthInfoForm(true)}
           >
@@ -588,7 +685,8 @@ export default function DashboardPage() {
                     Complete Your Cosmic Profile
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Add your personal and birth information for more accurate readings
+                    Add your personal and birth information for more accurate
+                    readings
                   </p>
                 </div>
               </div>
@@ -608,43 +706,50 @@ export default function DashboardPage() {
         <div
           className="p-6 rounded-3xl border border-white/30 text-center"
           style={{
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
           }}
         >
           <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 w-fit mx-auto mb-4">
             <Calendar className="w-6 h-6 text-white" />
           </div>
-          <div className="text-2xl font-light text-gray-900 mb-1">{user.totalReports}</div>
+          <div className="text-2xl font-light text-gray-900 mb-1">
+            {user.totalReports}
+          </div>
           <div className="text-sm text-gray-600">Total Reports</div>
         </div>
 
         <div
           className="p-6 rounded-3xl border border-white/30 text-center"
           style={{
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
           }}
         >
           <div className="p-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 w-fit mx-auto mb-4">
             <TrendingUp className="w-6 h-6 text-white" />
           </div>
-          <div className="text-2xl font-light text-gray-900 mb-1">{user.averageScore}%</div>
+          <div className="text-2xl font-light text-gray-900 mb-1">
+            {user.averageScore}%
+          </div>
           <div className="text-sm text-gray-600">Average Fortune</div>
         </div>
 
         <div
           className="p-6 rounded-3xl border border-white/30 text-center"
           style={{
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
           }}
         >
           <div className="p-3 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 w-fit mx-auto mb-4">
             <Star className="w-6 h-6 text-white" />
           </div>
           <div className="text-2xl font-light text-gray-900 mb-1">
-            {Math.floor((Date.now() - new Date(user.joinDate).getTime()) / (1000 * 60 * 60 * 24))}
+            {Math.floor(
+              (Date.now() - new Date(user.joinDate).getTime()) /
+                (1000 * 60 * 60 * 24)
+            )}
           </div>
           <div className="text-sm text-gray-600">Days Journey</div>
         </div>
@@ -658,12 +763,18 @@ export default function DashboardPage() {
         className="mb-8"
       >
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-light text-gray-900">Your Fortune Reports</h2>
+          <h2 className="text-2xl font-light text-gray-900">
+            Your Fortune Reports
+          </h2>
           <div className="flex items-center gap-4">
             <div className="relative">
-              <select 
+              <select
                 value={reportFilter}
-                onChange={(e) => setReportFilter(e.target.value as 'ALL' | 'YEARLY' | 'MONTHLY' | 'WEEKLY')}
+                onChange={(e) =>
+                  setReportFilter(
+                    e.target.value as "ALL" | "YEARLY" | "MONTHLY" | "WEEKLY"
+                  )
+                }
                 className="appearance-none bg-white/50 backdrop-blur-sm border border-white/30 rounded-2xl px-4 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
                 <option value="ALL">All Reports</option>
@@ -693,7 +804,9 @@ export default function DashboardPage() {
             <div className="p-4 rounded-2xl bg-red-100 w-fit mx-auto mb-4">
               <Calendar className="w-8 h-8 text-red-400" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Error Loading Reports</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Error Loading Reports
+            </h3>
             <p className="text-gray-600 mb-4">{reportsError}</p>
             <button
               onClick={() => loadReports(true)}
@@ -715,18 +828,19 @@ export default function DashboardPage() {
                 <div className="p-4 rounded-2xl bg-gray-100 w-fit mx-auto mb-4">
                   <Calendar className="w-8 h-8 text-gray-400" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Reports Found</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No Reports Found
+                </h3>
                 <p className="text-gray-600 mb-6">
-                  {reportFilter === 'ALL' 
-                    ? reports.length === 0 
-                      ? "You don't have any reports yet. Generate your first reading!" 
+                  {reportFilter === "ALL"
+                    ? reports.length === 0
+                      ? "You don't have any reports yet. Generate your first reading!"
                       : "No reports match your filter."
-                    : `No ${reportFilter.toLowerCase()} reports found. Try a different filter.`
-                  }
+                    : `No ${reportFilter.toLowerCase()} reports found. Try a different filter.`}
                 </p>
-                
+
                 {/* Show Generate Report button only when no reports exist at all */}
-                {reports.length === 0 && reportFilter === 'ALL' && (
+                {reports.length === 0 && reportFilter === "ALL" && (
                   <div className="space-y-4">
                     <motion.button
                       whileHover={{ scale: 1.02 }}
@@ -739,8 +853,12 @@ export default function DashboardPage() {
                         <>
                           <Loader2 className="w-5 h-5 animate-spin" />
                           <div className="text-left">
-                            <div className="font-medium">Generating Your Yearly Report...</div>
-                            <div className="text-xs opacity-90">This may take up to 1 minute</div>
+                            <div className="font-medium">
+                              Generating Your Yearly Report...
+                            </div>
+                            <div className="text-xs opacity-90">
+                              This may take up to 1 minute
+                            </div>
                           </div>
                         </>
                       ) : (
@@ -749,17 +867,22 @@ export default function DashboardPage() {
                             <Sparkles className="w-5 h-5" />
                           </div>
                           <div className="text-left">
-                            <div className="font-medium">Generate Yearly Report</div>
-                            <div className="text-xs opacity-90">Get your comprehensive fortune analysis</div>
+                            <div className="font-medium">
+                              Generate Yearly Report
+                            </div>
+                            <div className="text-xs opacity-90">
+                              Get your comprehensive fortune analysis
+                            </div>
                           </div>
                         </>
                       )}
                     </motion.button>
-                    
+
                     {needsProfileCompletion && (
                       <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-sm text-orange-600 bg-orange-50 px-4 py-3 rounded-lg">
                         <p className="flex-1">
-                          Please complete your profile first to generate accurate reports
+                          Please complete your profile first to generate
+                          accurate reports
                         </p>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
@@ -772,7 +895,7 @@ export default function DashboardPage() {
                         </motion.button>
                       </div>
                     )}
-                    
+
                     {generationError && (
                       <p className="text-sm text-red-600 bg-red-50 px-4 py-2 rounded-lg inline-block">
                         {generationError}
@@ -784,29 +907,32 @@ export default function DashboardPage() {
             )}
 
             {/* Load More Button */}
-            {!reportsLoading && !reportsError && filteredReports.length > 0 && hasMoreReports && (
-              <div className="text-center mt-8">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={loadMoreReports}
-                  disabled={loadingMore}
-                  className="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto"
-                >
-                  {loadingMore ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Loading more...
-                    </>
-                  ) : (
-                    <>
-                      Load More Reports
-                      <ChevronRight className="w-4 h-4" />
-                    </>
-                  )}
-                </motion.button>
-              </div>
-            )}
+            {!reportsLoading &&
+              !reportsError &&
+              filteredReports.length > 0 &&
+              hasMoreReports && (
+                <div className="text-center mt-8">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={loadMoreReports}
+                    disabled={loadingMore}
+                    className="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mx-auto"
+                  >
+                    {loadingMore ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Loading more...
+                      </>
+                    ) : (
+                      <>
+                        Load More Reports
+                        <ChevronRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              )}
           </>
         )}
       </motion.div>
@@ -817,20 +943,23 @@ export default function DashboardPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <h2 className="text-2xl font-light text-gray-900 mb-6">Quick Actions</h2>
+        <h2 className="text-2xl font-light text-gray-900 mb-6">
+          Quick Actions
+        </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div
             className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
             style={{
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
-              backdropFilter: 'blur(20px)',
+              background:
+                "linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)",
+              backdropFilter: "blur(20px)",
             }}
             onClick={() => {
               if (needsProfileCompletion) {
                 setShowBirthInfoForm(true);
               } else {
                 // TODO: Navigate to new reading request
-                console.log('Request new reading');
+                console.log("Request new reading");
               }
             }}
           >
@@ -838,43 +967,54 @@ export default function DashboardPage() {
               <Star className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {needsProfileCompletion ? 'Complete Profile First' : 'Request New Reading'}
+              {needsProfileCompletion
+                ? "Complete Profile First"
+                : "Request New Reading"}
             </h3>
             <p className="text-sm text-gray-600">
-              {needsProfileCompletion 
-                ? 'Add personal and birth info for accurate readings' 
-                : 'Get your personalized fortune analysis'
-              }
+              {needsProfileCompletion
+                ? "Add personal and birth info for accurate readings"
+                : "Get your personalized fortune analysis"}
             </p>
           </div>
 
           <div
             className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
             style={{
-              background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%)',
-              backdropFilter: 'blur(20px)',
+              background:
+                "linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%)",
+              backdropFilter: "blur(20px)",
             }}
           >
             <div className="p-4 rounded-2xl bg-gradient-to-r from-pink-500 to-red-500 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
               <User className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Update Profile</h3>
-            <p className="text-sm text-gray-600">Personalize your spiritual journey</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Update Profile
+            </h3>
+            <p className="text-sm text-gray-600">
+              Personalize your spiritual journey
+            </p>
           </div>
 
           <Link href="/orders">
             <div
               className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
               style={{
-                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
-                backdropFilter: 'blur(20px)',
+                background:
+                  "linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
+                backdropFilter: "blur(20px)",
               }}
             >
               <div className="p-4 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Package className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Order History</h3>
-              <p className="text-sm text-gray-600">View your subscription orders</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Order History
+              </h3>
+              <p className="text-sm text-gray-600">
+                View your subscription orders
+              </p>
             </div>
           </Link>
         </div>
