@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, JSX } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -19,7 +19,12 @@ import {
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { reportsApi, Report } from "@/lib/api/reports";
-import { translationApi, Language, SUPPORTED_LANGUAGES, LanguageCode } from "@/lib/api/translation";
+import {
+  translationApi,
+  Language,
+  SUPPORTED_LANGUAGES,
+  LanguageCode,
+} from "@/lib/api/translation";
 import { useAppInit } from "@/hooks/useAppInit";
 
 // Tooltip component for glossary terms
@@ -94,14 +99,16 @@ function TranslationToggle({
   onTranslationChange: (content: any, language: LanguageCode) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(SUPPORTED_LANGUAGES[0]);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>(
+    SUPPORTED_LANGUAGES[0]
+  );
   const [isTranslating, setIsTranslating] = useState(false);
   const [translationError, setTranslationError] = useState<string | null>(null);
 
   const translateContent = async (targetLanguage: Language) => {
-    if (targetLanguage.code === 'ENGLISH') {
+    if (targetLanguage.code === "ENGLISH") {
       // If English is selected, use original content
-      onTranslationChange(reportContent, 'ENGLISH');
+      onTranslationChange(reportContent, "ENGLISH");
       setCurrentLanguage(targetLanguage);
       setIsOpen(false);
       return;
@@ -126,13 +133,17 @@ function TranslationToggle({
           })),
         },
         targetLanguage.code as LanguageCode,
-        'ENGLISH'
+        "ENGLISH"
       );
 
       if (response.error) {
         // If it's an auth error, try the manual method
-        if (response.error.code === 'AUTH_ERROR' || response.error.httpStatus === 401 || response.error.httpStatus === 403) {
-          console.log('🔄 Trying manual fetch method due to auth error...');
+        if (
+          response.error.code === "AUTH_ERROR" ||
+          response.error.httpStatus === 401 ||
+          response.error.httpStatus === 403
+        ) {
+          console.log("🔄 Trying manual fetch method due to auth error...");
           const manualResponse = await translationApi.translateContentManual(
             {
               reading: reportContent.reading,
@@ -147,7 +158,7 @@ function TranslationToggle({
               })),
             },
             targetLanguage.code as LanguageCode,
-            'ENGLISH'
+            "ENGLISH"
           );
 
           if (manualResponse.error) {
@@ -155,12 +166,15 @@ function TranslationToggle({
           }
 
           if (manualResponse.data?.success) {
-            onTranslationChange(manualResponse.data.translatedContent, targetLanguage.code);
+            onTranslationChange(
+              manualResponse.data.translatedContent,
+              targetLanguage.code
+            );
             setCurrentLanguage(targetLanguage);
             setIsOpen(false);
             return;
           } else {
-            throw new Error(manualResponse.data?.error || 'Translation failed');
+            throw new Error(manualResponse.data?.error || "Translation failed");
           }
         } else {
           throw new Error(response.error.message);
@@ -168,15 +182,18 @@ function TranslationToggle({
       }
 
       if (response.data?.success) {
-        onTranslationChange(response.data.translatedContent, targetLanguage.code);
+        onTranslationChange(
+          response.data.translatedContent,
+          targetLanguage.code
+        );
         setCurrentLanguage(targetLanguage);
         setIsOpen(false);
       } else {
-        throw new Error(response.data?.error || 'Translation failed');
+        throw new Error(response.data?.error || "Translation failed");
       }
     } catch (error) {
-      console.error('Translation error:', error);
-      setTranslationError('Translation failed. Please try again.');
+      console.error("Translation error:", error);
+      setTranslationError("Translation failed. Please try again.");
     } finally {
       setIsTranslating(false);
     }
@@ -199,7 +216,11 @@ function TranslationToggle({
         <span className="text-sm font-medium text-gray-700">
           {currentLanguage.flag} {currentLanguage.name}
         </span>
-        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 text-gray-500 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </motion.button>
 
       {isOpen && (
@@ -225,9 +246,9 @@ function TranslationToggle({
                   disabled={isTranslating}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all hover:bg-indigo-50 ${
                     currentLanguage.code === language.code
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'text-gray-700'
-                  } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      ? "bg-indigo-100 text-indigo-700"
+                      : "text-gray-700"
+                  } ${isTranslating ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <span className="text-lg">{language.flag}</span>
                   <span className="text-sm font-medium flex-1 text-left">
@@ -262,10 +283,7 @@ function TranslationToggle({
 
       {/* Click outside to close */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       )}
     </div>
   );
@@ -312,15 +330,20 @@ function LuckyElementCard({
         }}
       >
         {/* Gradient border using pseudo-element */}
-        <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{
-          background: "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
-          mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          maskComposite: "xor",
-          WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          WebkitMaskComposite: "xor",
-          padding: "1px"
-        }} />
-        
+        <div
+          className="absolute inset-0 rounded-3xl pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
+            mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            maskComposite: "xor",
+            WebkitMask:
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            WebkitMaskComposite: "xor",
+            padding: "1px",
+          }}
+        />
+
         {/* Shimmer effect */}
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
@@ -337,22 +360,14 @@ function LuckyElementCard({
 
         <div className="flex items-center gap-3 mb-4 relative z-10">
           <div className={`p-2 rounded-xl ${iconBgGradient}`}>
-            <div className={iconTextColor}>
-              {icon}
-            </div>
+            <div className={iconTextColor}>{icon}</div>
           </div>
           <div>
-            <h3 className="text-lg font-medium text-gray-900">
-              {title}
-            </h3>
-            <p className={`text-xs font-medium ${subtitleColor}`}>
-              {subtitle}
-            </p>
+            <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+            <p className={`text-xs font-medium ${subtitleColor}`}>{subtitle}</p>
           </div>
         </div>
-        <div className="relative z-10">
-          {renderContent()}
-        </div>
+        <div className="relative z-10">{renderContent()}</div>
       </div>
     </motion.div>
   );
@@ -485,7 +500,11 @@ function formatReportPeriod(report: Report) {
 // Function to replace glossary terms in text with interactive components
 function processTextWithGlossary(text: string, glossary: any[]) {
   let processedText = text;
-  const components = [];
+  const components: {
+    key: string;
+    placeholder: string;
+    component: JSX.Element;
+  }[] = [];
   let keyCounter = 0;
 
   // Sort glossary by term length (longest first) to avoid partial matches
@@ -535,10 +554,11 @@ export default function ReportPage() {
   const [report, setReport] = useState<Report | null>(null);
   const [reportLoading, setReportLoading] = useState(true);
   const [reportError, setReportError] = useState<string | null>(null);
-  
+
   // Translation state
   const [translatedContent, setTranslatedContent] = useState<any>(null);
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('ENGLISH');
+  const [currentLanguage, setCurrentLanguage] =
+    useState<LanguageCode>("ENGLISH");
 
   // Get report ID from URL search params
   const reportId = searchParams.get("id");
@@ -551,7 +571,9 @@ export default function ReportPage() {
 
   // Get current content (original or translated)
   const getCurrentContent = () => {
-    return currentLanguage === 'ENGLISH' || !translatedContent ? report?.reportContent : translatedContent;
+    return currentLanguage === "ENGLISH" || !translatedContent
+      ? report?.reportContent
+      : translatedContent;
   };
 
   // Load report data
@@ -656,7 +678,7 @@ export default function ReportPage() {
             <ArrowLeft className="w-5 h-5" />
             Back
           </button>
-          
+
           {/* Translation Toggle */}
           {report && (
             <TranslationToggle
@@ -719,7 +741,7 @@ export default function ReportPage() {
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-700 leading-relaxed">
               {processTextWithGlossary(
-                getCurrentContent()?.reading || '',
+                getCurrentContent()?.reading || "",
                 getCurrentContent()?.glossary || []
               )}
             </p>
@@ -778,14 +800,19 @@ export default function ReportPage() {
             }}
           >
             {/* Gradient border using pseudo-element */}
-            <div className="absolute inset-0 rounded-3xl" style={{
-              background: "linear-gradient(135deg, #FFD700, #FFA500, #8A2BE2, #4B0082)",
-              mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              maskComposite: "xor",
-              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              padding: "2px"
-            }} />
+            <div
+              className="absolute inset-0 rounded-3xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, #FFD700, #FFA500, #8A2BE2, #4B0082)",
+                mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                maskComposite: "xor",
+                WebkitMask:
+                  "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                WebkitMaskComposite: "xor",
+                padding: "2px",
+              }}
+            />
             {/* Animated background pattern */}
             <div className="absolute inset-0">
               <motion.div
@@ -1008,14 +1035,16 @@ export default function ReportPage() {
           renderContent={() => (
             <div className="flex gap-2 flex-wrap">
               {(getCurrentContent()?.luckyNumbers || []).length > 0 ? (
-                (getCurrentContent()?.luckyNumbers || []).map((number, index) => (
-                  <div
-                    key={index}
-                    className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium"
-                  >
-                    {number}
-                  </div>
-                ))
+                (getCurrentContent()?.luckyNumbers || []).map(
+                  (number, index) => (
+                    <div
+                      key={index}
+                      className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium"
+                    >
+                      {number}
+                    </div>
+                  )
+                )
               ) : (
                 <div className="text-sm text-gray-500 italic">
                   No specific lucky numbers for this period
@@ -1037,11 +1066,13 @@ export default function ReportPage() {
           renderContent={() => (
             <div className="space-y-2">
               {(getCurrentContent()?.luckyGemstones || []).length > 0 ? (
-                (getCurrentContent()?.luckyGemstones || []).map((gemstone, index) => (
-                  <div key={index} className="text-sm text-gray-700">
-                    {gemstone}
-                  </div>
-                ))
+                (getCurrentContent()?.luckyGemstones || []).map(
+                  (gemstone, index) => (
+                    <div key={index} className="text-sm text-gray-700">
+                      {gemstone}
+                    </div>
+                  )
+                )
               ) : (
                 <div className="text-sm text-gray-500 italic">
                   No specific lucky gemstones for this period
@@ -1053,74 +1084,81 @@ export default function ReportPage() {
 
         {/* Lucky Enhancer Section - if available */}
         {(getCurrentContent()?.luckyEnhancer || []).length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              whileHover={{ scale: 1.01, y: -3 }}
-              className="md:col-span-3 group"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            whileHover={{ scale: 1.01, y: -3 }}
+            className="md:col-span-3 group"
+          >
+            <div
+              className="relative p-6 rounded-3xl h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
+                backdropFilter: "blur(30px)",
+                border: "1px solid transparent",
+                backgroundClip: "padding-box",
+                boxShadow:
+                  "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
+              }}
             >
+              {/* Gradient border using pseudo-element */}
               <div
-                className="relative p-6 rounded-3xl h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
+                className="absolute inset-0 rounded-3xl pointer-events-none"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
-                  backdropFilter: "blur(30px)",
-                  border: "1px solid transparent", 
-                  backgroundClip: "padding-box",
-                  boxShadow:
-                    "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
-                }}
-              >
-                {/* Gradient border using pseudo-element */}
-                <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{
-                  background: "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
+                    "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
                   mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                   maskComposite: "xor",
-                  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                   WebkitMaskComposite: "xor",
-                  padding: "1px"
-                }} />
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                </div>
+                  padding: "1px",
+                }}
+              />
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+              </div>
 
-                {/* Premium indicator with pulse */}
-                <div className="absolute top-3 right-3">
-                  <motion.div
-                    animate={{ scale: [1, 1.3, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.9 }}
-                    className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg"
-                  />
-                </div>
+              {/* Premium indicator with pulse */}
+              <div className="absolute top-3 right-3">
+                <motion.div
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.9 }}
+                  className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg"
+                />
+              </div>
 
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-gradient-to-r from-amber-100 to-yellow-100">
-                    <Lightbulb className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">
-                      Lucky Enhancement Suggestions
-                    </h3>
-                    <p className="text-xs text-amber-600 font-medium">
-                      Premium Insights
-                    </p>
-                  </div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-xl bg-gradient-to-r from-amber-100 to-yellow-100">
+                  <Lightbulb className="w-5 h-5 text-amber-600" />
                 </div>
-                <div className="space-y-3">
-                  {(getCurrentContent()?.luckyEnhancer || []).map((enhancer, index) => (
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Lucky Enhancement Suggestions
+                  </h3>
+                  <p className="text-xs text-amber-600 font-medium">
+                    Premium Insights
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {(getCurrentContent()?.luckyEnhancer || []).map(
+                  (enhancer, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
                       <div className="text-sm text-gray-700 leading-relaxed">
                         {enhancer}
                       </div>
                     </div>
-                  ))}
-                </div>
+                  )
+                )}
               </div>
-            </motion.div>
-          )}
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Spiritual Guidance */}
@@ -1143,7 +1181,7 @@ export default function ReportPage() {
             </h3>
           </div>
           <p className="text-gray-700 leading-relaxed italic">
-            "{getCurrentContent()?.spiritualGuidance || ''}"
+            "{getCurrentContent()?.spiritualGuidance || ""}"
           </p>
         </div>
       </motion.div>
