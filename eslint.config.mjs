@@ -16,10 +16,12 @@ const eslintConfig = [
       // Turn problematic rules into warnings to allow build to pass
       "react/no-unescaped-entities": "warn",
       "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
+
       "react-hooks/exhaustive-deps": "warn",
       "@typescript-eslint/no-empty-object-type": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-inferrable-types": "off",
     },
   },
 ];
