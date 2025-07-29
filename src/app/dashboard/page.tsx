@@ -464,9 +464,9 @@ export default function DashboardPage() {
         setGenerationError(response.error.message);
       } else if (response.data) {
         // Add the new report to the beginning of the list
-        setReports((prev) => [response.data, ...prev]);
+        setReports((prev) => [response.data!, ...prev]);
         // Navigate to the new report
-        router.push(`/report?id=${response.data.id}`);
+        router.push(`/report?id=${response.data!.id}`);
       }
     } catch (error) {
       console.error("Failed to generate report:", error);
@@ -534,12 +534,12 @@ export default function DashboardPage() {
           onSkip={handleSkipProfile}
           showSkip={true}
           initialData={{
-            firstName: user.firstName,
-            lastName: user.lastName,
-            gender: user.gender,
+            firstName: user.firstName || "",
+            lastName: user.lastName || "",
+            gender: (user.gender as "MALE" | "FEMALE" | "PREFER_NOT_TO_SAY") || undefined,
             birthDate: user.birthDate ? user.birthDate.replace(/\//g, "-") : "", // Convert from YYYY/MM/DD to YYYY-MM-DD for HTML input
-            birthTime: user.birthTime,
-            birthCity: user.birthCity,
+            birthTime: user.birthTime || "",
+            birthCity: user.birthCity || "",
             birthCountry: user.birthCountry || "", // Fallback for missing country
           }}
         />
@@ -730,7 +730,7 @@ export default function DashboardPage() {
             <TrendingUp className="w-6 h-6 text-white" />
           </div>
           <div className="text-2xl font-light text-gray-900 mb-1">
-            {user.averageScore}%
+            {user?.averageScore ?? 0}%
           </div>
           <div className="text-sm text-gray-600">Average Fortune</div>
         </div>
@@ -747,7 +747,7 @@ export default function DashboardPage() {
           </div>
           <div className="text-2xl font-light text-gray-900 mb-1">
             {Math.floor(
-              (Date.now() - new Date(user.joinDate).getTime()) /
+              (Date.now() - new Date(user.joinDate || user.createTime).getTime()) /
                 (1000 * 60 * 60 * 24)
             )}
           </div>

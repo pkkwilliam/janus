@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from './config';
-import { apiClient, ApiResponse } from './client';
+import { API_ENDPOINTS } from "./config";
+import { apiClient, ApiResponse } from "./client";
 
 // In-memory cache for user profile (cleared on page refresh/revisit)
 class UserProfileCache {
@@ -39,7 +39,7 @@ export interface EmailVerificationRequest {
 }
 
 export interface EmailVerificationResponse {
-  responseStatus: 'SENT' | 'ERROR';
+  responseStatus: "SENT" | "ERROR";
   message?: string;
 }
 
@@ -65,6 +65,10 @@ export interface EmailVerifyResponse {
   birthDate?: string | null;
   birthTime?: string | null;
   birthCity?: string | null;
+  birthCountry?: string | null;
+  totalReports?: number;
+  averageScore?: number;
+  joinDate?: string | null;
   createTime: string;
   updateTime: string;
   grantedRoles: string[];
@@ -88,9 +92,11 @@ export const authAPI = {
    * @param email - User's email address
    * @returns Promise with verification response or error
    */
-  async requestEmailVerification(email: string): Promise<ApiResponse<EmailVerificationResponse>> {
+  async requestEmailVerification(
+    email: string
+  ): Promise<ApiResponse<EmailVerificationResponse>> {
     return apiClient.post<EmailVerificationResponse>(
-      API_ENDPOINTS.AUTH.EMAIL_REQUEST_VERIFICATION, 
+      API_ENDPOINTS.AUTH.EMAIL_REQUEST_VERIFICATION,
       { email }
     );
   },
@@ -101,9 +107,12 @@ export const authAPI = {
    * @param oneTimePassword - 6-digit verification code
    * @returns Promise with user data or error
    */
-  async verifyEmail(email: string, oneTimePassword: string): Promise<ApiResponse<EmailVerifyResponse>> {
+  async verifyEmail(
+    email: string,
+    oneTimePassword: string
+  ): Promise<ApiResponse<EmailVerifyResponse>> {
     return apiClient.post<EmailVerifyResponse>(
-      API_ENDPOINTS.AUTH.EMAIL_VERIFY, 
+      API_ENDPOINTS.AUTH.EMAIL_VERIFY,
       { email, oneTimePassword }
     );
   },
@@ -114,10 +123,9 @@ export const authAPI = {
    * @returns Promise with authentication response or error
    */
   async googleOAuth(token: string): Promise<ApiResponse<OAuthResponse>> {
-    return apiClient.post<OAuthResponse>(
-      API_ENDPOINTS.AUTH.GOOGLE_OAUTH, 
-      { token }
-    );
+    return apiClient.post<OAuthResponse>(API_ENDPOINTS.AUTH.GOOGLE_OAUTH, {
+      token,
+    });
   },
 
   /**
@@ -126,10 +134,9 @@ export const authAPI = {
    * @returns Promise with authentication response or error
    */
   async facebookOAuth(token: string): Promise<ApiResponse<OAuthResponse>> {
-    return apiClient.post<OAuthResponse>(
-      API_ENDPOINTS.AUTH.FACEBOOK_OAUTH, 
-      { token }
-    );
+    return apiClient.post<OAuthResponse>(API_ENDPOINTS.AUTH.FACEBOOK_OAUTH, {
+      token,
+    });
   },
 
   /**
@@ -138,7 +145,7 @@ export const authAPI = {
   logout(): void {
     apiClient.clearAuthToken();
     userProfileCache.clearProfile();
-    console.log('✅ User logged out successfully');
+    console.log("✅ User logged out successfully");
   },
 
   /**
@@ -146,11 +153,11 @@ export const authAPI = {
    * @returns boolean indicating if user has valid session
    */
   isAuthenticated(): boolean {
-    if (typeof window === 'undefined') return false;
-    
-    const userData = localStorage.getItem('userData');
-    const userId = localStorage.getItem('userId');
-    
+    if (typeof window === "undefined") return false;
+
+    const userData = localStorage.getItem("userData");
+    const userId = localStorage.getItem("userId");
+
     return !!(userData && userId);
   },
 
@@ -171,7 +178,7 @@ export const authAPI = {
     if (currentUser) {
       const updatedUser = { ...currentUser, ...userData };
       userProfileCache.setProfile(updatedUser);
-      console.log('✅ User data updated in cache');
+      console.log("✅ User data updated in cache");
     }
   },
 
@@ -182,21 +189,23 @@ export const authAPI = {
    * @param forceRefresh - Force refresh even if cached data exists
    * @returns Promise resolving to user data or null if authentication fails
    */
-  async loadUserProfile(forceRefresh = false): Promise<EmailVerifyResponse | null> {
+  async loadUserProfile(
+    forceRefresh = false
+  ): Promise<EmailVerifyResponse | null> {
     // Check if running in browser
-    if (typeof window === 'undefined') return null;
+    if (typeof window === "undefined") return null;
 
     // Check if already loading to prevent multiple simultaneous requests
     if (userProfileCache.getLoading()) {
       // Wait for existing request to complete
       while (userProfileCache.getLoading()) {
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
       }
       return userProfileCache.getProfile();
     }
 
     // First check if user has a valid JWT token
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) {
       // No token, clear cache and return null
       userProfileCache.clearProfile();
@@ -211,16 +220,16 @@ export const authAPI = {
 
     // Token exists but no cached user (or force refresh) - fetch from API
     userProfileCache.setLoading(true);
-    
+
     try {
-      const { userAPI } = await import('./user');
+      const { userAPI } = await import("./user");
       const response = await userAPI.getProfile();
-      
+
       if (response.error) {
         // API error - token might be invalid
-        console.error('Failed to fetch user profile:', response.error.message);
+        console.error("Failed to fetch user profile:", response.error.message);
         // Clear invalid token and cache
-        localStorage.removeItem('authToken');
+        localStorage.removeItem("authToken");
         userProfileCache.clearProfile();
         return null;
       }
@@ -228,16 +237,16 @@ export const authAPI = {
       if (response.data) {
         // Successfully fetched profile, cache it in memory
         userProfileCache.setProfile(response.data);
-        console.log('✅ User profile loaded from API and cached in memory');
+        console.log("✅ User profile loaded from API and cached in memory");
         return response.data;
       }
 
       return null;
     } catch (error) {
       // Network or other error
-      console.error('Error fetching user profile:', error);
-      
-      // If there's a network error but we have a token, 
+      console.error("Error fetching user profile:", error);
+
+      // If there's a network error but we have a token,
       // we might want to keep the token for retry later
       // Return null to indicate profile loading failed
       return null;
@@ -251,5 +260,5 @@ export const authAPI = {
    */
   clearUserProfile(): void {
     userProfileCache.clearProfile();
-  }
+  },
 };
