@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { ArrowLeft, User } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { BirthInfoForm } from '@/components/profile/BirthInfoForm';
-import { useAppInit } from '@/hooks/useAppInit';
+import { motion } from "framer-motion";
+import { ArrowLeft, User } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { BirthInfoForm } from "@/components/profile/BirthInfoForm";
+import { useAppInit } from "@/hooks/useAppInit";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -44,8 +44,8 @@ export default function SettingsPage() {
         <div
           className="p-6 rounded-3xl border border-white/30"
           style={{
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(20px)',
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(20px)",
           }}
         >
           <div className="flex items-center justify-between">
@@ -59,9 +59,9 @@ export default function SettingsPage() {
                 <div
                   className="p-4 rounded-2xl"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.6)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    background: "rgba(255, 255, 255, 0.6)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
                   }}
                 >
                   <User className="w-8 h-8 text-indigo-600" />
@@ -70,7 +70,9 @@ export default function SettingsPage() {
                   <h1 className="text-3xl font-light text-gray-900 mb-1">
                     Profile Settings
                   </h1>
-                  <p className="text-gray-600">Update your personal information</p>
+                  <p className="text-gray-600">
+                    Update your personal information
+                  </p>
                 </div>
               </div>
             </div>
@@ -85,18 +87,18 @@ export default function SettingsPage() {
         transition={{ delay: 0.1 }}
         className="mb-8"
       >
-        <BirthInfoForm 
+        <BirthInfoForm
           onComplete={handleProfileComplete}
-          onSkip={() => router.push('/dashboard')}
+          onSkip={() => router.push("/dashboard")}
           showSkip={true}
           initialData={{
-            firstName: user.firstName || '',
-            lastName: user.lastName || '',
-            gender: user.gender || '',
-            birthDate: user.birthDate ? user.birthDate.replace(/\//g, '-') : '', // Convert from YYYY/MM/DD to YYYY-MM-DD for HTML input
-            birthTime: user.birthTime || '',
-            birthCity: user.birthCity || '',
-            birthCountry: user.birthCountry || '', // Fallback for missing country
+            firstName: user.firstName || "",
+            lastName: user.lastName || "",
+            gender: user.gender || undefined,
+            birthDate: user.birthDate ? user.birthDate.replace(/\//g, "-") : "", // Convert from YYYY/MM/DD to YYYY-MM-DD for HTML input
+            birthTime: user.birthTime || "",
+            birthCity: user.birthCity || "",
+            birthCountry: user.birthCountry || "", // Fallback for missing country
           }}
           isSettingsMode={true}
         />

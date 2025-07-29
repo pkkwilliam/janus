@@ -56,7 +56,7 @@ export interface EmailVerifyResponse {
   nickname?: string | null;
   firstName?: string | null;
   lastName?: string | null;
-  gender?: string;
+  gender?: "MALE" | "FEMALE" | "PREFER_NOT_TO_SAY" | null;
   imageUrl?: string | null;
   smsNumber?: string | null;
   countryCode?: string | null;

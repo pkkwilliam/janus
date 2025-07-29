@@ -3,12 +3,12 @@ import { API_ENDPOINTS } from "./config";
 
 export interface SubscriptionRequest {
   autoRenew: boolean;
-  subscribeType: "MONTHLY" | "YEARLY";
+  subscribeType: "MONTH" | "YEAR";
 }
 
 export interface SubscriptionResponse {
   sessionId: string;
-  url: string;
+  requestUrl: string;
 }
 
 export interface SubscriptionStatusResponse {

@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import { XCircle, ArrowLeft, RefreshCw, Crown, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function CancelPage() {
+function CancelContent() {
   const searchParams = useSearchParams();
   const transactionId = searchParams.get("transactionId");
   return (
@@ -154,5 +155,20 @@ export default function CancelPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function CancelPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <CancelContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, JSX } from "react";
+import { useState, useEffect, JSX, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -547,7 +547,7 @@ function processTextWithGlossary(text: string, glossary: any[]) {
   });
 }
 
-export default function ReportPage() {
+function ReportContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isLoading } = useAppInit({ requireAuth: true });
@@ -1186,5 +1186,20 @@ export default function ReportPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function ReportPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ReportContent />
+    </Suspense>
   );
 }
