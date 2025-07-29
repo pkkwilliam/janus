@@ -54,7 +54,9 @@ jobs:
         run: npm run build
 
       - name: Create CNAME file for custom domain
-        run: echo "fortune-cookie.me" > ./out/CNAME
+        run: |
+          mkdir -p ./out
+          echo "fortune-cookie.me" > ./out/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
