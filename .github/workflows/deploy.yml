@@ -31,13 +31,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (so it can work with static export).
-          static_site_generator: next
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -57,9 +50,18 @@ jobs:
         run: |
           mkdir -p ./out
           echo "fortune-cookie.me" > ./out/CNAME
-          
-      - name: Copy 404 fallback for SPA routing
-        run: cp ./public/404.html ./out/404.html
+
+      - name: Verify build output
+        run: |
+          echo "Contents of ./out directory:"
+          ls -la ./out/
+          echo "Checking for index.html:"
+          if [ -f "./out/index.html" ]; then
+            echo "✅ index.html exists"
+            head -5 ./out/index.html
+          else
+            echo "❌ index.html missing"
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
