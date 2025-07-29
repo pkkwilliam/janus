@@ -326,7 +326,7 @@ export default function DashboardPage() {
       
       if (response.error) {
         setReportsError(response.error.message);
-      } else if (response.data) {
+      } else if (response.data && response.data.content) {
         if (reset) {
           setReports(response.data.content);
         } else {
