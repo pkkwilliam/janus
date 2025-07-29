@@ -440,7 +440,7 @@ export default function DashboardPage() {
       if (response.error) {
         setReportsError(response.error.message);
       } else if (response.data) {
-        setReports((prev) => [...prev, ...response.data.content]);
+        setReports((prev) => [...prev, ...(response?.data?.content ?? [])]);
         setHasMoreReports(!response.data.last);
       }
     } catch (error) {
