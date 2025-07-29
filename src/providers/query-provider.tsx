@@ -16,9 +16,12 @@ export function QueryProvider({ children }: QueryProviderProps) {
             staleTime: 5 * 60 * 1000, // 5 minutes
             gcTime: 10 * 60 * 1000, // 10 minutes
             refetchOnWindowFocus: false,
-            retry: (failureCount, error: any) => {
-              if (error?.status === 404 || error?.status === 401) {
-                return false;
+            retry: (failureCount, error: unknown) => {
+              if (error && typeof error === 'object' && 'status' in error) {
+                const errorWithStatus = error as { status: number };
+                if (errorWithStatus.status === 404 || errorWithStatus.status === 401) {
+                  return false;
+                }
               }
               return failureCount < 3;
             },

@@ -1,4 +1,4 @@
-interface CacheItem<T = any> {
+interface CacheItem<T = unknown> {
   data: T;
   timestamp: number;
   expiresAt: number;

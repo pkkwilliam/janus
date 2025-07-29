@@ -10,20 +10,20 @@ export interface BackendErrorResponse {
 }
 
 // Generic API response wrapper
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: {
     code: string;
     message: string;
     severity: ErrorSeverity;
     httpStatus?: number;
-    originalError?: any;
+    originalError?: unknown;
   };
 }
 
 // API request options
 export interface ApiRequestOptions extends Omit<RequestInit, "body"> {
-  body?: any;
+  body?: unknown;
   timeout?: number;
   skipErrorHandling?: boolean;
 }
@@ -35,7 +35,7 @@ export class ApiError extends Error {
     public code: string,
     public httpStatus: number,
     public severity: ErrorSeverity,
-    public originalError?: any
+    public originalError?: unknown
   ) {
     super(message);
     this.name = "ApiError";
@@ -52,7 +52,7 @@ export class ApiClient {
   }
 
   // Generic request method with centralized error handling
-  async request<T = any>(
+  async request<T = unknown>(
     endpoint: string,
     options: ApiRequestOptions = {}
   ): Promise<ApiResponse<T>> {
@@ -89,21 +89,12 @@ export class ApiClient {
       !endpoint.startsWith("/auth") && !endpoint.startsWith("/public");
     const token = this.getAuthToken();
     
-    console.log(`🔐 Auth Debug - Endpoint: ${endpoint}`);
-    console.log(`🔐 Auth Debug - Should include token: ${shouldIncludeToken}`);
-    console.log(`🔐 Auth Debug - Token exists: ${!!token}`);
-    console.log(`🔐 Auth Debug - Token preview: ${token ? token.substring(0, 20) + '...' : 'null'}`);
-    
     if (token && shouldIncludeToken) {
       headers["Authorization"] = `Bearer ${token}`;
-      console.log(`🔐 Auth Debug - Authorization header set`);
-    } else {
-      console.log(`🔐 Auth Debug - No authorization header set`);
     }
 
     try {
       console.log(`🌐 API Request: ${config.method || "GET"} ${url}`);
-      console.log("📤 Request Headers:", headers);
       if (body) {
         console.log("📤 Request Body:", body);
       }
@@ -134,7 +125,7 @@ export class ApiClient {
 
       // Handle error responses
       return await this.handleErrorResponse(response, skipErrorHandling);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("❌ API Request Failed:", error);
 
       if (skipErrorHandling) {
@@ -215,12 +206,12 @@ export class ApiClient {
   }
 
   // Handle network/connection errors
-  private handleNetworkError(error: any): ApiResponse {
+  private handleNetworkError(error: unknown): ApiResponse {
     let errorCode = "NETWORK_ERROR";
     let message =
       "Network connection failed. Please check your internet connection and try again.";
 
-    if (error.name === "AbortError") {
+    if (error instanceof Error && error.name === "AbortError") {
       errorCode = "TIMEOUT_ERROR";
       message = "Request timed out. Please try again.";
     }
@@ -249,7 +240,7 @@ export class ApiClient {
 
   async post<T>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     options?: Omit<ApiRequestOptions, "method" | "body">
   ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { ...options, method: "POST", body });
@@ -257,7 +248,7 @@ export class ApiClient {
 
   async put<T>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     options?: Omit<ApiRequestOptions, "method" | "body">
   ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { ...options, method: "PUT", body });

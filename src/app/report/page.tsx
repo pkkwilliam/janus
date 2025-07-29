@@ -111,9 +111,6 @@ function TranslationToggle({
     setTranslationError(null);
 
     try {
-      // Debug auth token before making request
-      translationApi.debugAuthToken();
-      
       // Use the translation API
       const response = await translationApi.translateContent(
         {

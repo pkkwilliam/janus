@@ -1,5 +1,6 @@
 import { apiClient, ApiResponse } from './client';
 import { API_ENDPOINTS, getApiBaseUrl } from './config';
+import { ErrorSeverity } from './errors';
 
 // Translation request structure
 export interface TranslationRequest {
@@ -92,35 +93,24 @@ export const translationApi = {
     targetLanguage: LanguageCode,
     sourceLanguage: LanguageCode = 'ENGLISH'
   ): Promise<ApiResponse<TranslationResponse>> {
-    console.log('🌍 Translation API - Starting translation request');
-    console.log('🌍 Translation API - Target language:', targetLanguage);
-    console.log('🌍 Translation API - Source language:', sourceLanguage);
-    console.log('🌍 Translation API - Endpoint:', API_ENDPOINTS.USER.TRANSLATE);
-    
     const requestBody: TranslationRequest = {
       content,
       targetLanguage,
       sourceLanguage,
     };
 
-    console.log('🌍 Translation API - Using apiClient.post');
-    
     // Double-check token before making request
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("authToken");
       if (!token) {
-        console.error('🚨 Translation API - No auth token found in localStorage!');
         throw new Error('Authentication token not found. Please log in again.');
       }
     }
     
-    const response = await apiClient.post<TranslationResponse>(
+    return await apiClient.post<TranslationResponse>(
       API_ENDPOINTS.USER.TRANSLATE,
       requestBody
     );
-    
-    console.log('🌍 Translation API - Response received:', response);
-    return response;
   },
 
   /**
@@ -162,14 +152,13 @@ export const translationApi = {
     targetLanguage: LanguageCode,
     sourceLanguage: LanguageCode = 'ENGLISH'
   ): Promise<ApiResponse<TranslationResponse>> {
-    console.log('🔧 Translation API - Using manual fetch method');
     
     if (typeof window === "undefined") {
       return {
         error: {
           code: 'SSR_ERROR',
           message: 'Translation not available during server-side rendering',
-          severity: 'error' as any,
+          severity: ErrorSeverity.ERROR,
         }
       };
     }
@@ -180,7 +169,7 @@ export const translationApi = {
         error: {
           code: 'AUTH_ERROR',
           message: 'Authentication token not found. Please log in again.',
-          severity: 'error' as any,
+          severity: ErrorSeverity.ERROR,
         }
       };
     }
@@ -217,7 +206,7 @@ export const translationApi = {
           error: {
             code: 'TRANSLATION_ERROR',
             message: `Translation failed: ${response.status} ${response.statusText}`,
-            severity: 'error' as any,
+            severity: ErrorSeverity.ERROR,
             httpStatus: response.status,
           }
         };
@@ -233,7 +222,7 @@ export const translationApi = {
         error: {
           code: 'NETWORK_ERROR',
           message: 'Network error during translation request',
-          severity: 'error' as any,
+          severity: ErrorSeverity.ERROR,
           originalError: error,
         }
       };
