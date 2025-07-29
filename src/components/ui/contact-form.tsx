@@ -90,7 +90,7 @@ export function ContactForm({ className, onSuccess }: ContactFormProps) {
         </motion.div>
         <h3 className="text-xl font-medium text-gray-900 mb-2">Message Sent!</h3>
         <p className="text-gray-600">
-          Thank you for reaching out. We'll get back to you soon!
+          Thank you for reaching out. We&rsquo;ll get back to you soon!
         </p>
       </motion.div>
     );

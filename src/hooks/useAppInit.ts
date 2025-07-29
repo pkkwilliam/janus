@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { authAPI } from '@/lib/api/auth';
 import { EmailVerifyResponse } from '@/lib/api/auth';
@@ -33,7 +33,7 @@ export function useAppInit(options: UseAppInitOptions = {}): UseAppInitReturn {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadUser = async (forceRefresh = false) => {
+  const loadUser = useCallback(async (forceRefresh = false) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -64,7 +64,7 @@ export function useAppInit(options: UseAppInitOptions = {}): UseAppInitReturn {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [requireAuth, redirectTo, router]);
 
   const refresh = async () => {
     await loadUser(true); // Force refresh
@@ -74,7 +74,7 @@ export function useAppInit(options: UseAppInitOptions = {}): UseAppInitReturn {
     // Always force refresh on initial load (site revisit)
     // The loadUserProfile method will use cache for subsequent calls within the same session
     loadUser(true);
-  }, []);
+  }, [loadUser]);
 
   return {
     user,

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Logo } from './logo';
-import { Mail, MessageCircle, Shield, FileText, Heart, Star, Moon, Sparkles } from 'lucide-react';
+import { Mail, MessageCircle, Shield, Heart, Star, Moon, Sparkles } from 'lucide-react';
 
 interface FooterLink {
   name: string;
@@ -89,7 +89,7 @@ export function Footer() {
                 
                 {/* Social Links */}
                 <div className="flex items-center gap-4">
-                  {socialLinks.map((social, index) => {
+                  {socialLinks.map((social) => {
                     const Icon = social.icon;
                     return (
                       <motion.a

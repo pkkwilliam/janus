@@ -5,9 +5,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Star, CheckCircle, X, User } from 'lucide-react';
 import { userAPI, GENDER_OPTIONS, UpdateUserProfileRequest } from '@/lib/api/user';
 
-interface ProfileFormData extends UpdateUserProfileRequest {
-  // All fields from UpdateUserProfileRequest are included
-}
+type ProfileFormData = UpdateUserProfileRequest;
 
 interface ProfileFormProps {
   onComplete: (profileData: ProfileFormData) => void;
@@ -219,7 +217,7 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
               <p className="text-red-500 text-xs">{errors.birthTime}</p>
             )}
             <p className="text-xs text-gray-500">
-              💡 Don't know your exact birth time? Check your birth certificate or ask family members
+              💡 Don&rsquo;t know your exact birth time? Check your birth certificate or ask family members
             </p>
           </div>
 
@@ -335,7 +333,7 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
               </label>
               <select
                 value={formData.gender || ''}
-                onChange={(e) => handleInputChange('gender', e.target.value as any)}
+                onChange={(e) => handleInputChange('gender', e.target.value as "MALE" | "FEMALE" | "PREFER_NOT_TO_SAY")}
                 className="w-full px-4 py-3 md:py-4 rounded-2xl border border-gray-200/50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-300 transition-all touch-manipulation"
                 style={{
                   background: "rgba(255, 255, 255, 0.8)",

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Home, User, Settings, Menu, X, LogIn, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Logo, LogoIcon } from './logo';
+import { Logo } from './logo';
 
 const publicNavigation = [
   { name: 'Pricing', href: '/pricing', icon: Star },

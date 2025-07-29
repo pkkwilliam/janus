@@ -158,7 +158,7 @@ export function SubscriptionSelector({
       {/* Features Included */}
       <div className="mb-8">
         <h4 className="text-lg font-medium text-gray-900 mb-4">
-          What's included:
+          What&rsquo;s included:
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {features.map((feature, index) => (

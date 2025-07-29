@@ -250,7 +250,7 @@ export default function Terms() {
               <h2 className="text-2xl font-semibold mb-4">Questions About These Terms?</h2>
               <p className="text-purple-200 mb-6 max-w-2xl mx-auto">
                 If you have any questions about these Terms of Service, please contact us. 
-                We're here to help clarify any concerns you may have.
+                We&rsquo;re here to help clarify any concerns you may have.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.a
