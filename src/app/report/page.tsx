@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { reportsApi, Report } from "@/lib/api/reports";
+import { translationApi, Language, SUPPORTED_LANGUAGES, LanguageCode } from "@/lib/api/translation";
 import { useAppInit } from "@/hooks/useAppInit";
 
 // Tooltip component for glossary terms
@@ -84,49 +85,13 @@ function GlossaryTooltip({
   );
 }
 
-// Translation types and interfaces
-interface TranslatedContent {
-  reading: string;
-  keyThemes: string[];
-  spiritualGuidance: string;
-  luckyGemstones?: string[];
-  luckyEnhancer?: string[];
-  glossary: Array<{
-    term: string;
-    meaning: string;
-    pinyin: string;
-  }>;
-}
-
-interface Language {
-  code: string;
-  name: string;
-  flag: string;
-}
-
-const SUPPORTED_LANGUAGES: Language[] = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'pt', name: 'Português', flag: '🇵🇹' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'ja', name: '日本語', flag: '🇯🇵' },
-  { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'zh-cn', name: '简体中文', flag: '🇨🇳' },
-  { code: 'zh-tw', name: '繁體中文', flag: '🇹🇼' },
-];
-
 // Translation toggle component
 function TranslationToggle({
   reportContent,
   onTranslationChange,
 }: {
   reportContent: any;
-  onTranslationChange: (content: any, language: string) => void;
+  onTranslationChange: (content: any, language: LanguageCode) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<Language>(SUPPORTED_LANGUAGES[0]);
@@ -134,9 +99,9 @@ function TranslationToggle({
   const [translationError, setTranslationError] = useState<string | null>(null);
 
   const translateContent = async (targetLanguage: Language) => {
-    if (targetLanguage.code === 'en') {
+    if (targetLanguage.code === 'ENGLISH') {
       // If English is selected, use original content
-      onTranslationChange(reportContent, 'en');
+      onTranslationChange(reportContent, 'ENGLISH');
       setCurrentLanguage(targetLanguage);
       setIsOpen(false);
       return;
@@ -146,38 +111,72 @@ function TranslationToggle({
     setTranslationError(null);
 
     try {
-      // This would call your backend translation API
-      const response = await fetch('/api/translate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Debug auth token before making request
+      translationApi.debugAuthToken();
+      
+      // Use the translation API
+      const response = await translationApi.translateContent(
+        {
+          reading: reportContent.reading,
+          keyThemes: reportContent.keyThemes,
+          spiritualGuidance: reportContent.spiritualGuidance,
+          luckyGemstones: reportContent.luckyGemstones || [],
+          luckyEnhancer: reportContent.luckyEnhancer || [],
+          glossary: reportContent.glossary.map((item: any) => ({
+            term: item.term,
+            meaning: item.meaning,
+            pinyin: item.pinyin,
+          })),
         },
-        body: JSON.stringify({
-          content: {
-            reading: reportContent.reading,
-            keyThemes: reportContent.keyThemes,
-            spiritualGuidance: reportContent.spiritualGuidance,
-            luckyGemstones: reportContent.luckyGemstones || [],
-            luckyEnhancer: reportContent.luckyEnhancer || [],
-            glossary: reportContent.glossary.map((item: any) => ({
-              term: item.term,
-              meaning: item.meaning,
-              pinyin: item.pinyin,
-            })),
-          },
-          targetLanguage: targetLanguage.code,
-          sourceLanguage: 'en', // Assuming original content is in English
-        }),
-      });
+        targetLanguage.code as LanguageCode,
+        'ENGLISH'
+      );
 
-      if (!response.ok) {
-        throw new Error('Translation failed');
+      if (response.error) {
+        // If it's an auth error, try the manual method
+        if (response.error.code === 'AUTH_ERROR' || response.error.httpStatus === 401 || response.error.httpStatus === 403) {
+          console.log('🔄 Trying manual fetch method due to auth error...');
+          const manualResponse = await translationApi.translateContentManual(
+            {
+              reading: reportContent.reading,
+              keyThemes: reportContent.keyThemes,
+              spiritualGuidance: reportContent.spiritualGuidance,
+              luckyGemstones: reportContent.luckyGemstones || [],
+              luckyEnhancer: reportContent.luckyEnhancer || [],
+              glossary: reportContent.glossary.map((item: any) => ({
+                term: item.term,
+                meaning: item.meaning,
+                pinyin: item.pinyin,
+              })),
+            },
+            targetLanguage.code as LanguageCode,
+            'ENGLISH'
+          );
+
+          if (manualResponse.error) {
+            throw new Error(manualResponse.error.message);
+          }
+
+          if (manualResponse.data?.success) {
+            onTranslationChange(manualResponse.data.translatedContent, targetLanguage.code);
+            setCurrentLanguage(targetLanguage);
+            setIsOpen(false);
+            return;
+          } else {
+            throw new Error(manualResponse.data?.error || 'Translation failed');
+          }
+        } else {
+          throw new Error(response.error.message);
+        }
       }
 
-      const translatedData = await response.json();
-      onTranslationChange(translatedData.translatedContent, targetLanguage.code);
-      setCurrentLanguage(targetLanguage);
-      setIsOpen(false);
+      if (response.data?.success) {
+        onTranslationChange(response.data.translatedContent, targetLanguage.code);
+        setCurrentLanguage(targetLanguage);
+        setIsOpen(false);
+      } else {
+        throw new Error(response.data?.error || 'Translation failed');
+      }
     } catch (error) {
       console.error('Translation error:', error);
       setTranslationError('Translation failed. Please try again.');
@@ -542,20 +541,20 @@ export default function ReportPage() {
   
   // Translation state
   const [translatedContent, setTranslatedContent] = useState<any>(null);
-  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('ENGLISH');
 
   // Get report ID from URL search params
   const reportId = searchParams.get("id");
 
   // Handle translation changes
-  const handleTranslationChange = (content: any, language: string) => {
+  const handleTranslationChange = (content: any, language: LanguageCode) => {
     setTranslatedContent(content);
     setCurrentLanguage(language);
   };
 
   // Get current content (original or translated)
   const getCurrentContent = () => {
-    return currentLanguage === 'en' || !translatedContent ? report?.reportContent : translatedContent;
+    return currentLanguage === 'ENGLISH' || !translatedContent ? report?.reportContent : translatedContent;
   };
 
   // Load report data

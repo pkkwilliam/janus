@@ -55,6 +55,7 @@ export const API_ENDPOINTS = {
     REPORTS_PAGINATION: "/user/report/v1/pagination",
     REPORT_DETAIL: "/user/report/v1/:id",
     REPORT_GENERATE: "/user/report/v1/:type/generate",
+    TRANSLATE: "/user/translate/v1",
   },
   REPORTS: {
     LIST: "/reports/v1/list",

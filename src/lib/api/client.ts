@@ -88,12 +88,22 @@ export class ApiClient {
     const shouldIncludeToken =
       !endpoint.startsWith("/auth") && !endpoint.startsWith("/public");
     const token = this.getAuthToken();
+    
+    console.log(`🔐 Auth Debug - Endpoint: ${endpoint}`);
+    console.log(`🔐 Auth Debug - Should include token: ${shouldIncludeToken}`);
+    console.log(`🔐 Auth Debug - Token exists: ${!!token}`);
+    console.log(`🔐 Auth Debug - Token preview: ${token ? token.substring(0, 20) + '...' : 'null'}`);
+    
     if (token && shouldIncludeToken) {
       headers["Authorization"] = `Bearer ${token}`;
+      console.log(`🔐 Auth Debug - Authorization header set`);
+    } else {
+      console.log(`🔐 Auth Debug - No authorization header set`);
     }
 
     try {
       console.log(`🌐 API Request: ${config.method || "GET"} ${url}`);
+      console.log("📤 Request Headers:", headers);
       if (body) {
         console.log("📤 Request Body:", body);
       }
