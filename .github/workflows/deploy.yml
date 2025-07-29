@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["feature/2.0"]
+    branches: ["main"]
 
   repository_dispatch:
     types: [mystical-app-trigger]
