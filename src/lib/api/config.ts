@@ -4,7 +4,7 @@ export const API_CONFIG = {
     baseURL: "http://localhost:8080",
   },
   production: {
-    baseURL: "https://janus-api.bitcode-lab.com",
+    baseURL: "https://api.fortune-cookie.me",
   },
 };
 
