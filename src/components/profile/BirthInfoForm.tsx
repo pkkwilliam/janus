@@ -27,6 +27,8 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<ProfileFormData>>({});
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const validateForm = () => {
     const newErrors: Partial<ProfileFormData> = {};
@@ -79,6 +81,7 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
     }
 
     setIsLoading(true);
+    setApiError(null); // Clear previous errors
     
     // Format the data for the API call
     const apiData: UpdateUserProfileRequest = {
@@ -95,9 +98,9 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
     const response = await userAPI.updateProfile(apiData);
     
     if (response.error) {
-      // Set error state - could add a general error state to the form
+      // Set error state
       console.error('Profile update failed:', response.error.message);
-      // For now, we'll just log it - you could add a general error state to show this
+      setApiError(response.error.message || 'Failed to update profile. Please try again.');
       setIsLoading(false);
       return;
     }
@@ -106,8 +109,19 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
     if (response.data) {
       console.log('✅ Profile updated successfully');
       
+      // Show success message
+      setShowSuccess(true);
+      
       // Profile data is automatically cached by userAPI.updateProfile
-      onComplete(formData);
+      if (isSettingsMode) {
+        // In settings mode, show success and delay callback
+        setTimeout(() => {
+          onComplete(formData);
+        }, 1500);
+      } else {
+        // In other modes, call immediately
+        onComplete(formData);
+      }
     }
     
     setIsLoading(false);
@@ -118,6 +132,10 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
+    }
+    // Clear API error when user makes changes
+    if (apiError) {
+      setApiError(null);
     }
   };
 
@@ -158,8 +176,58 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
           </p>
         </div>
 
+        {/* Success Message */}
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6"
+          >
+            <div
+              className="p-4 rounded-2xl border border-green-200/50 text-center"
+              style={{
+                background: "rgba(34, 197, 94, 0.1)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div className="flex items-center justify-center gap-2 text-green-700">
+                <CheckCircle className="w-5 h-5" />
+                <span className="font-medium">Profile updated successfully!</span>
+              </div>
+              {isSettingsMode && (
+                <p className="text-sm text-green-600 mt-1">
+                  Returning to dashboard...
+                </p>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Error Message */}
+        {apiError && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6"
+          >
+            <div
+              className="p-4 rounded-2xl border border-red-200/50 text-center"
+              style={{
+                background: "rgba(239, 68, 68, 0.1)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div className="flex items-center justify-center gap-2 text-red-700">
+                <X className="w-5 h-5" />
+                <span className="font-medium">{apiError}</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+          <fieldset disabled={showSuccess} className={showSuccess ? 'opacity-75' : ''}>
           {/* Birth Information Section - Priority */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-4">
@@ -375,6 +443,7 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
               </div>
             </div>
           </div>
+          </fieldset>
 
           {/* Buttons */}
           <div className="flex flex-col-reverse md:flex-row gap-3 pt-4">
@@ -397,19 +466,28 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
             
             <motion.button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || showSuccess}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="flex-1 flex items-center justify-center gap-2 py-3 md:py-4 rounded-2xl text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
               style={{
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                boxShadow: "0 8px 24px rgba(102, 126, 234, 0.3)",
+                background: showSuccess 
+                  ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" 
+                  : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                boxShadow: showSuccess 
+                  ? "0 8px 24px rgba(16, 185, 129, 0.3)" 
+                  : "0 8px 24px rgba(102, 126, 234, 0.3)",
               }}
             >
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   Saving...
+                </>
+              ) : showSuccess ? (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  Saved Successfully!
                 </>
               ) : (
                 <>

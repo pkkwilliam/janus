@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Logo } from './logo';
 import { Mail, MessageCircle, Shield, Heart, Star, Moon, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { authAPI } from '@/lib/api/auth';
 
 interface FooterLink {
   name: string;
@@ -61,6 +63,43 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check authentication state and user subscription status
+  useEffect(() => {
+    const checkAuthState = async () => {
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('authToken');
+        const loggedIn = !!token;
+        setIsLoggedIn(loggedIn);
+
+        // If logged in, fetch user data to check subscription status
+        if (loggedIn) {
+          try {
+            const userData = await authAPI.loadUserProfile();
+            setHasActiveSubscription(userData?.hasActiveSubscription || false);
+          } catch (error) {
+            console.error('Failed to load user profile in footer:', error);
+            setHasActiveSubscription(false);
+          }
+        } else {
+          setHasActiveSubscription(false);
+        }
+      }
+    };
+
+    checkAuthState();
+  }, []);
+
+  // Filter footer sections based on subscription status
+  const filteredFooterSections = footerSections.map(section => ({
+    ...section,
+    links: section.links.filter(link => 
+      !(link.name === 'Pricing' && hasActiveSubscription)
+    )
+  }));
+
   return (
     <footer className="relative bg-gradient-to-b from-gray-50 to-gray-100 mt-20">
       {/* Decorative background elements */}
@@ -114,7 +153,7 @@ export function Footer() {
             </div>
 
             {/* Footer Links */}
-            {footerSections.map((section, sectionIndex) => (
+            {filteredFooterSections.map((section, sectionIndex) => (
               <motion.div
                 key={section.title}
                 initial={{ opacity: 0, y: 20 }}

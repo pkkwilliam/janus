@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Home, User, Settings, Menu, X, LogIn, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Logo } from './logo';
+import { authAPI } from '@/lib/api/auth';
 
 const publicNavigation = [
   { name: 'Pricing', href: '/pricing', icon: Star },
@@ -21,13 +22,28 @@ export function Navigation() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
 
-  // Check authentication state based on JWT token presence
+  // Check authentication state and user subscription status
   useEffect(() => {
-    const checkAuthState = () => {
+    const checkAuthState = async () => {
       if (typeof window !== 'undefined') {
         const token = localStorage.getItem('authToken');
-        setIsLoggedIn(!!token);
+        const loggedIn = !!token;
+        setIsLoggedIn(loggedIn);
+
+        // If logged in, fetch user data to check subscription status
+        if (loggedIn) {
+          try {
+            const userData = await authAPI.loadUserProfile();
+            setHasActiveSubscription(userData?.hasActiveSubscription || false);
+          } catch (error) {
+            console.error('Failed to load user profile in navigation:', error);
+            setHasActiveSubscription(false);
+          }
+        } else {
+          setHasActiveSubscription(false);
+        }
       }
     };
 
@@ -40,6 +56,11 @@ export function Navigation() {
       window.removeEventListener('storage', checkAuthState);
     };
   }, []);
+
+  // Filter navigation items based on subscription status
+  const filteredPublicNavigation = publicNavigation.filter(item => 
+    !(item.name === 'Pricing' && hasActiveSubscription)
+  );
 
   return (
     <>
@@ -60,7 +81,7 @@ export function Navigation() {
             
             <div className="flex items-center space-x-2">
               {/* Public navigation (always visible) */}
-              {publicNavigation.map((item) => {
+              {filteredPublicNavigation.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
                 
@@ -217,7 +238,7 @@ export function Navigation() {
         >
           <div className="px-4 py-6 space-y-2">
             {[
-              ...publicNavigation,
+              ...filteredPublicNavigation,
               ...(isLoggedIn ? privateNavigation : [{ name: 'Login', href: '/auth/login', icon: LogIn }])
             ].map((item) => {
               const Icon = item.icon;
@@ -260,13 +281,16 @@ export function Navigation() {
             WebkitBackdropFilter: 'blur(20px)',
           }}
         >
-          <div className={cn(
-            "grid h-16",
-            isLoggedIn ? "grid-cols-4" : "grid-cols-3"
-          )}>
+          <div className="grid h-16" style={{
+            gridTemplateColumns: `repeat(${[
+              { name: 'Home', href: '/', icon: Home },
+              ...filteredPublicNavigation,
+              ...(isLoggedIn ? privateNavigation : [{ name: 'Login', href: '/auth/login', icon: LogIn }])
+            ].length}, minmax(0, 1fr))`
+          }}>
             {[
               { name: 'Home', href: '/', icon: Home },
-              ...publicNavigation,
+              ...filteredPublicNavigation,
               ...(isLoggedIn ? privateNavigation : [{ name: 'Login', href: '/auth/login', icon: LogIn }])
             ].map((item) => {
               const Icon = item.icon;

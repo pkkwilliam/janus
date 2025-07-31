@@ -68,6 +68,7 @@ export interface EmailVerifyResponse {
   birthCountry?: string | null;
   totalReports?: number;
   averageScore?: number;
+  hasActiveSubscription?: boolean;
   joinDate?: string | null;
   createTime: string;
   updateTime: string;

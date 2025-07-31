@@ -15,6 +15,9 @@ export default function SettingsPage() {
     // Profile update is already handled in the form component and auto-cached
     // Refresh user data to get the updated profile
     refresh();
+    
+    // Navigate back to dashboard after successful update
+    router.push("/dashboard");
   };
 
   // Show loading state while user data is being loaded
