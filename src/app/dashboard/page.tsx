@@ -487,6 +487,15 @@ function DashboardContent() {
     (report) => reportFilter === "ALL" || report.type === reportFilter
   );
 
+  // Calculate total reports and average score from actual reports data
+  const totalReports = reports.length;
+  const averageScore = reports.length > 0 
+    ? Math.round(reports.reduce((sum, report) => {
+        const score = parseInt(report.reportContent?.fortuneScore || '0');
+        return sum + score;
+      }, 0) / reports.length)
+    : 0;
+
   const handleProfileComplete = (profileData: any) => {
     // Profile update is already handled in the form component and auto-cached
     // Just close the form and refresh user data from cache
@@ -714,7 +723,7 @@ function DashboardContent() {
             <Calendar className="w-6 h-6 text-white" />
           </div>
           <div className="text-2xl font-light text-gray-900 mb-1">
-            {user.totalReports}
+            {totalReports}
           </div>
           <div className="text-sm text-gray-600">Total Reports</div>
         </div>
@@ -730,7 +739,7 @@ function DashboardContent() {
             <TrendingUp className="w-6 h-6 text-white" />
           </div>
           <div className="text-2xl font-light text-gray-900 mb-1">
-            {user?.averageScore ?? 0}%
+            {averageScore}%
           </div>
           <div className="text-sm text-gray-600">Average Fortune</div>
         </div>
@@ -946,38 +955,7 @@ function DashboardContent() {
         <h2 className="text-2xl font-light text-gray-900 mb-6">
           Quick Actions
         </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
-            className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)",
-              backdropFilter: "blur(20px)",
-            }}
-            onClick={() => {
-              if (needsProfileCompletion) {
-                setShowBirthInfoForm(true);
-              } else {
-                // TODO: Navigate to new reading request
-                console.log("Request new reading");
-              }
-            }}
-          >
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <Star className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {needsProfileCompletion
-                ? "Complete Profile First"
-                : "Request New Reading"}
-            </h3>
-            <p className="text-sm text-gray-600">
-              {needsProfileCompletion
-                ? "Add personal and birth info for accurate readings"
-                : "Get your personalized fortune analysis"}
-            </p>
-          </div>
-
+        <div className="grid md:grid-cols-2 gap-6">
           <div
             className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
             style={{
@@ -985,6 +963,7 @@ function DashboardContent() {
                 "linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%)",
               backdropFilter: "blur(20px)",
             }}
+            onClick={() => setShowBirthInfoForm(true)}
           >
             <div className="p-4 rounded-2xl bg-gradient-to-r from-pink-500 to-red-500 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
               <User className="w-8 h-8 text-white" />
