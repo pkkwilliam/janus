@@ -739,10 +739,10 @@ function DashboardContent() {
               <div className="flex items-center gap-3">
                 <div className="text-right">
                   <div className="text-sm font-medium text-purple-600">
-                    Starting at $9.99/month
+                    Starting at $2.00/month
                   </div>
                   <div className="text-xs text-gray-500">
-                    7-day free trial
+                    Affordable premium features
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />

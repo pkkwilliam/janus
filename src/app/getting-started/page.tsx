@@ -36,9 +36,9 @@ const steps = [
     description: 'Select a plan that fits your spiritual journey and unlock unlimited readings.',
     details: [
       'Browse monthly and yearly subscription options',
-      'Yearly plans offer 80% savings',
+      'Yearly plans offer significant savings',
       'All plans include unlimited readings',
-      'Start with our free trial readings'
+      'Affordable pricing starting at $2/month'
     ]
   },
   {

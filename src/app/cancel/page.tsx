@@ -75,7 +75,7 @@ function CancelContent() {
             </div>
 
             {/* Action buttons */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               <Link href="/pricing">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -92,7 +92,7 @@ function CancelContent() {
                 </motion.button>
               </Link>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 <Link href="/dashboard">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
