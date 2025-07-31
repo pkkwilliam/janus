@@ -757,7 +757,7 @@ function DashboardContent() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className={`grid ${user.hasActiveSubscription ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-6 mb-8`}
+        className="grid md:grid-cols-3 gap-6 mb-8"
       >
         <div
           className="p-6 rounded-3xl border border-white/30 text-center"
@@ -809,24 +809,6 @@ function DashboardContent() {
           </div>
           <div className="text-sm text-gray-600">Days Journey</div>
         </div>
-
-        {user.hasActiveSubscription && (
-          <div
-            className="p-6 rounded-3xl border border-white/30 text-center"
-            style={{
-              background: "rgba(255, 255, 255, 0.4)",
-              backdropFilter: "blur(20px)",
-            }}
-          >
-            <div className="p-3 rounded-2xl bg-gradient-to-r from-purple-500 to-indigo-600 w-fit mx-auto mb-4">
-              <Crown className="w-6 h-6 text-white" />
-            </div>
-            <div className="text-2xl font-light text-gray-900 mb-1">
-              Premium
-            </div>
-            <div className="text-sm text-gray-600">Active Subscription</div>
-          </div>
-        )}
       </motion.div>
 
       {/* Reports */}
