@@ -14,15 +14,21 @@ const publicNavigation = [
 ];
 
 const privateNavigation = [
-  { name: 'Profile', href: '/profile', icon: User },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function Navigation() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Initialize based on localStorage if available
+    if (typeof window !== 'undefined') {
+      return !!localStorage.getItem('authToken');
+    }
+    return false;
+  });
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // Check authentication state and user subscription status
   useEffect(() => {
@@ -45,6 +51,7 @@ export function Navigation() {
           setHasActiveSubscription(false);
         }
       }
+      setIsAuthLoading(false);
     };
 
     checkAuthState();
@@ -150,8 +157,8 @@ export function Navigation() {
                     </motion.div>
                   );
                 })
-              ) : (
-                // Show login button when not logged in
+              ) : !isAuthLoading ? (
+                // Show login button only when not logged in and not loading
                 <motion.div className="relative">
                   <Link
                     href="/auth/login"
@@ -165,7 +172,7 @@ export function Navigation() {
                     <span>Login</span>
                   </Link>
                 </motion.div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -188,7 +195,7 @@ export function Navigation() {
             </Link>
             
             <div className="flex items-center space-x-2">
-              {!isLoggedIn && (
+              {!isLoggedIn && !isAuthLoading && (
                 <Link
                   href="/auth/login"
                   className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium text-white transition-all duration-200"
@@ -239,7 +246,7 @@ export function Navigation() {
           <div className="px-4 py-6 space-y-2">
             {[
               ...filteredPublicNavigation,
-              ...(isLoggedIn ? privateNavigation : [{ name: 'Login', href: '/auth/login', icon: LogIn }])
+              ...(isLoggedIn ? privateNavigation : (!isAuthLoading ? [{ name: 'Login', href: '/auth/login', icon: LogIn }] : []))
             ].map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -285,13 +292,13 @@ export function Navigation() {
             gridTemplateColumns: `repeat(${[
               { name: 'Home', href: '/', icon: Home },
               ...filteredPublicNavigation,
-              ...(isLoggedIn ? privateNavigation : [{ name: 'Login', href: '/auth/login', icon: LogIn }])
+              ...(isLoggedIn ? privateNavigation : (!isAuthLoading ? [{ name: 'Login', href: '/auth/login', icon: LogIn }] : []))
             ].length}, minmax(0, 1fr))`
           }}>
             {[
               { name: 'Home', href: '/', icon: Home },
               ...filteredPublicNavigation,
-              ...(isLoggedIn ? privateNavigation : [{ name: 'Login', href: '/auth/login', icon: LogIn }])
+              ...(isLoggedIn ? privateNavigation : (!isAuthLoading ? [{ name: 'Login', href: '/auth/login', icon: LogIn }] : []))
             ].map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
