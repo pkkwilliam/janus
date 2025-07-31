@@ -42,6 +42,7 @@ export interface CreateOrderResponse {
   totalAmount: number;
   updateTime: string | null;
   userId: string;
+  requestUrl?: string; // Payment URL is now returned directly from order creation
 }
 
 export interface RequestSubscriptionPaymentResponse {
@@ -97,6 +98,7 @@ export interface OrdersPaginationResponse {
 }
 
 export const subscriptionApi = {
+  // Deprecated - use createOrder instead
   async createSubscription(
     request: SubscriptionRequest
   ): Promise<ApiResponse<SubscriptionResponse>> {
@@ -106,6 +108,7 @@ export const subscriptionApi = {
     );
   },
 
+  // Deprecated - use getOrderDetail instead  
   async getSubscriptionStatus(
     transactionId: string
   ): Promise<ApiResponse<SubscriptionStatusResponse>> {
@@ -116,7 +119,7 @@ export const subscriptionApi = {
     return apiClient.get<SubscriptionStatusResponse>(endpoint);
   },
 
-  // New two-step payment methods
+  // Order-based methods
   async createOrder(
     request: CreateOrderRequest
   ): Promise<ApiResponse<CreateOrderResponse>> {
@@ -129,11 +132,22 @@ export const subscriptionApi = {
   async requestSubscriptionPayment(
     orderId: string
   ): Promise<ApiResponse<RequestSubscriptionPaymentResponse>> {
-    const endpoint = API_ENDPOINTS.PAYMENT.REQUEST_SUBSCRIPTION_PAYMENT.replace(
+    const endpoint = API_ENDPOINTS.PAYMENT.ORDER_PAYMENT.replace(
       ":orderId",
       orderId
     );
     return apiClient.get<RequestSubscriptionPaymentResponse>(endpoint);
+  },
+
+  // Get specific order details
+  async getOrderDetail(
+    orderId: string
+  ): Promise<ApiResponse<Order>> {
+    const endpoint = API_ENDPOINTS.PAYMENT.ORDER_DETAIL.replace(
+      ":orderId",
+      orderId
+    );
+    return apiClient.get<Order>(endpoint);
   },
 
   // Orders pagination

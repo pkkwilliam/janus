@@ -24,20 +24,43 @@ export function SubscriptionSelector({
     onSubscriptionStart?.();
 
     try {
-      const response = await subscriptionApi.createSubscription({
-        autoRenew: true,
-        subscribeType: selectedPlan,
+      // Create order - payment URL is now returned directly
+      const productId = selectedPlan === "YEAR" ? "p-1" : "p-2";
+      const orderResponse = await subscriptionApi.createOrder({
+        buyerSubscription: {
+          productId,
+        },
       });
 
-      if (response.error) {
-        setError(response.error.message);
+      if (orderResponse.error) {
+        setError(orderResponse.error.message);
         return;
       }
 
-      if (response.data?.requestUrl) {
-        window.location.href = response.data.requestUrl;
+      if (!orderResponse.data) {
+        setError("Failed to create order");
+        return;
+      }
+
+      if (orderResponse.data.requestUrl) {
+        // New flow: payment URL returned directly from order creation
+        window.location.href = orderResponse.data.requestUrl;
       } else {
-        setError("Failed to create subscription session");
+        // Fallback: use the old two-step flow if requestUrl not provided
+        const paymentResponse = await subscriptionApi.requestSubscriptionPayment(
+          orderResponse.data.id
+        );
+
+        if (paymentResponse.error) {
+          setError(paymentResponse.error.message);
+          return;
+        }
+
+        if (paymentResponse.data?.requestUrl) {
+          window.location.href = paymentResponse.data.requestUrl;
+        } else {
+          setError("Failed to create payment session");
+        }
       }
     } catch (err) {
       setError("An unexpected error occurred");

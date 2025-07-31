@@ -45,21 +45,26 @@ export default function PricingPage() {
         throw new Error("Failed to create order");
       }
 
-      // Step 2: Request subscription payment
-      const paymentResponse = await subscriptionApi.requestSubscriptionPayment(
-        orderResponse.data.id
-      );
+      if (orderResponse.data.requestUrl) {
+        // New flow: payment URL returned directly from order creation
+        window.location.href = orderResponse.data.requestUrl;
+      } else {
+        // Fallback: use the old two-step flow if requestUrl not provided
+        const paymentResponse = await subscriptionApi.requestSubscriptionPayment(
+          orderResponse.data.id
+        );
 
-      if (paymentResponse.error) {
-        throw new Error(paymentResponse.error.message);
+        if (paymentResponse.error) {
+          throw new Error(paymentResponse.error.message);
+        }
+
+        if (!paymentResponse.data) {
+          throw new Error("Failed to get payment URL");
+        }
+
+        // Redirect to Stripe checkout
+        window.location.href = paymentResponse.data.requestUrl;
       }
-
-      if (!paymentResponse.data) {
-        throw new Error("Failed to get payment URL");
-      }
-
-      // Redirect to Stripe checkout
-      window.location.href = paymentResponse.data.requestUrl;
     } catch (error) {
       console.error("Payment process failed:", error);
       alert("Payment process failed. Please try again.");

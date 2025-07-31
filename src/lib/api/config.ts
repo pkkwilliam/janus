@@ -66,11 +66,14 @@ export const API_ENDPOINTS = {
     FEEDBACK: "/public/feedback/v1",
   },
   PAYMENT: {
+    CREATE_ORDER: "/user/order/v1",
+    ORDER_DETAIL: "/user/order/v1/:orderId",
+    ORDER_PAGINATION: "/user/order/v1/pagination",
+    ORDER_PAYMENT: "/user/payment/v1/requestSubscriptionPayment/:orderId",
+    // Deprecated endpoints - remove after migration
     CREATE_SUBSCRIPTION: "/user/payment/v1",
     SUBSCRIPTION_STATUS: "/user/payment/v1/:transactionId/status",
-    CREATE_ORDER: "/user/order/v1",
     REQUEST_SUBSCRIPTION_PAYMENT:
       "/user/payment/v1/requestSubscriptionPayment/:orderId",
-    ORDER_PAGINATION: "/user/order/v1/pagination",
   },
 } as const;

@@ -13,6 +13,7 @@ function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const transactionId = searchParams.get("transactionId");
+  const orderId = searchParams.get("orderId");
 
   const [status, setStatus] = useState<PaymentStatus>("checking");
   const [error, setError] = useState<string | null>(null);
@@ -20,61 +21,101 @@ function SuccessContent() {
   const maxChecks = 20; // Prevent infinite polling
 
   useEffect(() => {
-    if (!transactionId) {
+    if (!transactionId && !orderId) {
       setStatus("error");
-      setError("Transaction ID is missing");
+      setError("Transaction ID or Order ID is missing");
       return;
     }
 
     checkPaymentStatus();
-  }, [transactionId]);
+  }, [transactionId, orderId]);
 
   const checkPaymentStatus = async () => {
-    if (!transactionId || checkCount >= maxChecks) {
-      if (checkCount >= maxChecks) {
-        setStatus("error");
-        setError("Payment verification timed out. Please contact support.");
-      }
+    if (checkCount >= maxChecks) {
+      setStatus("error");
+      setError("Payment verification timed out. Please contact support.");
       return;
     }
 
     try {
-      const response = await subscriptionApi.getSubscriptionStatus(
-        transactionId
-      );
+      if (orderId) {
+        // New flow: Check order status
+        const response = await subscriptionApi.getOrderDetail(orderId);
 
-      if (response.error) {
-        console.error("Status check error:", response.error);
-        setStatus("error");
-        setError(response.error.message);
-        return;
-      }
-
-      const result = response.data?.result;
-      const interval = response.data?.nextQueryInterval;
-
-      switch (result) {
-        case "SUCCESS":
-          setStatus("success");
-          break;
-        case "FAIL":
-          setStatus("failed");
-          // Redirect to cancel page after a brief delay
-          setTimeout(() => {
-            router.push(`/cancel?transactionId=${transactionId}`);
-          }, 2000);
-          break;
-        case "REPEAT_QUERY":
-          setCheckCount((prev) => prev + 1);
-          // Schedule next check
-          const intervalSeconds = parseInt(interval || "3");
-          setTimeout(() => {
-            checkPaymentStatus();
-          }, intervalSeconds * 1000);
-          break;
-        default:
+        if (response.error) {
+          console.error("Order status check error:", response.error);
           setStatus("error");
-          setError("Unknown payment status");
+          setError(response.error.message);
+          return;
+        }
+
+        const orderStatus = response.data?.status;
+
+        switch (orderStatus) {
+          case "PAID":
+            setStatus("success");
+            break;
+          case "CANCELLED":
+          case "REFUNDED": 
+            setStatus("failed");
+            // Redirect to cancel page after a brief delay
+            setTimeout(() => {
+              router.push(`/cancel?orderId=${orderId}`);
+            }, 2000);
+            break;
+          case "PAYMENT_PENDING":
+            setCheckCount((prev) => prev + 1);
+            // Schedule next check in 3 seconds
+            setTimeout(() => {
+              checkPaymentStatus();
+            }, 3000);
+            break;
+          default:
+            setStatus("error");
+            setError("Unknown order status");
+        }
+      } else if (transactionId) {
+        // Legacy flow: Check subscription status
+        const response = await subscriptionApi.getSubscriptionStatus(
+          transactionId
+        );
+
+        if (response.error) {
+          console.error("Status check error:", response.error);
+          setStatus("error");
+          setError(response.error.message);
+          return;
+        }
+
+        const result = response.data?.result;
+        const interval = response.data?.nextQueryInterval;
+
+        switch (result) {
+          case "SUCCESS":
+            setStatus("success");
+            break;
+          case "FAIL":
+            setStatus("failed");
+            // Redirect to cancel page after a brief delay
+            setTimeout(() => {
+              router.push(`/cancel?transactionId=${transactionId}`);
+            }, 2000);
+            break;
+          case "REPEAT_QUERY":
+            setCheckCount((prev) => prev + 1);
+            // Schedule next check
+            const intervalSeconds = parseInt(interval || "3");
+            setTimeout(() => {
+              checkPaymentStatus();
+            }, intervalSeconds * 1000);
+            break;
+          default:
+            setStatus("error");
+            setError("Unknown payment status");
+        }
+      } else {
+        setStatus("error");
+        setError("No transaction ID or order ID provided");
       }
     } catch (err) {
       console.error("Payment status check failed:", err);
@@ -83,7 +124,7 @@ function SuccessContent() {
     }
   };
 
-  if (!transactionId) {
+  if (!transactionId && !orderId) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
@@ -92,7 +133,7 @@ function SuccessContent() {
             Invalid Request
           </h1>
           <p className="text-gray-600 mb-6">
-            Transaction ID is missing from the URL.
+            Transaction ID or Order ID is missing from the URL.
           </p>
           <Link href="/dashboard">
             <motion.button
@@ -219,7 +260,7 @@ function SuccessContent() {
             </div>
 
             <p className="text-sm text-gray-500 text-center">
-              Transaction ID: {transactionId}
+              {orderId ? `Order ID: ${orderId}` : `Transaction ID: ${transactionId}`}
             </p>
           </motion.div>
         )}
@@ -303,9 +344,9 @@ function SuccessContent() {
               </div>
             </div>
 
-            {transactionId && (
+            {(transactionId || orderId) && (
               <p className="text-sm text-gray-500 text-center">
-                Transaction ID: {transactionId}
+                {orderId ? `Order ID: ${orderId}` : `Transaction ID: ${transactionId}`}
               </p>
             )}
           </motion.div>
