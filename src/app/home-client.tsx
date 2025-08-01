@@ -234,7 +234,7 @@ export default function HomeClient() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Mystical Features for Modern Souls
+              Fortune Cookie Features for Your Journey
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Discover the perfect blend of ancient wisdom and cutting-edge technology
@@ -454,10 +454,10 @@ function FeatureCard({ feature, index }: { feature: (typeof features)[0]; index:
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
       className="group relative p-8 rounded-3xl cursor-pointer"
       style={{
-        background: "rgba(255, 255, 255, 0.6)",
+        background: "rgba(255, 255, 255, 0.8)",
         backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255, 255, 255, 0.3)",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+        border: "1px solid rgba(255, 255, 255, 0.4)",
+        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15)",
       }}
     >
       <div className="space-y-4">
@@ -479,7 +479,7 @@ function FeatureCard({ feature, index }: { feature: (typeof features)[0]; index:
         </p>
       </div>
 
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-pink-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-pink-400/10 opacity-50 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
     </motion.div>
   );
 }

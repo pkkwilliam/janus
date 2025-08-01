@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Logo } from './logo';
+import { LogoSvg } from './logo';
 import { Mail, MessageCircle, Shield, Heart, Star, Moon, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { authAPI } from '@/lib/api/auth';
@@ -121,10 +121,10 @@ export function Footer() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <Logo size="lg" className="mb-6" />
+                <LogoSvg size="lg" className="mb-6" />
                 <p className="text-gray-600 text-sm leading-relaxed mb-6 max-w-sm">
-                  Discover your inner wisdom through personalized readings, mindful practices, 
-                  and spiritual insights designed for the modern woman.
+                  Discover your fortune with personalized readings, lucky insights, 
+                  and ancient wisdom designed for your spiritual journey.
                 </p>
                 
                 {/* Social Links */}
@@ -229,7 +229,7 @@ export function Footer() {
               className="flex items-center gap-2 text-sm text-gray-500"
             >
               <Moon className="w-4 h-4" />
-              <span>Mystical insights for modern souls</span>
+              <span>Fortune insights for your journey</span>
               <Sparkles className="w-4 h-4" />
             </motion.div>
           </div>
