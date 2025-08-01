@@ -84,69 +84,7 @@ export default function LoginPage() {
     setIsLoading(false);
   };
 
-  const handleGoogleOAuth = async () => {
-    setIsLoading(true);
-    setError("");
-    
-    // TODO: Replace with actual Google OAuth implementation
-    // For now, simulate the OAuth flow
-    console.log('Initiating Google OAuth...');
-    
-    // Simulate OAuth flow
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // TODO: When implementing real OAuth, use:
-    // const response = await authAPI.googleOAuth(googleToken);
-    // if (response.error) {
-    //   setError(response.error.message);
-    //   setIsLoading(false);
-    //   return;
-    // }
-    // 
-    // // Success case - cache user profile data
-    // if (response.data && response.data.user) {
-    //   localStorage.setItem('userData', JSON.stringify(response.data.user));
-    //   localStorage.setItem('userId', response.data.user.sid);
-    //   localStorage.setItem('userEmail', response.data.user.email);
-    //   console.log('✅ Google OAuth successful, user profile cached');
-    // }
-    
-    // For now, just redirect to dashboard
-    router.push("/dashboard");
-    setIsLoading(false);
-  };
-
-  const handleFacebookOAuth = async () => {
-    setIsLoading(true);
-    setError("");
-    
-    // TODO: Replace with actual Facebook OAuth implementation
-    // For now, simulate the OAuth flow
-    console.log('Initiating Facebook OAuth...');
-    
-    // Simulate OAuth flow
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // TODO: When implementing real OAuth, use:
-    // const response = await authAPI.facebookOAuth(facebookToken);
-    // if (response.error) {
-    //   setError(response.error.message);
-    //   setIsLoading(false);
-    //   return;
-    // }
-    // 
-    // // Success case - cache user profile data
-    // if (response.data && response.data.user) {
-    //   localStorage.setItem('userData', JSON.stringify(response.data.user));
-    //   localStorage.setItem('userId', response.data.user.sid);
-    //   localStorage.setItem('userEmail', response.data.user.email);
-    //   console.log('✅ Facebook OAuth successful, user profile cached');
-    // }
-    
-    // For now, just redirect to dashboard
-    router.push("/dashboard");
-    setIsLoading(false);
-  };
+  // Note: Google and Facebook OAuth will be implemented in future updates
 
   const handleVerifyCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -238,28 +176,23 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* OAuth Options */}
+          {/* OAuth Options - Coming Soon */}
           <div className="space-y-4 mb-6">
-            {/* Google OAuth */}
-            <motion.button
-              type="button"
+            {/* Google OAuth - Disabled */}
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              whileHover={{ scale: 1.02, y: -1 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleGoogleOAuth}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-gray-200/50 text-gray-700 font-medium transition-all hover:border-gray-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                background: "rgba(255, 255, 255, 0.9)",
-                backdropFilter: "blur(10px)",
-              }}
+              className="relative"
             >
-              {isLoading ? (
-                <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-              ) : (
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <div
+                className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-gray-200/30 text-gray-400 font-medium opacity-60 cursor-not-allowed"
+                style={{
+                  background: "rgba(255, 255, 255, 0.5)",
+                  backdropFilter: "blur(10px)",
+                }}
+              >
+                <svg className="w-5 h-5 opacity-50" viewBox="0 0 24 24">
                   <path
                     fill="#4285F4"
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -277,35 +210,48 @@ export default function LoginPage() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-              )}
-              {isLoading ? "Connecting..." : "Continue with Google"}
-            </motion.button>
+                Continue with Google
+              </div>
+              <div className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                Coming Soon
+              </div>
+            </motion.div>
 
-            {/* Facebook OAuth */}
-            <motion.button
-              type="button"
+            {/* Facebook OAuth - Disabled */}
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              whileHover={{ scale: 1.02, y: -1 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleFacebookOAuth}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-gray-200/50 text-white font-medium transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                background: "linear-gradient(135deg, #1877F2 0%, #42A5F5 100%)",
-                backdropFilter: "blur(10px)",
-              }}
+              className="relative"
             >
-              {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <div
+                className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-gray-200/30 text-gray-400 font-medium opacity-60 cursor-not-allowed"
+                style={{
+                  background: "rgba(24, 119, 242, 0.1)",
+                  backdropFilter: "blur(10px)",
+                }}
+              >
+                <svg className="w-5 h-5 opacity-50" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
-              )}
-              {isLoading ? "Connecting..." : "Continue with Facebook"}
-            </motion.button>
+                Continue with Facebook
+              </div>
+              <div className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                Coming Soon
+              </div>
+            </motion.div>
+
+            {/* Coming Soon Notice */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-center py-2"
+            >
+              <p className="text-xs text-gray-500 font-light">
+                Google & Facebook login will be available soon!
+              </p>
+            </motion.div>
 
             {/* Divider */}
             <div className="relative flex items-center justify-center py-4">

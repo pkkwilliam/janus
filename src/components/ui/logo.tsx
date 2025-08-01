@@ -166,3 +166,50 @@ export function Logo({ className, size = 'md', showText = true, animate = true }
 export function LogoIcon({ className, size = 'md' }: { className?: string; size?: 'sm' | 'md' | 'lg' | 'xl' }) {
   return <Logo className={className} size={size} showText={false} animate={false} />;
 }
+
+// SVG logo version using uploaded logo.svg file
+export function LogoSvg({ className, size = 'md', showText = true }: { 
+  className?: string; 
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  showText?: boolean;
+}) {
+  const sizeClasses = {
+    sm: 'h-6 w-6',
+    md: 'h-8 w-8',
+    lg: 'h-12 w-12',
+    xl: 'h-16 w-16'
+  };
+
+  const textSizeClasses = {
+    sm: 'text-lg',
+    md: 'text-xl',
+    lg: 'text-2xl',
+    xl: 'text-3xl'
+  };
+
+  return (
+    <div className={cn("flex items-center gap-3", className)}>
+      <img 
+        src="/logo.svg" 
+        alt="Fortune Cookie Logo" 
+        className={cn("object-contain", sizeClasses[size])}
+      />
+      
+      {showText && (
+        <div className="flex flex-col">
+          <span 
+            className={cn(
+              "font-light tracking-tight text-gray-900",
+              textSizeClasses[size]
+            )}
+          >
+            Fortune Cookie
+          </span>
+          <span className="text-xs text-gray-500 font-light tracking-wider -mt-1">
+            .me
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}

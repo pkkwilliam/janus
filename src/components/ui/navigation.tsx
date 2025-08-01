@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Home, User, Settings, Menu, X, LogIn, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Logo } from './logo';
+import { LogoSvg } from './logo';
 import { authAPI } from '@/lib/api/auth';
 import { userAPI } from '@/lib/api/user';
 
@@ -84,7 +84,7 @@ export function Navigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex justify-between items-center h-16">
             <Link href="/">
-              <Logo size="sm" />
+              <LogoSvg size="sm" />
             </Link>
             
             <div className="flex items-center space-x-2">
@@ -192,7 +192,7 @@ export function Navigation() {
         >
           <div className="px-4 h-16 flex items-center justify-between">
             <Link href="/">
-              <Logo size="sm" />
+              <LogoSvg size="sm" />
             </Link>
             
             <div className="flex items-center space-x-2">
