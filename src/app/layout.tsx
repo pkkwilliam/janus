@@ -15,32 +15,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mystical - Your Spiritual Journey Awaits",
-  description: "Discover your mystical path with personalized readings, meditation guides, and spiritual insights. Connect with your inner wisdom through our intuitive mobile experience.",
-  keywords: "mystical, spiritual, meditation, tarot, astrology, wellness, mindfulness, personal growth",
-  authors: [{ name: "Mystical App" }],
-  creator: "Mystical App",
-  publisher: "Mystical App",
+  title: "Fortune Cookie - Your Fortune Awaits",
+  description: "Discover your fortune with personalized readings, lucky insights, and ancient wisdom. Get your daily fortune cookie and unlock your destiny through our intuitive experience.",
+  keywords: "fortune cookie, fortune telling, lucky numbers, daily fortune, personalized readings, ancient wisdom, destiny, luck, spiritual guidance",
+  authors: [{ name: "Fortune Cookie" }],
+  creator: "Fortune Cookie",
+  publisher: "Fortune Cookie",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://mystical-app.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://fortune-cookie.me'),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Mystical - Your Spiritual Journey Awaits",
-    description: "Discover your mystical path with personalized readings, meditation guides, and spiritual insights.",
+    title: "Fortune Cookie - Your Fortune Awaits",
+    description: "Discover your fortune with personalized readings, lucky insights, and ancient wisdom. Get your daily fortune cookie and unlock your destiny.",
     url: "/",
-    siteName: "Mystical App",
+    siteName: "Fortune Cookie",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Mystical App - Spiritual Journey",
+        alt: "Fortune Cookie - Your Fortune Awaits",
       },
     ],
     locale: "en_US",
@@ -48,8 +48,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mystical - Your Spiritual Journey Awaits",
-    description: "Discover your mystical path with personalized readings, meditation guides, and spiritual insights.",
+    title: "Fortune Cookie - Your Fortune Awaits",
+    description: "Discover your fortune with personalized readings, lucky insights, and ancient wisdom. Get your daily fortune cookie.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -80,7 +80,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#007AFF" />
+        <meta name="theme-color" content="#F59E0B" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
