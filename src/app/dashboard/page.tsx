@@ -374,6 +374,8 @@ function DashboardContent() {
   const [currentPage, setCurrentPage] = useState(0);
   const [generatingReport, setGeneratingReport] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [planLoading, setPlanLoading] = useState(true);
   const dashboardPageSize = 6;
 
   useEffect(() => {
@@ -385,8 +387,22 @@ function DashboardContent() {
   useEffect(() => {
     if (user) {
       loadReports();
+      loadPlanInfo();
     }
   }, [user]);
+
+  const loadPlanInfo = async () => {
+    setPlanLoading(true);
+    try {
+      const planResponse = await userAPI.getPlan();
+      setHasActiveSubscription(planResponse.data?.hasActiveSubscription || false);
+    } catch (error) {
+      console.error('Failed to load plan information:', error);
+      setHasActiveSubscription(false);
+    } finally {
+      setPlanLoading(false);
+    }
+  };
 
   const loadReports = async (reset = true) => {
     if (reset) {
@@ -706,7 +722,7 @@ function DashboardContent() {
       )}
 
       {/* Subscription Upgrade Banner */}
-      {!user.hasActiveSubscription && (
+      {!planLoading && !hasActiveSubscription && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1002,7 +1018,7 @@ function DashboardContent() {
         <h2 className="text-2xl font-light text-gray-900 mb-6">
           Quick Actions
         </h2>
-        <div className={`grid ${user.hasActiveSubscription ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+        <div className={`grid ${hasActiveSubscription ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
           <div
             className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
             style={{
@@ -1023,7 +1039,7 @@ function DashboardContent() {
             </p>
           </div>
 
-          {!user.hasActiveSubscription && (
+          {!hasActiveSubscription && (
             <div
               className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
               style={{

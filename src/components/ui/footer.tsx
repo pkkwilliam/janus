@@ -6,6 +6,7 @@ import { Logo } from './logo';
 import { Mail, MessageCircle, Shield, Heart, Star, Moon, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { authAPI } from '@/lib/api/auth';
+import { userAPI } from '@/lib/api/user';
 
 interface FooterLink {
   name: string;
@@ -74,13 +75,13 @@ export function Footer() {
         const loggedIn = !!token;
         setIsLoggedIn(loggedIn);
 
-        // If logged in, fetch user data to check subscription status
+        // If logged in, fetch plan data to check subscription status
         if (loggedIn) {
           try {
-            const userData = await authAPI.loadUserProfile();
-            setHasActiveSubscription(userData?.hasActiveSubscription || false);
+            const planResponse = await userAPI.getPlan();
+            setHasActiveSubscription(planResponse.data?.hasActiveSubscription || false);
           } catch (error) {
-            console.error('Failed to load user profile in footer:', error);
+            console.error('Failed to load user plan in footer:', error);
             setHasActiveSubscription(false);
           }
         } else {

@@ -8,6 +8,7 @@ import { Home, User, Settings, Menu, X, LogIn, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Logo } from './logo';
 import { authAPI } from '@/lib/api/auth';
+import { userAPI } from '@/lib/api/user';
 
 const publicNavigation = [
   { name: 'Pricing', href: '/pricing', icon: Star },
@@ -38,13 +39,13 @@ export function Navigation() {
         const loggedIn = !!token;
         setIsLoggedIn(loggedIn);
 
-        // If logged in, fetch user data to check subscription status
+        // If logged in, fetch plan data to check subscription status
         if (loggedIn) {
           try {
-            const userData = await authAPI.loadUserProfile();
-            setHasActiveSubscription(userData?.hasActiveSubscription || false);
+            const planResponse = await userAPI.getPlan();
+            setHasActiveSubscription(planResponse.data?.hasActiveSubscription || false);
           } catch (error) {
-            console.error('Failed to load user profile in navigation:', error);
+            console.error('Failed to load user plan in navigation:', error);
             setHasActiveSubscription(false);
           }
         } else {

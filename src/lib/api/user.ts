@@ -13,6 +13,14 @@ export interface UpdateUserProfileRequest {
   birthCountry?: string;
 }
 
+// Plan response interface
+export interface PlanResponse {
+  hasActiveSubscription: boolean;
+  planType?: string;
+  expirationDate?: string;
+  status?: string;
+}
+
 // Gender options for the UI
 export const GENDER_OPTIONS = [
   { value: "MALE", label: "Male" },
@@ -52,6 +60,14 @@ export const userAPI = {
    */
   async getProfile(): Promise<ApiResponse<EmailVerifyResponse>> {
     return apiClient.get<EmailVerifyResponse>(API_ENDPOINTS.USER.GET_PROFILE);
+  },
+
+  /**
+   * Get user plan information
+   * @returns Promise with user plan data or error
+   */
+  async getPlan(): Promise<ApiResponse<PlanResponse>> {
+    return apiClient.get<PlanResponse>(API_ENDPOINTS.USER.GET_PLAN);
   },
 
   /**
