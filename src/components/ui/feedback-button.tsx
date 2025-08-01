@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Star, Heart } from 'lucide-react';
-import { feedbackAPI } from '@/lib/api/feedback';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle, X, Send, Star, Heart } from "lucide-react";
+import { feedbackAPI } from "@/lib/api/feedback";
 
 interface FeedbackButtonProps {
   className?: string;
@@ -11,58 +11,58 @@ interface FeedbackButtonProps {
 
 export function FeedbackButton({ className }: FeedbackButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState("");
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!feedback.trim()) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
       // Prepare data for existing API
-      const subject = rating > 0 
-        ? `User Feedback (${rating} ${rating === 1 ? 'star' : 'stars'})`
-        : 'User Feedback';
-      
+      const subject =
+        rating > 0
+          ? `User Feedback (${rating} ${rating === 1 ? "star" : "stars"})`
+          : "User Feedback";
+
       const feedbackData = {
-        email: email || 'anonymous@fortune-cookie.me',
+        email: email || "anonymous@fortune-cookie.me",
         subject,
-        content: feedback.trim()
+        content: feedback.trim(),
       };
 
       // Submit using existing API
       const response = await feedbackAPI.submitFeedback(feedbackData);
-      
+
       if (response.success) {
         setIsSubmitted(true);
-        
+
         // Reset form after a delay
         setTimeout(() => {
           setIsOpen(false);
-          setFeedback('');
+          setFeedback("");
           setRating(0);
-          setEmail('');
+          setEmail("");
           setIsSubmitted(false);
         }, 2000);
       } else {
-        throw new Error(response.message || 'Failed to submit feedback');
+        throw new Error(response.message || "Failed to submit feedback");
       }
-      
     } catch (error) {
-      console.error('Failed to submit feedback:', error);
+      console.error("Failed to submit feedback:", error);
       // Still show success to user to avoid breaking UX
       setIsSubmitted(true);
       setTimeout(() => {
         setIsOpen(false);
-        setFeedback('');
+        setFeedback("");
         setRating(0);
-        setEmail('');
+        setEmail("");
         setIsSubmitted(false);
       }, 2000);
     } finally {
@@ -82,19 +82,19 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 z-40 p-3 rounded-full shadow-lg border border-white/20 group ${className}`}
         style={{
-          background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-          backdropFilter: 'blur(20px)',
-          boxShadow: '0 8px 32px rgba(245, 158, 11, 0.3)',
+          background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 8px 32px rgba(245, 158, 11, 0.3)",
         }}
         title="Send Feedback"
       >
         <MessageCircle className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
-        
+
         {/* Pulse effect */}
-        <div 
+        <div
           className="absolute inset-0 rounded-full animate-ping opacity-20"
           style={{
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+            background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
           }}
         />
       </motion.button>
@@ -107,7 +107,7 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
             onClick={() => setIsOpen(false)}
           >
             <motion.div
@@ -117,18 +117,19 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-md rounded-3xl border border-white/30 p-6"
               style={{
-                background: 'rgba(255, 255, 255, 0.95)',
-                backdropFilter: 'blur(20px)',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
+                background: "rgba(255, 255, 255, 0.95)",
+                backdropFilter: "blur(20px)",
+                boxShadow: "0 20px 60px rgba(0, 0, 0, 0.2)",
               }}
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div 
+                  <div
                     className="p-2 rounded-xl"
                     style={{
-                      background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                      background:
+                        "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
                     }}
                   >
                     <Heart className="w-5 h-5 text-white" />
@@ -168,8 +169,8 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
                           <Star
                             className={`w-6 h-6 ${
                               star <= rating
-                                ? 'text-yellow-400 fill-current'
-                                : 'text-gray-300'
+                                ? "text-yellow-400 fill-current"
+                                : "text-gray-300"
                             } hover:text-yellow-400 transition-colors`}
                           />
                         </button>
@@ -186,10 +187,10 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
                       value={feedback}
                       onChange={(e) => setFeedback(e.target.value)}
                       placeholder="Tell us what you think! Suggestions, bugs, or just say hi..."
-                      className="w-full p-3 rounded-2xl border border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-300 transition-all"
+                      className="w-full p-3 rounded-2xl border text-gray-600 border-gray-200 resize-none focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-300 transition-all"
                       style={{
-                        background: 'rgba(255, 255, 255, 0.8)',
-                        backdropFilter: 'blur(10px)',
+                        background: "rgba(255, 255, 255, 0.8)",
+                        backdropFilter: "blur(10px)",
                       }}
                       rows={4}
                       required
@@ -206,10 +207,10 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="your@email.com (if you want a response)"
-                      className="w-full p-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-300 transition-all"
+                      className="w-full p-3 rounded-2xl border text-gray-600 border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-300 transition-all"
                       style={{
-                        background: 'rgba(255, 255, 255, 0.8)',
-                        backdropFilter: 'blur(10px)',
+                        background: "rgba(255, 255, 255, 0.8)",
+                        backdropFilter: "blur(10px)",
                       }}
                     />
                   </div>
@@ -222,8 +223,9 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-3 rounded-2xl text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     style={{
-                      background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                      boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
+                      background:
+                        "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
+                      boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
                     }}
                   >
                     {isSubmitting ? (
@@ -245,10 +247,11 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
                   animate={{ scale: 1, opacity: 1 }}
                   className="text-center py-8"
                 >
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
                     style={{
-                      background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                      background:
+                        "linear-gradient(135deg, #10B981 0%, #059669 100%)",
                     }}
                   >
                     <Heart className="w-8 h-8 text-white" />
@@ -257,7 +260,8 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
                     Thank You! 🥠
                   </h3>
                   <p className="text-gray-800">
-                    Your feedback helps us make Fortune Cookie better for everyone!
+                    Your feedback helps us make Fortune Cookie better for
+                    everyone!
                   </p>
                 </motion.div>
               )}
