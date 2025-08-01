@@ -27,6 +27,7 @@ import { authAPI } from "@/lib/api/auth";
 import { apiClient } from "@/lib/api/client";
 import { reportsApi, Report } from "@/lib/api/reports";
 import { useAppInit } from "@/hooks/useAppInit";
+import { FeedbackButton } from "@/components/ui/feedback-button";
 
 // Mock user data
 const mockUser = {
@@ -1083,6 +1084,9 @@ function DashboardContent() {
           </Link>
         </div>
       </motion.div>
+
+      {/* Feedback Button */}
+      <FeedbackButton />
     </div>
   );
 }
