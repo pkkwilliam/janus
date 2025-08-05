@@ -95,6 +95,17 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Fortune Cookie" />
         <meta name="msapplication-TileColor" content="#F59E0B" />
         <meta name="msapplication-config" content="none" />
+        
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17439671337"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17439671337');
+          `
+        }} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen text-gray-900 overflow-x-hidden`}
