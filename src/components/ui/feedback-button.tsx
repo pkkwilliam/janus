@@ -40,7 +40,7 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
       // Submit using existing API
       const response = await feedbackAPI.submitFeedback(feedbackData);
 
-      if (response.success) {
+      if (response.data?.success) {
         setIsSubmitted(true);
 
         // Reset form after a delay
@@ -51,8 +51,10 @@ export function FeedbackButton({ className }: FeedbackButtonProps) {
           setEmail("");
           setIsSubmitted(false);
         }, 2000);
+      } else if (response.error) {
+        throw new Error(response.error.message);
       } else {
-        throw new Error(response.message || "Failed to submit feedback");
+        throw new Error("Failed to submit feedback");
       }
     } catch (error) {
       console.error("Failed to submit feedback:", error);

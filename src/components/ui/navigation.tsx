@@ -280,64 +280,6 @@ export function Navigation() {
           </div>
         </motion.div>
 
-        {/* Bottom Navigation */}
-        <nav 
-          className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/20"
-          style={{
-            background: 'rgba(255, 255, 255, 0.9)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-          }}
-        >
-          <div className="grid h-16" style={{
-            gridTemplateColumns: `repeat(${[
-              { name: 'Home', href: '/', icon: Home },
-              ...filteredPublicNavigation,
-              ...(isLoggedIn ? privateNavigation : (!isAuthLoading ? [{ name: 'Login', href: '/auth/login', icon: LogIn }] : []))
-            ].length}, minmax(0, 1fr))`
-          }}>
-            {[
-              { name: 'Home', href: '/', icon: Home },
-              ...filteredPublicNavigation,
-              ...(isLoggedIn ? privateNavigation : (!isAuthLoading ? [{ name: 'Login', href: '/auth/login', icon: LogIn }] : []))
-            ].map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    'relative flex flex-col items-center justify-center space-y-1 transition-all duration-200',
-                    isActive 
-                      ? 'text-indigo-600' 
-                      : 'text-gray-400 hover:text-gray-600'
-                  )}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </motion.div>
-                  <span className="text-xs font-medium">{item.name}</span>
-                  
-                  {isActive && (
-                    <motion.div
-                      layoutId="bottomActiveTab"
-                      className="absolute top-2 left-1/2 w-6 h-1 rounded-full -translate-x-1/2"
-                      style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      }}
-                      transition={{ type: "spring", duration: 0.5 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        </nav>
       </div>
 
       {/* Mobile Menu Backdrop */}
