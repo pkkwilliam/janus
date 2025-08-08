@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "./config";
 import { apiClient, ApiResponse } from "./client";
-import { EmailVerifyResponse } from "./auth";
+import { UserProfileResponse } from "./auth";
 
 // User profile update request interface
 export interface UpdateUserProfileRequest {
@@ -37,8 +37,8 @@ export const userAPI = {
    */
   async updateProfile(
     profileData: UpdateUserProfileRequest
-  ): Promise<ApiResponse<EmailVerifyResponse>> {
-    const response = await apiClient.put<EmailVerifyResponse>(
+  ): Promise<ApiResponse<UserProfileResponse>> {
+    const response = await apiClient.put<UserProfileResponse>(
       API_ENDPOINTS.USER.UPDATE_PROFILE,
       profileData
     );
@@ -58,8 +58,8 @@ export const userAPI = {
    * Get user profile
    * @returns Promise with user profile data or error
    */
-  async getProfile(): Promise<ApiResponse<EmailVerifyResponse>> {
-    return apiClient.get<EmailVerifyResponse>(API_ENDPOINTS.USER.GET_PROFILE);
+  async getProfile(): Promise<ApiResponse<UserProfileResponse>> {
+    return apiClient.get<UserProfileResponse>(API_ENDPOINTS.USER.GET_PROFILE);
   },
 
   /**
@@ -75,7 +75,7 @@ export const userAPI = {
    * @param user - User data to check
    * @returns Object indicating what's missing
    */
-  checkProfileCompleteness(user: Partial<EmailVerifyResponse>) {
+  checkProfileCompleteness(user: Partial<UserProfileResponse>) {
     const missing = {
       personalInfo: {
         firstName: !user.firstName,
@@ -114,16 +114,16 @@ export const userAPI = {
    * @param user - User data
    * @returns Completion percentage (0-100) - prioritizes birth information
    */
-  getProfileCompleteness(user: Partial<EmailVerifyResponse>): number {
+  getProfileCompleteness(user: Partial<UserProfileResponse>): number {
     // Birth information fields (higher priority)
     const birthFields = ["birthDate", "birthTime", "birthCity", "birthCountry"];
     const personalFields = ["firstName", "lastName", "gender"];
 
     const completedBirthFields = birthFields.filter(
-      (field) => user[field as keyof EmailVerifyResponse]
+      (field) => user[field as keyof UserProfileResponse]
     );
     const completedPersonalFields = personalFields.filter(
-      (field) => user[field as keyof EmailVerifyResponse]
+      (field) => user[field as keyof UserProfileResponse]
     );
 
     // Birth info accounts for 70% of completion, personal info for 30%

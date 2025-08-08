@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { authAPI } from '@/lib/api/auth';
-import { EmailVerifyResponse } from '@/lib/api/auth';
+import { UserProfileResponse } from '@/lib/api/auth';
 
 interface UseAppInitOptions {
   requireAuth?: boolean; // If true, redirect to login when no user
@@ -11,7 +11,7 @@ interface UseAppInitOptions {
 }
 
 interface UseAppInitReturn {
-  user: EmailVerifyResponse | null;
+  user: UserProfileResponse | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string | null;
@@ -29,7 +29,7 @@ export function useAppInit(options: UseAppInitOptions = {}): UseAppInitReturn {
   const { requireAuth = false, redirectTo = '/auth/login' } = options;
   const router = useRouter();
   
-  const [user, setUser] = useState<EmailVerifyResponse | null>(null);
+  const [user, setUser] = useState<UserProfileResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -44,8 +44,8 @@ export const API_ENDPOINTS = {
   AUTH: {
     EMAIL_REQUEST_VERIFICATION: "/login/v1/email_request_verification",
     EMAIL_VERIFY: "/login/v1/email_verify",
-    GOOGLE_OAUTH: "/login/v1/google_oauth",
-    FACEBOOK_OAUTH: "/login/v1/facebook_oauth",
+    OAUTH_LOGIN: "/oauth/v1/login_user",
+    OAUTH_GET_REQUEST_URL: "/oauth/v1/get_request_url",
   },
   USER: {
     PROFILE: "/user/v1/profile",

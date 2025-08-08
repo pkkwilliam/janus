@@ -3,14 +3,14 @@ import { apiClient, ApiResponse } from "./client";
 
 // In-memory cache for user profile (cleared on page refresh/revisit)
 class UserProfileCache {
-  private userProfile: EmailVerifyResponse | null = null;
+  private userProfile: UserProfileResponse | null = null;
   private isLoading = false;
 
-  setProfile(profile: EmailVerifyResponse | null): void {
+  setProfile(profile: UserProfileResponse | null): void {
     this.userProfile = profile;
   }
 
-  getProfile(): EmailVerifyResponse | null {
+  getProfile(): UserProfileResponse | null {
     return this.userProfile;
   }
 
@@ -48,7 +48,7 @@ export interface EmailVerifyRequest {
   oneTimePassword: string;
 }
 
-export interface EmailVerifyResponse {
+export interface UserProfileResponse {
   sid: string;
   username: string;
   email: string;
@@ -79,10 +79,14 @@ export interface EmailVerifyResponse {
   authorities: string[];
 }
 
-export interface OAuthResponse {
-  // Define OAuth response structure as needed
-  token?: string;
-  user?: Partial<EmailVerifyResponse>;
+export interface OAuthLoginRequest {
+  provider: "GOOGLE" | "FACEBOOK";
+  authorizationCode: string;
+}
+
+
+export interface OAuthUrlResponse {
+  oauthUrl: string;
 }
 
 // Auth API functions - now much cleaner with centralized error handling
@@ -110,33 +114,59 @@ export const authAPI = {
   async verifyEmail(
     email: string,
     oneTimePassword: string
-  ): Promise<ApiResponse<EmailVerifyResponse>> {
-    return apiClient.post<EmailVerifyResponse>(
+  ): Promise<ApiResponse<UserProfileResponse>> {
+    return apiClient.post<UserProfileResponse>(
       API_ENDPOINTS.AUTH.EMAIL_VERIFY,
       { email, oneTimePassword }
     );
   },
 
   /**
-   * Google OAuth authentication
-   * @param token - Google OAuth token
-   * @returns Promise with authentication response or error
+   * Get OAuth request URL for provider
+   * @param provider - OAuth provider ("GOOGLE" or "FACEBOOK")
+   * @returns Promise with OAuth URL or error
    */
-  async googleOAuth(token: string): Promise<ApiResponse<OAuthResponse>> {
-    return apiClient.post<OAuthResponse>(API_ENDPOINTS.AUTH.GOOGLE_OAUTH, {
-      token,
-    });
+  async getOAuthRequestUrl(
+    provider: "GOOGLE" | "FACEBOOK"
+  ): Promise<ApiResponse<OAuthUrlResponse>> {
+    return apiClient.get<OAuthUrlResponse>(
+      `${API_ENDPOINTS.AUTH.OAUTH_GET_REQUEST_URL}/${provider}`
+    );
   },
 
   /**
-   * Facebook OAuth authentication
-   * @param token - Facebook OAuth token
+   * OAuth authentication for Google and Facebook
+   * @param provider - OAuth provider ("GOOGLE" or "FACEBOOK")
+   * @param authorizationCode - Authorization code from OAuth provider
    * @returns Promise with authentication response or error
    */
-  async facebookOAuth(token: string): Promise<ApiResponse<OAuthResponse>> {
-    return apiClient.post<OAuthResponse>(API_ENDPOINTS.AUTH.FACEBOOK_OAUTH, {
-      token,
-    });
+  async oauthLogin(
+    provider: "GOOGLE" | "FACEBOOK",
+    authorizationCode: string
+  ): Promise<ApiResponse<UserProfileResponse>> {
+    return apiClient.post<UserProfileResponse>(
+      API_ENDPOINTS.AUTH.OAUTH_LOGIN,
+      {
+        provider,
+        authorizationCode,
+      }
+    );
+  },
+
+  /**
+   * Handle successful login (both email verification and OAuth)
+   * @param userData - User data from authentication response
+   */
+  handleLoginSuccess(userData: UserProfileResponse): void {
+    // Store user data in localStorage (unified format)
+    localStorage.setItem('userData', JSON.stringify(userData));
+    localStorage.setItem('userId', userData.sid);
+    localStorage.setItem('userEmail', userData.email);
+    
+    // Cache user data in memory
+    userProfileCache.setProfile(userData);
+    
+    console.log('✅ User login successful - data stored and cached');
   },
 
   /**
@@ -165,7 +195,7 @@ export const authAPI = {
    * Get current user data from memory cache
    * @returns User data or null
    */
-  getCurrentUser(): EmailVerifyResponse | null {
+  getCurrentUser(): UserProfileResponse | null {
     return userProfileCache.getProfile();
   },
 
@@ -173,7 +203,7 @@ export const authAPI = {
    * Update user data in memory cache
    * @param userData - Updated user data
    */
-  updateUserData(userData: Partial<EmailVerifyResponse>): void {
+  updateUserData(userData: Partial<UserProfileResponse>): void {
     const currentUser = this.getCurrentUser();
     if (currentUser) {
       const updatedUser = { ...currentUser, ...userData };
@@ -191,7 +221,7 @@ export const authAPI = {
    */
   async loadUserProfile(
     forceRefresh = false
-  ): Promise<EmailVerifyResponse | null> {
+  ): Promise<UserProfileResponse | null> {
     // Check if running in browser
     if (typeof window === "undefined") return null;
 

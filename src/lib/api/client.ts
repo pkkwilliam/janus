@@ -185,7 +185,7 @@ export class ApiClient {
   // Extract JWT token from response headers for auth endpoints
   private handleTokenExtraction(endpoint: string, response: Response): void {
     // Only extract tokens from authentication endpoints
-    const authEndpoints = ["/login/v1/email_verify"];
+    const authEndpoints = ["/login/v1/email_verify", "/oauth/v1/login_user"];
     const isAuthEndpoint = authEndpoints.some((authPath) =>
       endpoint.includes(authPath)
     );

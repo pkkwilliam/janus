@@ -3,23 +3,54 @@
 import { motion } from "framer-motion";
 import { Sparkles, Moon, Stars, Heart, Zap, CheckCircle, ArrowRight, Clock, Users, Shield, Play, Quote } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAppInit } from "@/hooks/useAppInit";
 import { ContactForm } from "@/components/ui/contact-form";
 import { Footer } from "@/components/ui/footer";
+import { authAPI } from "@/lib/api/auth";
 
 export default function HomeClient() {
   const { user, isLoading, isAuthenticated } = useAppInit({ requireAuth: false });
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showContactForm, setShowContactForm] = useState(false);
+  const [oauthProcessing, setOauthProcessing] = useState(false);
+
+  // Handle OAuth redirect on homepage
+  useEffect(() => {
+    const handleOAuthRedirect = async () => {
+      // Check if we have OAuth parameters from Google
+      const code = searchParams.get('code');
+      const error = searchParams.get('error');
+      
+      if (code || error) {
+        setOauthProcessing(true);
+        
+        // Redirect to callback page with all OAuth parameters
+        const params = new URLSearchParams();
+        searchParams.forEach((value, key) => {
+          params.set(key, value);
+        });
+        
+        // Add provider parameter for Google since backend response indicates Google OAuth
+        if (code) {
+          params.set('provider', 'google');
+        }
+        
+        router.replace(`/auth/callback?${params.toString()}`);
+      }
+    };
+
+    handleOAuthRedirect();
+  }, [searchParams, router]);
 
   // Automatically redirect logged-in users to dashboard
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (!isLoading && isAuthenticated && !oauthProcessing) {
       router.push("/dashboard");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, oauthProcessing]);
 
   return (
     <div className="relative min-h-screen">
