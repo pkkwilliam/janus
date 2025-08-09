@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
@@ -17,7 +17,8 @@ interface OAuthCallbackParams {
   expires_in?: string;
 }
 
-export default function OAuthCallbackPage() {
+// Component that handles OAuth callback logic with useSearchParams
+function OAuthCallbackHandler() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('Processing authentication...');
   const [debugInfo, setDebugInfo] = useState<string>('');
@@ -59,7 +60,7 @@ export default function OAuthCallbackPage() {
 
         // Set debug info for backend team
         const debugParams = Object.entries(params)
-          .filter(([_, value]) => value !== undefined)
+          .filter(([, value]) => value !== undefined)
           .map(([key, value]) => `${key}: ${value}`)
           .join('\n');
         
@@ -285,5 +286,21 @@ export default function OAuthCallbackPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+// Main component that wraps the OAuth handler in Suspense
+export default function OAuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <OAuthCallbackHandler />
+    </Suspense>
   );
 }

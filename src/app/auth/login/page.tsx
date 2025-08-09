@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { Mail, Phone, Lock, Sparkles } from "lucide-react";
+import { Mail, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { authAPI } from "@/lib/api/auth";
 

@@ -1,20 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Moon, Stars, Heart, Zap, CheckCircle, ArrowRight, Clock, Users, Shield, Play, Quote } from "lucide-react";
+import { Sparkles, Moon, Stars, Heart, ArrowRight, Clock, Users, Shield, Play, Quote } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useAppInit } from "@/hooks/useAppInit";
 import { ContactForm } from "@/components/ui/contact-form";
 import { Footer } from "@/components/ui/footer";
-import { authAPI } from "@/lib/api/auth";
 
-export default function HomeClient() {
-  const { user, isLoading, isAuthenticated } = useAppInit({ requireAuth: false });
+// Component to handle OAuth redirect logic
+function OAuthRedirectHandler() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showContactForm, setShowContactForm] = useState(false);
   const [oauthProcessing, setOauthProcessing] = useState(false);
 
   // Handle OAuth redirect on homepage
@@ -45,15 +43,28 @@ export default function HomeClient() {
     handleOAuthRedirect();
   }, [searchParams, router]);
 
+  return null; // This component doesn't render anything
+}
+
+export default function HomeClient() {
+  const { user, isLoading, isAuthenticated } = useAppInit({ requireAuth: false });
+  const router = useRouter();
+  const [showContactForm, setShowContactForm] = useState(false);
+
   // Automatically redirect logged-in users to dashboard
   useEffect(() => {
-    if (!isLoading && isAuthenticated && !oauthProcessing) {
+    if (!isLoading && isAuthenticated) {
       router.push("/dashboard");
     }
-  }, [isAuthenticated, isLoading, router, oauthProcessing]);
+  }, [isAuthenticated, isLoading, router]);
 
   return (
     <div className="relative min-h-screen">
+      {/* OAuth Redirect Handler (wrapped in Suspense) */}
+      <Suspense fallback={null}>
+        <OAuthRedirectHandler />
+      </Suspense>
+      
       {/* Hero Section */}
       <div className="relative min-h-screen overflow-hidden">
         {/* Apple-style Background with Liquid Glass Effect */}
