@@ -277,14 +277,14 @@ function ReportCard({ report, index }: { report: Report; index: number }) {
     >
       <Link href={`/report?id=${report.id}`}>
         <div
-          className="group p-6 rounded-3xl border border-white/30 cursor-pointer h-full"
+          className="group p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 cursor-pointer h-full"
           style={{
             background: "rgba(255, 255, 255, 0.4)",
             backdropFilter: "blur(20px)",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-between items-start mb-3 md:mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <span
@@ -311,7 +311,7 @@ function ReportCard({ report, index }: { report: Report; index: number }) {
             </div>
           </div>
 
-          <div className="space-y-3 mb-4">
+          <div className="space-y-2 md:space-y-3 mb-3 md:mb-4">
             <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-700 transition-colors">
               {report.type.charAt(0) + report.type.slice(1).toLowerCase()}{" "}
               Fortune Report
@@ -615,69 +615,69 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-8 max-w-7xl mx-auto">
+    <div className="min-h-screen px-4 py-4 md:py-8 max-w-7xl mx-auto">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
+        className="mb-4 md:mb-8"
       >
         <div
-          className="p-6 rounded-3xl border border-white/30"
+          className="p-3 md:p-6 rounded-xl md:rounded-3xl border border-white/30"
           style={{
             background: "rgba(255, 255, 255, 0.4)",
             backdropFilter: "blur(20px)",
           }}
         >
           <div className="flex justify-between items-start">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 md:gap-4">
               <div
-                className="p-4 rounded-2xl"
+                className="p-2 md:p-4 rounded-xl md:rounded-2xl"
                 style={{
                   background: "rgba(255, 255, 255, 0.6)",
                   backdropFilter: "blur(10px)",
                   border: "1px solid rgba(255, 255, 255, 0.3)",
                 }}
               >
-                <Sparkles className="w-8 h-8 text-indigo-600" />
+                <Sparkles className="w-5 h-5 md:w-8 md:h-8 text-indigo-600" />
               </div>
               <div>
-                <h1 className="text-3xl font-light text-gray-900 mb-1">
+                <h1 className="text-lg md:text-3xl font-light text-gray-900 mb-0.5 md:mb-1">
                   Welcome back,{" "}
                   {user.firstName ||
                     user.name?.split(" ")[0] ||
                     user.username?.split("@")[0] ||
                     "Friend"}
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-sm md:text-base text-gray-600">
                   Your spiritual journey continues
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 md:gap-2">
               <Link href="/orders">
                 <button
-                  className="p-2 rounded-xl hover:bg-white/50 transition-colors"
+                  className="p-1.5 md:p-2 rounded-lg md:rounded-xl hover:bg-white/50 transition-colors"
                   title="Order History"
                 >
-                  <Package className="w-5 h-5 text-gray-600" />
+                  <Package className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
                 </button>
               </Link>
               <Link href="/settings">
                 <button
-                  className="p-2 rounded-xl hover:bg-white/50 transition-colors"
+                  className="p-1.5 md:p-2 rounded-lg md:rounded-xl hover:bg-white/50 transition-colors"
                   title="Settings"
                 >
-                  <Settings className="w-5 h-5 text-gray-600" />
+                  <Settings className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
                 </button>
               </Link>
               <button
                 onClick={handleLogout}
-                className="p-2 rounded-xl hover:bg-white/50 transition-colors"
+                className="p-1.5 md:p-2 rounded-lg md:rounded-xl hover:bg-white/50 transition-colors"
                 title="Logout"
               >
-                <LogOut className="w-5 h-5 text-gray-600" />
+                <LogOut className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
               </button>
             </div>
           </div>
@@ -690,10 +690,10 @@ function DashboardContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-8"
+          className="mb-4 md:mb-8"
         >
           <div
-            className="p-6 rounded-3xl border border-orange-200/50 cursor-pointer group"
+            className="p-3 md:p-6 rounded-xl md:rounded-3xl border border-orange-200/50 cursor-pointer group"
             style={{
               background:
                 "linear-gradient(135deg, rgba(251, 146, 60, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%)",
@@ -702,21 +702,21 @@ function DashboardContent() {
             onClick={() => setShowBirthInfoForm(true)}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600">
-                  <Star className="w-6 h-6 text-white" />
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600">
+                  <Star className="w-4 h-4 md:w-6 md:h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">
+                  <h3 className="text-base md:text-lg font-medium text-gray-900 mb-0.5 md:mb-1">
                     Complete Your Cosmic Profile
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs md:text-sm text-gray-600">
                     Add your personal and birth information for more accurate
                     readings
                   </p>
                 </div>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all" />
+              <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all" />
             </div>
           </div>
         </motion.div>
@@ -728,10 +728,10 @@ function DashboardContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="mb-8"
+          className="mb-4 md:mb-8"
         >
           <div
-            className="p-6 rounded-3xl border border-purple-200/50 cursor-pointer group"
+            className="p-4 md:p-6 rounded-2xl md:rounded-3xl border border-purple-200/50 cursor-pointer group"
             style={{
               background:
                 "linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%)",
@@ -769,62 +769,121 @@ function DashboardContent() {
         </motion.div>
       )}
 
-      {/* Stats Overview */}
+      {/* Stats Overview - Mobile Optimized */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid md:grid-cols-3 gap-6 mb-8"
+        className="mb-6 md:mb-8"
       >
-        <div
-          className="p-6 rounded-3xl border border-white/30 text-center"
-          style={{
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(20px)",
-          }}
-        >
-          <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 w-fit mx-auto mb-4">
-            <Calendar className="w-6 h-6 text-white" />
+        {/* Mobile: Horizontal Scroll */}
+        <div className="md:hidden">
+          <div className="flex gap-4 overflow-x-auto pb-2 px-1 -mx-1 snap-x snap-mandatory">
+            <div
+              className="flex-shrink-0 p-4 rounded-2xl border border-white/30 text-center min-w-[140px] snap-center"
+              style={{
+                background: "rgba(255, 255, 255, 0.4)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <div className="p-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 w-fit mx-auto mb-3">
+                <Calendar className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-xl font-light text-gray-900 mb-1">
+                {totalReports}
+              </div>
+              <div className="text-xs text-gray-600">Total Reports</div>
+            </div>
+
+            <div
+              className="flex-shrink-0 p-4 rounded-2xl border border-white/30 text-center min-w-[140px] snap-center"
+              style={{
+                background: "rgba(255, 255, 255, 0.4)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <div className="p-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 w-fit mx-auto mb-3">
+                <TrendingUp className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-xl font-light text-gray-900 mb-1">
+                {averageScore}%
+              </div>
+              <div className="text-xs text-gray-600">Average Fortune</div>
+            </div>
+
+            <div
+              className="flex-shrink-0 p-4 rounded-2xl border border-white/30 text-center min-w-[140px] snap-center"
+              style={{
+                background: "rgba(255, 255, 255, 0.4)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <div className="p-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 w-fit mx-auto mb-3">
+                <Star className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-xl font-light text-gray-900 mb-1">
+                {Math.floor(
+                  (Date.now() - new Date(user.joinDate || user.createTime).getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )}
+              </div>
+              <div className="text-xs text-gray-600">Days Journey</div>
+            </div>
           </div>
-          <div className="text-2xl font-light text-gray-900 mb-1">
-            {totalReports}
-          </div>
-          <div className="text-sm text-gray-600">Total Reports</div>
         </div>
 
-        <div
-          className="p-6 rounded-3xl border border-white/30 text-center"
-          style={{
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(20px)",
-          }}
-        >
-          <div className="p-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 w-fit mx-auto mb-4">
-            <TrendingUp className="w-6 h-6 text-white" />
+        {/* Desktop: Grid Layout */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6">
+          <div
+            className="p-6 rounded-3xl border border-white/30 text-center"
+            style={{
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(20px)",
+            }}
+          >
+            <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 w-fit mx-auto mb-4">
+              <Calendar className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-2xl font-light text-gray-900 mb-1">
+              {totalReports}
+            </div>
+            <div className="text-sm text-gray-600">Total Reports</div>
           </div>
-          <div className="text-2xl font-light text-gray-900 mb-1">
-            {averageScore}%
-          </div>
-          <div className="text-sm text-gray-600">Average Fortune</div>
-        </div>
 
-        <div
-          className="p-6 rounded-3xl border border-white/30 text-center"
-          style={{
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(20px)",
-          }}
-        >
-          <div className="p-3 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 w-fit mx-auto mb-4">
-            <Star className="w-6 h-6 text-white" />
+          <div
+            className="p-6 rounded-3xl border border-white/30 text-center"
+            style={{
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(20px)",
+            }}
+          >
+            <div className="p-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 w-fit mx-auto mb-4">
+              <TrendingUp className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-2xl font-light text-gray-900 mb-1">
+              {averageScore}%
+            </div>
+            <div className="text-sm text-gray-600">Average Fortune</div>
           </div>
-          <div className="text-2xl font-light text-gray-900 mb-1">
-            {Math.floor(
-              (Date.now() - new Date(user.joinDate || user.createTime).getTime()) /
-                (1000 * 60 * 60 * 24)
-            )}
+
+          <div
+            className="p-6 rounded-3xl border border-white/30 text-center"
+            style={{
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(20px)",
+            }}
+          >
+            <div className="p-3 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 w-fit mx-auto mb-4">
+              <Star className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-2xl font-light text-gray-900 mb-1">
+              {Math.floor(
+                (Date.now() - new Date(user.joinDate || user.createTime).getTime()) /
+                  (1000 * 60 * 60 * 24)
+              )}
+            </div>
+            <div className="text-sm text-gray-600">Days Journey</div>
           </div>
-          <div className="text-sm text-gray-600">Days Journey</div>
         </div>
       </motion.div>
 
@@ -833,10 +892,10 @@ function DashboardContent() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="mb-8"
+        className="mb-4 md:mb-8"
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-light text-gray-900">
+        <div className="flex justify-between items-center mb-4 md:mb-6">
+          <h2 className="text-xl md:text-2xl font-light text-gray-900">
             Your Fortune Reports
           </h2>
           <div className="flex items-center gap-4">
@@ -890,7 +949,7 @@ function DashboardContent() {
           </div>
         ) : (
           <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {filteredReports.map((report, index) => (
                 <ReportCard key={report.id} report={report} index={index} />
               ))}
@@ -1016,12 +1075,12 @@ function DashboardContent() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <h2 className="text-2xl font-light text-gray-900 mb-6">
+        <h2 className="text-xl md:text-2xl font-light text-gray-900 mb-4 md:mb-6">
           Quick Actions
         </h2>
-        <div className={`grid ${hasActiveSubscription ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+        <div className={`grid ${hasActiveSubscription ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4 md:gap-6`}>
           <div
-            className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
+            className="p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
             style={{
               background:
                 "linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%)",
@@ -1042,7 +1101,7 @@ function DashboardContent() {
 
           {!hasActiveSubscription && (
             <div
-              className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
+              className="p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%)",
@@ -1064,7 +1123,7 @@ function DashboardContent() {
 
           <Link href="/orders">
             <div
-              className="p-6 rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
+              className="p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
