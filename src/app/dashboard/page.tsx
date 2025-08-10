@@ -860,8 +860,40 @@ function DashboardContent() {
         transition={{ delay: 0.2 }}
         className="mb-4 md:mb-8"
       >
-        <div className="flex justify-between items-center mb-4 md:mb-6">
-          <h2 className="text-xl md:text-2xl font-light text-gray-900">
+        {/* Mobile: Stacked Layout */}
+        <div className="md:hidden mb-4">
+          <h2 className="text-lg font-light text-gray-900 mb-3">
+            Your Fortune Reports
+          </h2>
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <div className="relative flex-1 min-w-0">
+              <select
+                value={reportFilter}
+                onChange={(e) =>
+                  setReportFilter(
+                    e.target.value as "ALL" | "YEARLY" | "MONTHLY" | "WEEKLY"
+                  )
+                }
+                className="w-full appearance-none bg-white/50 backdrop-blur-sm border border-white/30 rounded-xl px-3 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+                <option value="ALL">All Reports</option>
+                <option value="YEARLY">🌟 Yearly</option>
+                <option value="MONTHLY">🌙 Monthly</option>
+                <option value="WEEKLY">⭐ Weekly</option>
+              </select>
+              <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            </div>
+            <Link href="/reports" className="shrink-0">
+              <button className="w-full sm:w-auto px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-800 transition-colors text-sm font-medium rounded-xl border border-indigo-200">
+                View All
+              </button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Desktop: Horizontal Layout */}
+        <div className="hidden md:flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-light text-gray-900">
             Your Fortune Reports
           </h2>
           <div className="flex items-center gap-4">
