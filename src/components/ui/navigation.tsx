@@ -15,7 +15,6 @@ const publicNavigation = [
 ];
 
 const privateNavigation = [
-  { name: 'Update Profile', href: '/profile', icon: User },
   { name: 'Order History', href: '/orders', icon: Package },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
