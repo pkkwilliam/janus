@@ -129,9 +129,8 @@ export const authAPI = {
   async getOAuthRequestUrl(
     provider: "GOOGLE" | "FACEBOOK"
   ): Promise<ApiResponse<OAuthUrlResponse>> {
-    return apiClient.get<OAuthUrlResponse>(
-      `${API_ENDPOINTS.AUTH.OAUTH_GET_REQUEST_URL}/${provider}`
-    );
+    const url = API_ENDPOINTS.AUTH.OAUTH_GET_REQUEST_URL.replace(':provider', provider);
+    return apiClient.get<OAuthUrlResponse>(url);
   },
 
   /**
