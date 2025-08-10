@@ -10,8 +10,6 @@ import {
   Eye,
   ChevronRight,
   User,
-  Settings,
-  LogOut,
   Sparkles,
   Filter,
   Crown,
@@ -543,13 +541,6 @@ function DashboardContent() {
     return null;
   }
 
-  const handleLogout = () => {
-    // Clear JWT token and cached user data
-    authAPI.logout();
-
-    // Redirect to login
-    router.push("/auth/login");
-  };
 
   // If profile form is open, show it as overlay
   if (showBirthInfoForm) {
@@ -655,31 +646,6 @@ function DashboardContent() {
               </div>
             </div>
 
-            <div className="flex items-center gap-1 md:gap-2">
-              <Link href="/orders">
-                <button
-                  className="p-1.5 md:p-2 rounded-lg md:rounded-xl hover:bg-white/50 transition-colors"
-                  title="Order History"
-                >
-                  <Package className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
-                </button>
-              </Link>
-              <Link href="/settings">
-                <button
-                  className="p-1.5 md:p-2 rounded-lg md:rounded-xl hover:bg-white/50 transition-colors"
-                  title="Settings"
-                >
-                  <Settings className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
-                </button>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="p-1.5 md:p-2 rounded-lg md:rounded-xl hover:bg-white/50 transition-colors"
-                title="Logout"
-              >
-                <LogOut className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
-              </button>
-            </div>
           </div>
         </div>
       </motion.div>

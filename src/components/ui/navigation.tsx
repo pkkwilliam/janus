@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Home, User, Settings, Menu, X, LogIn, Star } from 'lucide-react';
+import { Home, User, Settings, Menu, X, LogIn, Star, Crown, Package, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { LogoSvg } from './logo';
 import { authAPI } from '@/lib/api/auth';
@@ -15,11 +15,14 @@ const publicNavigation = [
 ];
 
 const privateNavigation = [
+  { name: 'Update Profile', href: '/profile', icon: User },
+  { name: 'Order History', href: '/orders', icon: Package },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     // Initialize based on localStorage if available
@@ -65,10 +68,23 @@ export function Navigation() {
     };
   }, []);
 
+  // Handle logout
+  const handleLogout = () => {
+    authAPI.logout();
+    router.push('/auth/login');
+    setIsMobileMenuOpen(false);
+  };
+
   // Filter navigation items based on subscription status
   const filteredPublicNavigation = publicNavigation.filter(item => 
     !(item.name === 'Pricing' && hasActiveSubscription)
   );
+
+  // Add "Upgrade to Premium" to private navigation if user doesn't have active subscription
+  const filteredPrivateNavigation = [
+    ...privateNavigation,
+    ...(!hasActiveSubscription ? [{ name: 'Upgrade to Premium', href: '/pricing', icon: Crown }] : [])
+  ];
 
   return (
     <>
@@ -125,7 +141,7 @@ export function Navigation() {
 
               {isLoggedIn ? (
                 // Show private navigation when logged in
-                privateNavigation.map((item) => {
+                filteredPrivateNavigation.map((item) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.href;
                   
@@ -158,7 +174,27 @@ export function Navigation() {
                     </motion.div>
                   );
                 })
-              ) : !isAuthLoading ? (
+              ) : null}
+
+              {/* Logout button for desktop - only when logged in */}
+              {isLoggedIn && (
+                <motion.div className="relative">
+                  <button
+                    onClick={handleLogout}
+                    className="relative flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 text-gray-600 hover:text-gray-900 hover:scale-105"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.5)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                    }}
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </motion.div>
+              )}
+
+              {!isLoggedIn && !isAuthLoading ? (
                 // Show login button only when not logged in and not loading
                 <motion.div className="relative">
                   <Link
@@ -245,9 +281,10 @@ export function Navigation() {
           }}
         >
           <div className="px-4 py-6 space-y-2">
+            {/* Navigation Links */}
             {[
               ...filteredPublicNavigation,
-              ...(isLoggedIn ? privateNavigation : (!isAuthLoading ? [{ name: 'Login', href: '/auth/login', icon: LogIn }] : []))
+              ...(isLoggedIn ? filteredPrivateNavigation : (!isAuthLoading ? [{ name: 'Login', href: '/auth/login', icon: LogIn }] : []))
             ].map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -277,6 +314,22 @@ export function Navigation() {
                 </Link>
               );
             })}
+
+            {/* Logout Button - only for logged in users */}
+            {isLoggedIn && (
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-2xl text-base font-medium transition-all duration-200 text-gray-600 hover:text-gray-900"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.3)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                }}
+              >
+                <LogOut className="w-5 h-5" />
+                <span>Logout</span>
+              </button>
+            )}
           </div>
         </motion.div>
 
