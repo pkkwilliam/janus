@@ -62,8 +62,16 @@ export function Navigation() {
     // Listen for storage changes (login/logout in other tabs)
     window.addEventListener('storage', checkAuthState);
     
+    // Listen for custom auth change events (login/logout in same tab)
+    window.addEventListener('authStateChange', checkAuthState);
+    
+    // Polling as fallback to ensure auth state stays in sync
+    const pollInterval = setInterval(checkAuthState, 1000);
+    
     return () => {
       window.removeEventListener('storage', checkAuthState);
+      window.removeEventListener('authStateChange', checkAuthState);
+      clearInterval(pollInterval);
     };
   }, []);
 

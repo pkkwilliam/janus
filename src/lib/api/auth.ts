@@ -166,6 +166,13 @@ export const authAPI = {
     // Cache user data in memory
     userProfileCache.setProfile(userData);
     
+    // Dispatch custom event for navigation updates
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('authStateChange', { 
+        detail: { type: 'login', user: userData } 
+      }));
+    }
+    
     console.log('✅ User login successful - data stored and cached');
   },
 
@@ -175,6 +182,14 @@ export const authAPI = {
   logout(): void {
     apiClient.clearAuthToken();
     userProfileCache.clearProfile();
+    
+    // Dispatch custom event for navigation updates
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('authStateChange', { 
+        detail: { type: 'logout' } 
+      }));
+    }
+    
     console.log("✅ User logged out successfully");
   },
 
