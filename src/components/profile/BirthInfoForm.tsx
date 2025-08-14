@@ -424,7 +424,7 @@ export function BirthInfoForm({ onComplete, onSkip, showSkip = false, initialDat
 
           {/* Info Box */}
           <div
-            className="p-4 rounded-2xl border border-indigo-200/50"
+            className="p-4 rounded-2xl border border-indigo-200/50 mt-6"
             style={{
               background: "rgba(99, 102, 241, 0.05)",
               backdropFilter: "blur(10px)",
