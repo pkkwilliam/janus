@@ -115,82 +115,27 @@ export function PricingClient() {
 
           {/* Pricing Cards */}
           <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-              {/* Free Plan */}
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-start">
+              {/* Premium Plan - Moved to left for priority */}
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="relative"
-              >
-                <div
-                  className="p-8 rounded-3xl border border-gray-200 h-full"
-                  style={{
-                    background: "rgba(255, 255, 255, 0.6)",
-                    backdropFilter: "blur(20px)",
-                  }}
-                >
-                  <div className="text-center mb-8">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center mx-auto mb-4">
-                      <Star className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-medium text-gray-900 mb-2">
-                      Free Journey
-                    </h3>
-                    <div className="text-4xl font-light text-gray-900 mb-1">
-                      $0
-                    </div>
-                    <div className="text-gray-600">Forever free</div>
-                  </div>
-
-                  <ul className="space-y-4 mb-8">
-                    {freeFeatures.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href={isAuthenticated ? "/dashboard" : "/auth/login"}
-                    className="block"
-                  >
-                    <motion.button
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full py-4 rounded-2xl font-medium text-gray-700 transition-all border border-gray-300 hover:border-gray-400"
-                      style={{
-                        background: "rgba(255, 255, 255, 0.8)",
-                        backdropFilter: "blur(10px)",
-                      }}
-                    >
-                      {isAuthenticated
-                        ? "Access Dashboard"
-                        : "Get Started Free"}
-                    </motion.button>
-                  </Link>
-                </div>
-              </motion.div>
-
-              {/* Premium Plan */}
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="relative"
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="relative md:order-1 transform md:scale-105 z-10"
               >
                 {/* Popular Badge */}
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
                   <div
-                    className="px-6 py-2 rounded-full text-sm font-medium text-white"
+                    className="px-8 py-3 rounded-full text-sm font-bold text-white flex items-center gap-2"
                     style={{
                       background:
                         "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                      boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
+                      boxShadow: "0 6px 20px rgba(102, 126, 234, 0.4)",
                     }}
                   >
-                    Most Popular
+                    <Crown className="w-4 h-4" />
+                    MOST POPULAR
+                    <Sparkles className="w-4 h-4" />
                   </div>
                 </div>
 
@@ -201,22 +146,27 @@ export function PricingClient() {
                       "linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)",
                     backdropFilter: "blur(20px)",
                     borderColor: "#667eea",
-                    boxShadow: "0 20px 40px rgba(102, 126, 234, 0.2)",
+                    boxShadow: "0 25px 50px rgba(102, 126, 234, 0.25)",
                   }}
                 >
                   {/* Floating sparkles */}
                   <div className="absolute top-4 right-4">
-                    <Sparkles className="w-6 h-6 text-amber-400 opacity-50" />
+                    <motion.div
+                      animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      <Sparkles className="w-6 h-6 text-amber-400" />
+                    </motion.div>
                   </div>
                   <div className="absolute bottom-4 left-4">
-                    <Gift className="w-5 h-5 text-purple-400 opacity-30" />
+                    <Gift className="w-5 h-5 text-purple-400 opacity-50" />
                   </div>
 
                   <div className="text-center mb-8">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-4">
-                      <Crown className="w-8 h-8 text-white" />
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-xl">
+                      <Crown className="w-10 h-10 text-white" />
                     </div>
-                    <h3 className="text-2xl font-medium text-gray-900 mb-2">
+                    <h3 className="text-3xl font-bold text-gray-900 mb-2">
                       Premium Journey
                     </h3>
 
@@ -247,14 +197,14 @@ export function PricingClient() {
                     </div>
 
                     <div className="flex items-center justify-center gap-2 mb-1">
-                      <div className="text-4xl font-light text-gray-900">
+                      <div className="text-5xl font-bold text-gray-900">
                         ${isYearly ? "1.6" : "2"}
                       </div>
-                      <div className="text-gray-600">/month</div>
+                      <div className="text-gray-600 text-xl">/month</div>
                     </div>
-                    <div className="text-sm text-green-600 font-medium">
+                    <div className="text-sm text-green-600 font-bold bg-green-50 px-3 py-1 rounded-full inline-block">
                       {isYearly
-                        ? "Save 47% vs monthly • $19.20/year"
+                        ? "🎉 Save 47% vs monthly • $19.20/year"
                         : "$2/month • No commitment"}
                     </div>
                   </div>
@@ -262,8 +212,10 @@ export function PricingClient() {
                   <ul className="space-y-4 mb-8">
                     {premiumFeatures.map((feature, index) => (
                       <li key={index} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-indigo-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center mt-0.5 flex-shrink-0">
+                          <Check className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-gray-700 font-medium">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -272,18 +224,18 @@ export function PricingClient() {
                     <div className="space-y-3">
                       <Link href="/auth/login">
                         <motion.button
-                          whileHover={{ scale: 1.02, y: -2 }}
+                          whileHover={{ scale: 1.02, y: -3 }}
                           whileTap={{ scale: 0.98 }}
-                          className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-white font-medium transition-all"
+                          className="w-full flex items-center justify-center gap-2 py-5 rounded-2xl text-white font-bold transition-all text-lg shadow-2xl"
                           style={{
                             background:
                               "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                            boxShadow: "0 8px 24px rgba(102, 126, 234, 0.3)",
+                            boxShadow: "0 12px 30px rgba(102, 126, 234, 0.4)",
                           }}
                         >
-                          <Crown className="w-5 h-5" />
-                          Sign In to Get Premium
-                          <ArrowRight className="w-5 h-5" />
+                          <Crown className="w-6 h-6" />
+                          START YOUR PREMIUM JOURNEY
+                          <ArrowRight className="w-6 h-6" />
                         </motion.button>
                       </Link>
                       <p className="text-xs text-center text-gray-500">
@@ -292,24 +244,85 @@ export function PricingClient() {
                     </div>
                   ) : (
                     <motion.button
-                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileHover={{ scale: 1.02, y: -3 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handlePremiumSubscription(isYearly)}
                       disabled={isProcessing}
-                      className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full flex items-center justify-center gap-2 py-5 rounded-2xl text-white font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-2xl"
                       style={{
                         background:
                           "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                        boxShadow: "0 8px 24px rgba(102, 126, 234, 0.3)",
+                        boxShadow: "0 12px 30px rgba(102, 126, 234, 0.4)",
                       }}
                     >
-                      <Crown className="w-5 h-5" />
+                      <Crown className="w-6 h-6" />
                       {isProcessing
                         ? "Processing Payment..."
-                        : "Upgrade to Premium"}
-                      {!isProcessing && <ArrowRight className="w-5 h-5" />}
+                        : "UPGRADE TO PREMIUM"}
+                      {!isProcessing && <ArrowRight className="w-6 h-6" />}
                     </motion.button>
                   )}
+                </div>
+              </motion.div>
+
+              {/* Free Plan - Moved to right and de-emphasized */}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="relative md:order-2 opacity-75 hover:opacity-90 transition-opacity"
+              >
+
+                <div
+                  className="p-6 rounded-3xl border border-gray-200 h-full"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.6)",
+                    backdropFilter: "blur(20px)",
+                  }}
+                >
+                  <div className="text-center mb-6">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-gray-400 to-gray-500 flex items-center justify-center mx-auto mb-4">
+                      <Star className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl font-medium text-gray-700 mb-2">
+                      Basic Journey
+                    </h3>
+                    <div className="text-3xl font-light text-gray-700 mb-1">
+                      $0
+                    </div>
+                    <div className="text-gray-500 text-sm">Limited features</div>
+                  </div>
+
+                  <ul className="space-y-3 mb-6">
+                    {freeFeatures.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <Check className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-600 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href={isAuthenticated ? "/dashboard" : "/auth/login"}
+                    className="block"
+                  >
+                    <motion.button
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full py-3 rounded-xl font-medium text-gray-600 transition-all border border-gray-300 hover:border-gray-400 hover:text-gray-700"
+                      style={{
+                        background: "rgba(255, 255, 255, 0.8)",
+                        backdropFilter: "blur(10px)",
+                      }}
+                    >
+                      {isAuthenticated
+                        ? "Access Basic Features"
+                        : "Try Basic (Free)"}
+                    </motion.button>
+                  </Link>
+                  <p className="text-xs text-center text-gray-400 mt-2">
+                    Limited to basic features only
+                  </p>
                 </div>
               </motion.div>
             </div>
@@ -408,10 +421,10 @@ export function PricingClient() {
                 <Gift className="w-8 h-8 text-purple-500" />
                 <div>
                   <div className="font-medium text-gray-900">
-                    7-Day Free Trial
+                    Premium Features
                   </div>
                   <div className="text-sm text-gray-600">
-                    Try premium risk-free
+                    Unlock advanced insights
                   </div>
                 </div>
               </div>
@@ -480,9 +493,9 @@ const faqs = [
       "Yes! You can cancel your Premium subscription at any time. Your premium features will remain active until the end of your current billing period.",
   },
   {
-    question: "Is there a free trial for Premium?",
+    question: "What happens after I subscribe to Premium?",
     answer:
-      "Yes, we offer a 7-day free trial for new Premium subscribers. You can explore all premium features risk-free before deciding.",
+      "You'll get instant access to all premium features including detailed lucky elements, personalized guidance, and advanced timing recommendations.",
   },
   {
     question: "How accurate are the lucky element recommendations?",
