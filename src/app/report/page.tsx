@@ -668,15 +668,15 @@ function ReportContent() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
+        className="mb-6"
       >
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <button
             onClick={() => router.back()}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-sm sm:text-base">Back</span>
           </button>
 
           {/* Translation Toggle */}
@@ -689,32 +689,37 @@ function ReportContent() {
         </div>
 
         <div
-          className="p-6 rounded-3xl border border-white/30"
+          className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-white/30"
           style={{
             background: "rgba(255, 255, 255, 0.4)",
             backdropFilter: "blur(20px)",
           }}
         >
-          <div className="flex items-center gap-4 mb-4">
-            <div className={`p-3 rounded-2xl ${getTypeGradient(type)}`}>
-              {getTypeIcon(type)}
-            </div>
-            <div>
-              <h1 className="text-2xl font-light text-gray-900">
-                {getReportTitle(type)}
-              </h1>
-              <div className="flex items-center gap-2 text-gray-600">
-                <Calendar className="w-4 h-4" />
-                <span className="text-sm">{formatReportPeriod(report)}</span>
+          {/* Mobile-first layout: Stack on small screens, side-by-side on larger */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            {/* Report type and title */}
+            <div className="flex items-center gap-3">
+              <div className={`p-2 sm:p-3 rounded-xl sm:rounded-2xl ${getTypeGradient(type)}`}>
+                {getTypeIcon(type)}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-2xl font-light text-gray-900 truncate">
+                  {getReportTitle(type)}
+                </h1>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm truncate">{formatReportPeriod(report)}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-4">
-            <div className="text-3xl font-light text-indigo-600">
-              {reportContent.fortuneScore}%
+            {/* Fortune Score - Compact mobile display */}
+            <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2 sm:gap-1 bg-white/20 sm:bg-transparent rounded-xl sm:rounded-none p-3 sm:p-0">
+              <div className="text-sm sm:text-xs text-gray-600 sm:order-2">Fortune Score</div>
+              <div className="text-2xl sm:text-3xl font-light text-indigo-600 sm:order-1">
+                {reportContent.fortuneScore}%
+              </div>
             </div>
-            <div className="text-sm text-gray-600">Fortune Score</div>
           </div>
         </div>
       </motion.div>
