@@ -406,36 +406,56 @@ function LuckyElementsBlurOverlay() {
 // Reading section blur overlay component for non-premium users
 function ReadingBlurOverlay() {
   return (
-    <div className="absolute bottom-0 left-0 right-0 h-3/5 flex items-end justify-center z-10 rounded-b-3xl overflow-hidden">
-      {/* Multi-layer gradient fade for smoother transition */}
+    <div className="absolute bottom-0 left-0 right-0 h-4/5 flex items-end justify-center z-10 rounded-b-3xl overflow-hidden">
+      {/* Ultra-smooth gradient fade with natural top and bottom transitions */}
       <div 
         className="absolute inset-0" 
         style={{
-          background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.02) 10%, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.3) 40%, rgba(255, 255, 255, 0.6) 55%, rgba(255, 255, 255, 0.85) 75%, rgba(255, 255, 255, 0.98) 100%)",
+          background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.002) 10%, rgba(255, 255, 255, 0.008) 20%, rgba(255, 255, 255, 0.02) 30%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.25) 70%, rgba(255, 255, 255, 0.4) 80%, rgba(255, 255, 255, 0.6) 90%, rgba(255, 255, 255, 0.45) 100%)",
         }}
       />
-      {/* Strong blur layer */}
+      {/* Graduated blur layers with soft edges top and bottom */}
       <div 
-        className="absolute inset-0" 
+        className="absolute top-1/4 left-0 right-0 bottom-2" 
         style={{
-          backdropFilter: "blur(15px)",
-          WebkitBackdropFilter: "blur(15px)",
+          backdropFilter: "blur(1px)",
+          WebkitBackdropFilter: "blur(1px)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
         }}
       />
-      {/* Additional text-hiding overlay */}
       <div 
-        className="absolute bottom-0 left-0 right-0 h-2/3" 
+        className="absolute top-1/2 left-0 right-0 bottom-4" 
         style={{
-          background: "linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.4) 30%, rgba(248, 250, 252, 0.8) 60%, rgba(248, 250, 252, 0.95) 100%)",
+          backdropFilter: "blur(3px)",
+          WebkitBackdropFilter: "blur(3px)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
+        }}
+      />
+      <div 
+        className="absolute top-3/4 left-0 right-0 bottom-6" 
+        style={{
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
+        }}
+      />
+      {/* Ultra-light background wash with soft edges */}
+      <div 
+        className="absolute top-1/2 left-0 right-0 bottom-0" 
+        style={{
+          background: "linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.03) 20%, rgba(248, 250, 252, 0.1) 40%, rgba(248, 250, 252, 0.25) 60%, rgba(248, 250, 252, 0.35) 80%, rgba(248, 250, 252, 0.25) 100%)",
         }}
       />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="text-center p-4 sm:p-6 relative z-20 mb-4"
+        className="text-center p-4 sm:p-6 relative z-20 mb-8"
       >
-        <div className="p-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 mb-3 inline-block shadow-lg">
+        <div className="p-3 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 mb-3 inline-block" style={{ boxShadow: "0 2px 8px rgba(99, 102, 241, 0.15)" }}>
           <BookOpen className="w-6 h-6 text-white" />
         </div>
         <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
@@ -446,7 +466,10 @@ function ReadingBlurOverlay() {
         </p>
         <button
           onClick={() => window.open("/pricing", "_blank")}
-          className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs sm:text-sm font-medium rounded-full hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-indigo-400 to-purple-500 text-white text-xs sm:text-sm font-medium rounded-full hover:from-indigo-500 hover:to-purple-600 transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+          style={{
+            boxShadow: "0 2px 8px rgba(99, 102, 241, 0.15)",
+          }}
           aria-label="Upgrade to Premium to read the complete fortune reading"
         >
           Unlock Full Reading
