@@ -403,6 +403,59 @@ function LuckyElementsBlurOverlay() {
   );
 }
 
+// Reading section blur overlay component for non-premium users
+function ReadingBlurOverlay() {
+  return (
+    <div className="absolute bottom-0 left-0 right-0 h-3/5 flex items-end justify-center z-10 rounded-b-3xl overflow-hidden">
+      {/* Multi-layer gradient fade for smoother transition */}
+      <div 
+        className="absolute inset-0" 
+        style={{
+          background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.02) 10%, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.3) 40%, rgba(255, 255, 255, 0.6) 55%, rgba(255, 255, 255, 0.85) 75%, rgba(255, 255, 255, 0.98) 100%)",
+        }}
+      />
+      {/* Strong blur layer */}
+      <div 
+        className="absolute inset-0" 
+        style={{
+          backdropFilter: "blur(15px)",
+          WebkitBackdropFilter: "blur(15px)",
+        }}
+      />
+      {/* Additional text-hiding overlay */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-2/3" 
+        style={{
+          background: "linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.4) 30%, rgba(248, 250, 252, 0.8) 60%, rgba(248, 250, 252, 0.95) 100%)",
+        }}
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="text-center p-4 sm:p-6 relative z-20 mb-4"
+      >
+        <div className="p-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 mb-3 inline-block shadow-lg">
+          <BookOpen className="w-6 h-6 text-white" />
+        </div>
+        <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+          Continue Reading with Premium
+        </h4>
+        <p className="text-xs sm:text-sm text-gray-600 mb-3 max-w-xs">
+          Unlock the complete fortune reading and detailed insights
+        </p>
+        <button
+          onClick={() => window.open("/pricing", "_blank")}
+          className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs sm:text-sm font-medium rounded-full hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          aria-label="Upgrade to Premium to read the complete fortune reading"
+        >
+          Unlock Full Reading
+        </button>
+      </motion.div>
+    </div>
+  );
+}
+
 // Helper functions for report types
 function getTypeGradient(type: string) {
   switch (type) {
@@ -545,6 +598,25 @@ function processTextWithGlossary(text: string, glossary: any[]) {
     const component = components.find((c) => c.placeholder === part);
     return component ? component.component : part;
   });
+}
+
+// Function to truncate reading text for non-premium users to enhance blur effect
+function truncateReadingForPreview(text: string, displayType: string): string {
+  if (displayType === "FULL") {
+    return text;
+  }
+  
+  // For non-premium users, show approximately 60% of the content
+  // This works better with the blur overlay that covers the bottom 60%
+  const words = text.split(' ');
+  const previewLength = Math.floor(words.length * 0.6);
+  const truncatedWords = words.slice(0, previewLength);
+  
+  // Add some trailing words that will be partially visible under the blur
+  const trailingWords = words.slice(previewLength, previewLength + 10);
+  const fullPreview = [...truncatedWords, ...trailingWords].join(' ');
+  
+  return fullPreview;
 }
 
 function ReportContent() {
@@ -732,7 +804,7 @@ function ReportContent() {
         className="mb-8"
       >
         <div
-          className="p-8 rounded-3xl border border-white/30"
+          className="relative p-8 rounded-3xl border border-white/30 overflow-hidden"
           style={{
             background: "rgba(255, 255, 255, 0.4)",
             backdropFilter: "blur(20px)",
@@ -741,16 +813,29 @@ function ReportContent() {
           <div className="flex items-center gap-3 mb-6">
             <BookOpen className="w-6 h-6 text-indigo-600" />
             <h2 className="text-xl font-medium text-gray-900">Your Reading</h2>
+            {displayType === "PARTIAL" && (
+              <div className="ml-auto">
+                <span className="px-3 py-1 text-xs font-medium text-orange-600 bg-orange-100 rounded-full">
+                  Preview
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-700 leading-relaxed">
               {processTextWithGlossary(
-                getCurrentContent()?.reading || "",
+                truncateReadingForPreview(
+                  getCurrentContent()?.reading || "",
+                  displayType
+                ),
                 getCurrentContent()?.glossary || []
               )}
             </p>
           </div>
+
+          {/* Show blur overlay for non-premium users */}
+          {displayType === "PARTIAL" && <ReadingBlurOverlay />}
         </div>
       </motion.div>
 
