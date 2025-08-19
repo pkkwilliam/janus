@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FAQS, GLASS_MORPHISM_STYLES, ANIMATION_VARIANTS } from "@/lib/constants/pricing";
+import { FAQS, GLASS_MORPHISM_STYLES, ANIMATION_VARIANTS, FAQ } from "@/lib/constants/pricing";
 
 interface FAQItemProps {
-  faq: typeof FAQS[0];
+  faq: FAQ;
   index: number;
 }
 

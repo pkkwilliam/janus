@@ -130,3 +130,13 @@ export const FAQS = [
 
 export type PricingPlan = keyof typeof PRICING;
 export type FeatureList = typeof FREE_FEATURES | typeof PREMIUM_FEATURES;
+export type FAQ = {
+  question: string;
+  answer: string;
+};
+export type PremiumFeature = {
+  icon: string;
+  title: string;
+  description: string;
+  color: string;
+};

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, Crown, Star } from "lucide-react";
-import { PREMIUM_FEATURE_DETAILS, GLASS_MORPHISM_STYLES, ANIMATION_VARIANTS } from "@/lib/constants/pricing";
+import { PREMIUM_FEATURE_DETAILS, GLASS_MORPHISM_STYLES, ANIMATION_VARIANTS, PremiumFeature } from "@/lib/constants/pricing";
 
 const iconMap = {
   Sparkles,
@@ -11,7 +11,7 @@ const iconMap = {
 };
 
 interface FeatureCardProps {
-  feature: typeof PREMIUM_FEATURE_DETAILS[0];
+  feature: PremiumFeature;
   index: number;
 }
 
