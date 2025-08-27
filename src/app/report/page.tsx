@@ -865,8 +865,11 @@ function ReportContent() {
           </div>
 
           <div className="prose prose-lg max-w-none">
-            {(getCurrentContent()?.readings || []).map((reading) => (
-              <p className="text-gray-700 leading-relaxed">
+            {(getCurrentContent()?.readings || []).map((reading, index) => (
+              <p
+                className="text-gray-700 leading-relaxed"
+                key={`reading-${index}`}
+              >
                 {processTextWithGlossary(
                   truncateReadingForPreview(reading, displayType),
                   getCurrentContent()?.glossary || []
