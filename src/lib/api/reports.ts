@@ -1,5 +1,5 @@
-import { apiClient, ApiResponse } from './client';
-import { API_ENDPOINTS } from './config';
+import { apiClient, ApiResponse } from "./client";
+import { API_ENDPOINTS } from "./config";
 
 // Report content structure
 export interface ReportContent {
@@ -14,7 +14,7 @@ export interface ReportContent {
   luckyEnhancer: string[];
   luckyGemstones: string[];
   luckyNumbers: string[];
-  reading: string;
+  readings: string[];
   spiritualGuidance: string;
 }
 
@@ -39,7 +39,7 @@ export interface Report {
   reportParseResult: string;
   startTime: string;
   userId: string;
-  type: 'YEARLY' | 'MONTHLY' | 'WEEKLY';
+  type: "YEARLY" | "MONTHLY" | "WEEKLY";
   period: ReportPeriod | null;
 }
 
@@ -87,7 +87,7 @@ export const reportsApi = {
     params: ReportsPaginationParams = {}
   ): Promise<ApiResponse<PaginatedReportsResponse>> {
     const { pageRequest = 0, pageSize = 8 } = params;
-    
+
     const queryParams = new URLSearchParams({
       pageRequest: pageRequest.toString(),
       pageSize: pageSize.toString(),
@@ -99,12 +99,14 @@ export const reportsApi = {
   },
 
   async getReportById(id: string): Promise<ApiResponse<Report>> {
-    const endpoint = API_ENDPOINTS.USER.REPORT_DETAIL.replace(':id', id);
+    const endpoint = API_ENDPOINTS.USER.REPORT_DETAIL.replace(":id", id);
     return apiClient.get<Report>(endpoint);
   },
 
-  async generateReport(type: 'YEARLY' | 'MONTHLY'): Promise<ApiResponse<Report>> {
-    const endpoint = API_ENDPOINTS.USER.REPORT_GENERATE.replace(':type', type);
+  async generateReport(
+    type: "YEARLY" | "MONTHLY"
+  ): Promise<ApiResponse<Report>> {
+    const endpoint = API_ENDPOINTS.USER.REPORT_GENERATE.replace(":type", type);
     return apiClient.post<Report>(endpoint, {});
   },
 };

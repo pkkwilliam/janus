@@ -121,7 +121,7 @@ function TranslationToggle({
       // Use the translation API
       const response = await translationApi.translateContent(
         {
-          reading: reportContent.reading,
+          readings: reportContent.readings || [],
           keyThemes: reportContent.keyThemes,
           spiritualGuidance: reportContent.spiritualGuidance,
           luckyGemstones: reportContent.luckyGemstones || [],
@@ -146,7 +146,7 @@ function TranslationToggle({
           console.log("🔄 Trying manual fetch method due to auth error...");
           const manualResponse = await translationApi.translateContentManual(
             {
-              reading: reportContent.reading,
+              readings: reportContent.readings || [],
               keyThemes: reportContent.keyThemes,
               spiritualGuidance: reportContent.spiritualGuidance,
               luckyGemstones: reportContent.luckyGemstones || [],
@@ -408,45 +408,53 @@ function ReadingBlurOverlay() {
   return (
     <div className="absolute bottom-0 left-0 right-0 h-4/5 flex items-end justify-center z-10 rounded-b-3xl overflow-hidden">
       {/* Ultra-smooth gradient fade with natural top and bottom transitions */}
-      <div 
-        className="absolute inset-0" 
+      <div
+        className="absolute inset-0"
         style={{
-          background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.002) 10%, rgba(255, 255, 255, 0.008) 20%, rgba(255, 255, 255, 0.02) 30%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.25) 70%, rgba(255, 255, 255, 0.4) 80%, rgba(255, 255, 255, 0.6) 90%, rgba(255, 255, 255, 0.45) 100%)",
+          background:
+            "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.002) 10%, rgba(255, 255, 255, 0.008) 20%, rgba(255, 255, 255, 0.02) 30%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.25) 70%, rgba(255, 255, 255, 0.4) 80%, rgba(255, 255, 255, 0.6) 90%, rgba(255, 255, 255, 0.45) 100%)",
         }}
       />
       {/* Graduated blur layers with soft edges top and bottom */}
-      <div 
-        className="absolute top-1/4 left-0 right-0 bottom-2" 
+      <div
+        className="absolute top-1/4 left-0 right-0 bottom-2"
         style={{
           backdropFilter: "blur(1px)",
           WebkitBackdropFilter: "blur(1px)",
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
         }}
       />
-      <div 
-        className="absolute top-1/2 left-0 right-0 bottom-4" 
+      <div
+        className="absolute top-1/2 left-0 right-0 bottom-4"
         style={{
           backdropFilter: "blur(3px)",
           WebkitBackdropFilter: "blur(3px)",
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
         }}
       />
-      <div 
-        className="absolute top-3/4 left-0 right-0 bottom-6" 
+      <div
+        className="absolute top-3/4 left-0 right-0 bottom-6"
         style={{
           backdropFilter: "blur(6px)",
           WebkitBackdropFilter: "blur(6px)",
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
         }}
       />
       {/* Ultra-light background wash with soft edges */}
-      <div 
-        className="absolute top-1/2 left-0 right-0 bottom-0" 
+      <div
+        className="absolute top-1/2 left-0 right-0 bottom-0"
         style={{
-          background: "linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.03) 20%, rgba(248, 250, 252, 0.1) 40%, rgba(248, 250, 252, 0.25) 60%, rgba(248, 250, 252, 0.35) 80%, rgba(248, 250, 252, 0.25) 100%)",
+          background:
+            "linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.03) 20%, rgba(248, 250, 252, 0.1) 40%, rgba(248, 250, 252, 0.25) 60%, rgba(248, 250, 252, 0.35) 80%, rgba(248, 250, 252, 0.25) 100%)",
         }}
       />
       <motion.div
@@ -455,7 +463,10 @@ function ReadingBlurOverlay() {
         transition={{ delay: 0.3 }}
         className="text-center p-4 sm:p-6 relative z-20 mb-8"
       >
-        <div className="p-3 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 mb-3 inline-block" style={{ boxShadow: "0 2px 8px rgba(99, 102, 241, 0.15)" }}>
+        <div
+          className="p-3 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 mb-3 inline-block"
+          style={{ boxShadow: "0 2px 8px rgba(99, 102, 241, 0.15)" }}
+        >
           <BookOpen className="w-6 h-6 text-white" />
         </div>
         <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
@@ -628,17 +639,17 @@ function truncateReadingForPreview(text: string, displayType: string): string {
   if (displayType === "FULL") {
     return text;
   }
-  
+
   // For non-premium users, show approximately 60% of the content
   // This works better with the blur overlay that covers the bottom 60%
-  const words = text.split(' ');
+  const words = text.split(" ");
   const previewLength = Math.floor(words.length * 0.6);
   const truncatedWords = words.slice(0, previewLength);
-  
+
   // Add some trailing words that will be partially visible under the blur
   const trailingWords = words.slice(previewLength, previewLength + 10);
-  const fullPreview = [...truncatedWords, ...trailingWords].join(' ');
-  
+  const fullPreview = [...truncatedWords, ...trailingWords].join(" ");
+
   return fullPreview;
 }
 
@@ -794,7 +805,11 @@ function ReportContent() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             {/* Report type and title */}
             <div className="flex items-center gap-3">
-              <div className={`p-2 sm:p-3 rounded-xl sm:rounded-2xl ${getTypeGradient(type)}`}>
+              <div
+                className={`p-2 sm:p-3 rounded-xl sm:rounded-2xl ${getTypeGradient(
+                  type
+                )}`}
+              >
                 {getTypeIcon(type)}
               </div>
               <div className="min-w-0 flex-1">
@@ -803,14 +818,18 @@ function ReportContent() {
                 </h1>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm truncate">{formatReportPeriod(report)}</span>
+                  <span className="text-xs sm:text-sm truncate">
+                    {formatReportPeriod(report)}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Fortune Score - Compact mobile display */}
             <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2 sm:gap-1 bg-white/20 sm:bg-transparent rounded-xl sm:rounded-none p-3 sm:p-0">
-              <div className="text-sm sm:text-xs text-gray-600 sm:order-2">Fortune Score</div>
+              <div className="text-sm sm:text-xs text-gray-600 sm:order-2">
+                Fortune Score
+              </div>
               <div className="text-2xl sm:text-3xl font-light text-indigo-600 sm:order-1">
                 {reportContent.fortuneScore}%
               </div>
@@ -846,19 +865,18 @@ function ReportContent() {
           </div>
 
           <div className="prose prose-lg max-w-none">
-            <p className="text-gray-700 leading-relaxed">
-              {processTextWithGlossary(
-                truncateReadingForPreview(
-                  getCurrentContent()?.reading || "",
-                  displayType
-                ),
-                getCurrentContent()?.glossary || []
-              )}
-            </p>
+            {(getCurrentContent()?.readings || []).map((reading) => (
+              <p className="text-gray-700 leading-relaxed">
+                {processTextWithGlossary(
+                  truncateReadingForPreview(reading, displayType),
+                  getCurrentContent()?.glossary || []
+                )}
+              </p>
+            ))}
           </div>
 
           {/* Show blur overlay for non-premium users */}
-          {displayType === "PARTIAL" && <ReadingBlurOverlay />}
+          {/* {displayType === "PARTIAL" && <ReadingBlurOverlay />} */}
         </div>
       </motion.div>
 
@@ -1304,14 +1322,16 @@ function ReportContent() {
 
 export default function ReportPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <ReportContent />
     </Suspense>
   );

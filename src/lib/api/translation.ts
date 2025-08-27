@@ -1,11 +1,11 @@
-import { apiClient, ApiResponse } from './client';
-import { API_ENDPOINTS, getApiBaseUrl } from './config';
-import { ErrorSeverity } from './errors';
+import { apiClient, ApiResponse } from "./client";
+import { API_ENDPOINTS, getApiBaseUrl } from "./config";
+import { ErrorSeverity } from "./errors";
 
 // Translation request structure
 export interface TranslationRequest {
   content: {
-    reading: string;
+    readings: string[];
     keyThemes: string[];
     spiritualGuidance: string;
     luckyGemstones?: string[];
@@ -44,20 +44,20 @@ export interface TranslationResponse {
 }
 
 // Language enum type (matching your Java backend)
-export type LanguageCode = 
-  | 'ENGLISH'
-  | 'CHINESE_SIMPLIFIED' 
-  | 'CHINESE_TRADITIONAL'
-  | 'SPANISH'
-  | 'FRENCH'
-  | 'GERMAN'
-  | 'ITALIAN'
-  | 'PORTUGUESE'
-  | 'RUSSIAN'
-  | 'JAPANESE'
-  | 'KOREAN'
-  | 'ARABIC'
-  | 'HINDI';
+export type LanguageCode =
+  | "ENGLISH"
+  | "CHINESE_SIMPLIFIED"
+  | "CHINESE_TRADITIONAL"
+  | "SPANISH"
+  | "FRENCH"
+  | "GERMAN"
+  | "ITALIAN"
+  | "PORTUGUESE"
+  | "RUSSIAN"
+  | "JAPANESE"
+  | "KOREAN"
+  | "ARABIC"
+  | "HINDI";
 
 // Language interface for UI
 export interface Language {
@@ -68,19 +68,19 @@ export interface Language {
 
 // Supported languages configuration
 export const SUPPORTED_LANGUAGES: Language[] = [
-  { code: 'ENGLISH', name: 'English', flag: '🇺🇸' },
-  { code: 'CHINESE_SIMPLIFIED', name: '简体中文', flag: '🇨🇳' },
-  { code: 'CHINESE_TRADITIONAL', name: '繁體中文', flag: '🇹🇼' },
-  { code: 'SPANISH', name: 'Español', flag: '🇪🇸' },
-  { code: 'FRENCH', name: 'Français', flag: '🇫🇷' },
-  { code: 'GERMAN', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ITALIAN', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'PORTUGUESE', name: 'Português', flag: '🇵🇹' },
-  { code: 'RUSSIAN', name: 'Русский', flag: '🇷🇺' },
-  { code: 'JAPANESE', name: '日本語', flag: '🇯🇵' },
-  { code: 'KOREAN', name: '한국어', flag: '🇰🇷' },
-  { code: 'ARABIC', name: 'العربية', flag: '🇸🇦' },
-  { code: 'HINDI', name: 'हिन्दी', flag: '🇮🇳' },
+  { code: "ENGLISH", name: "English", flag: "🇺🇸" },
+  { code: "CHINESE_SIMPLIFIED", name: "简体中文", flag: "🇨🇳" },
+  { code: "CHINESE_TRADITIONAL", name: "繁體中文", flag: "🇹🇼" },
+  { code: "SPANISH", name: "Español", flag: "🇪🇸" },
+  { code: "FRENCH", name: "Français", flag: "🇫🇷" },
+  { code: "GERMAN", name: "Deutsch", flag: "🇩🇪" },
+  { code: "ITALIAN", name: "Italiano", flag: "🇮🇹" },
+  { code: "PORTUGUESE", name: "Português", flag: "🇵🇹" },
+  { code: "RUSSIAN", name: "Русский", flag: "🇷🇺" },
+  { code: "JAPANESE", name: "日本語", flag: "🇯🇵" },
+  { code: "KOREAN", name: "한국어", flag: "🇰🇷" },
+  { code: "ARABIC", name: "العربية", flag: "🇸🇦" },
+  { code: "HINDI", name: "हिन्दी", flag: "🇮🇳" },
 ];
 
 // Translation API functions
@@ -89,9 +89,9 @@ export const translationApi = {
    * Translate report content to target language
    */
   async translateContent(
-    content: TranslationRequest['content'],
+    content: TranslationRequest["content"],
     targetLanguage: LanguageCode,
-    sourceLanguage: LanguageCode = 'ENGLISH'
+    sourceLanguage: LanguageCode = "ENGLISH"
   ): Promise<ApiResponse<TranslationResponse>> {
     const requestBody: TranslationRequest = {
       content,
@@ -103,10 +103,10 @@ export const translationApi = {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("authToken");
       if (!token) {
-        throw new Error('Authentication token not found. Please log in again.');
+        throw new Error("Authentication token not found. Please log in again.");
       }
     }
-    
+
     return await apiClient.post<TranslationResponse>(
       API_ENDPOINTS.USER.TRANSLATE,
       requestBody
@@ -117,7 +117,7 @@ export const translationApi = {
    * Get language by code
    */
   getLanguageByCode(code: LanguageCode): Language | undefined {
-    return SUPPORTED_LANGUAGES.find(lang => lang.code === code);
+    return SUPPORTED_LANGUAGES.find((lang) => lang.code === code);
   },
 
   /**
@@ -133,13 +133,16 @@ export const translationApi = {
   debugAuthToken(): void {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("authToken");
-      console.log('🔍 Auth Token Debug:');
-      console.log('  - Token exists:', !!token);
-      console.log('  - Token preview:', token ? token.substring(0, 20) + '...' : 'null');
-      console.log('  - Token length:', token ? token.length : 0);
-      console.log('  - localStorage keys:', Object.keys(localStorage));
+      console.log("🔍 Auth Token Debug:");
+      console.log("  - Token exists:", !!token);
+      console.log(
+        "  - Token preview:",
+        token ? token.substring(0, 20) + "..." : "null"
+      );
+      console.log("  - Token length:", token ? token.length : 0);
+      console.log("  - localStorage keys:", Object.keys(localStorage));
     } else {
-      console.log('🔍 Auth Token Debug: Window not available (SSR)');
+      console.log("🔍 Auth Token Debug: Window not available (SSR)");
     }
   },
 
@@ -148,18 +151,17 @@ export const translationApi = {
    * Use this if the apiClient approach is not working
    */
   async translateContentManual(
-    content: TranslationRequest['content'],
+    content: TranslationRequest["content"],
     targetLanguage: LanguageCode,
-    sourceLanguage: LanguageCode = 'ENGLISH'
+    sourceLanguage: LanguageCode = "ENGLISH"
   ): Promise<ApiResponse<TranslationResponse>> {
-    
     if (typeof window === "undefined") {
       return {
         error: {
-          code: 'SSR_ERROR',
-          message: 'Translation not available during server-side rendering',
+          code: "SSR_ERROR",
+          message: "Translation not available during server-side rendering",
           severity: ErrorSeverity.ERROR,
-        }
+        },
       };
     }
 
@@ -167,10 +169,10 @@ export const translationApi = {
     if (!token) {
       return {
         error: {
-          code: 'AUTH_ERROR',
-          message: 'Authentication token not found. Please log in again.',
+          code: "AUTH_ERROR",
+          message: "Authentication token not found. Please log in again.",
           severity: ErrorSeverity.ERROR,
-        }
+        },
       };
     }
 
@@ -181,50 +183,56 @@ export const translationApi = {
     };
 
     const url = `${getApiBaseUrl()}${API_ENDPOINTS.USER.TRANSLATE}`;
-    
-    console.log('🔧 Manual fetch - URL:', url);
-    console.log('🔧 Manual fetch - Token preview:', token.substring(0, 20) + '...');
+
+    console.log("🔧 Manual fetch - URL:", url);
+    console.log(
+      "🔧 Manual fetch - Token preview:",
+      token.substring(0, 20) + "..."
+    );
 
     try {
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(requestBody),
       });
 
-      console.log('🔧 Manual fetch - Response status:', response.status);
-      console.log('🔧 Manual fetch - Response headers:', Object.fromEntries(response.headers.entries()));
+      console.log("🔧 Manual fetch - Response status:", response.status);
+      console.log(
+        "🔧 Manual fetch - Response headers:",
+        Object.fromEntries(response.headers.entries())
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('🔧 Manual fetch - Error response:', errorText);
+        console.error("🔧 Manual fetch - Error response:", errorText);
         return {
           error: {
-            code: 'TRANSLATION_ERROR',
+            code: "TRANSLATION_ERROR",
             message: `Translation failed: ${response.status} ${response.statusText}`,
             severity: ErrorSeverity.ERROR,
             httpStatus: response.status,
-          }
+          },
         };
       }
 
       const data = await response.json();
-      console.log('🔧 Manual fetch - Success response:', data);
-      
+      console.log("🔧 Manual fetch - Success response:", data);
+
       return { data };
     } catch (error) {
-      console.error('🔧 Manual fetch - Network error:', error);
+      console.error("🔧 Manual fetch - Network error:", error);
       return {
         error: {
-          code: 'NETWORK_ERROR',
-          message: 'Network error during translation request',
+          code: "NETWORK_ERROR",
+          message: "Network error during translation request",
           severity: ErrorSeverity.ERROR,
           originalError: error,
-        }
+        },
       };
     }
   },
