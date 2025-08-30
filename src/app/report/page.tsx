@@ -864,7 +864,7 @@ function ReportContent() {
             )}
           </div>
 
-          <div className="prose prose-lg max-w-none">
+          <div className="prose prose-lg max-w-none flex flex-col gap-4">
             {(getCurrentContent()?.readings || []).map((reading, index) => (
               <p
                 className="text-gray-700 leading-relaxed"
