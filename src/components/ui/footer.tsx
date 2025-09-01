@@ -1,12 +1,20 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { LogoSvg } from './logo';
-import { Mail, MessageCircle, Shield, Heart, Star, Moon, Sparkles } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { authAPI } from '@/lib/api/auth';
-import { userAPI } from '@/lib/api/user';
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { LogoSvg } from "./logo";
+import {
+  Mail,
+  MessageCircle,
+  Shield,
+  Heart,
+  Star,
+  Moon,
+  Sparkles,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { authAPI } from "@/lib/api/auth";
+import { userAPI } from "@/lib/api/user";
 
 interface FooterLink {
   name: string;
@@ -21,46 +29,46 @@ interface FooterSection {
 
 const footerSections: FooterSection[] = [
   {
-    title: 'Product',
+    title: "Product",
     links: [
-      { name: 'Features', href: '#features' },
-      { name: 'Readings', href: '/dashboard' },
-      { name: 'Pricing', href: '/pricing' },
-      { name: 'How it Works', href: '#how-it-works' },
+      { name: "Features", href: "#features" },
+      { name: "Readings", href: "/dashboard" },
+      // { name: 'Pricing', href: '/pricing' },
+      { name: "How it Works", href: "#how-it-works" },
     ],
   },
   {
-    title: 'Company',
+    title: "Company",
     links: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Our Story', href: '/our-story' },
-      { name: 'Contact', href: '/contact' },
-      { name: 'Feedback', href: '/contact' },
+      { name: "About Us", href: "/about" },
+      { name: "Our Story", href: "/our-story" },
+      { name: "Contact", href: "/contact" },
+      { name: "Feedback", href: "/contact" },
     ],
   },
   {
-    title: 'Support',
+    title: "Support",
     links: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'Getting Started', href: '/getting-started' },
-      { name: 'Community', href: '/community' },
-      { name: 'Status', href: '/status' },
+      { name: "Help Center", href: "/help" },
+      { name: "Getting Started", href: "/getting-started" },
+      { name: "Community", href: "/community" },
+      { name: "Status", href: "/status" },
     ],
   },
   {
-    title: 'Legal',
+    title: "Legal",
     links: [
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Cookie Policy', href: '/cookies' },
-      { name: 'Disclaimer', href: '/disclaimer' },
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms of Service", href: "/terms" },
+      { name: "Cookie Policy", href: "/cookies" },
+      { name: "Disclaimer", href: "/disclaimer" },
     ],
   },
 ];
 
 const socialLinks = [
-  { name: 'Email', href: 'mailto:hello@fortune-cookie.me', icon: Mail },
-  { name: 'Contact', href: '#contact', icon: MessageCircle },
+  { name: "Email", href: "mailto:hello@fortune-cookie.me", icon: Mail },
+  { name: "Contact", href: "#contact", icon: MessageCircle },
 ];
 
 export function Footer() {
@@ -70,8 +78,8 @@ export function Footer() {
   // Check authentication state and user subscription status
   useEffect(() => {
     const checkAuthState = async () => {
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('authToken');
+      if (typeof window !== "undefined") {
+        const token = localStorage.getItem("authToken");
         const loggedIn = !!token;
         setIsLoggedIn(loggedIn);
 
@@ -79,9 +87,11 @@ export function Footer() {
         if (loggedIn) {
           try {
             const planResponse = await userAPI.getPlan();
-            setHasActiveSubscription(planResponse.data?.hasActiveSubscription || false);
+            setHasActiveSubscription(
+              planResponse.data?.hasActiveSubscription || false
+            );
           } catch (error) {
-            console.error('Failed to load user plan in footer:', error);
+            console.error("Failed to load user plan in footer:", error);
             setHasActiveSubscription(false);
           }
         } else {
@@ -94,11 +104,11 @@ export function Footer() {
   }, []);
 
   // Filter footer sections based on subscription status
-  const filteredFooterSections = footerSections.map(section => ({
+  const filteredFooterSections = footerSections.map((section) => ({
     ...section,
-    links: section.links.filter(link => 
-      !(link.name === 'Pricing' && hasActiveSubscription)
-    )
+    links: section.links.filter(
+      (link) => !(link.name === "Pricing" && hasActiveSubscription)
+    ),
   }));
 
   return (
@@ -123,10 +133,11 @@ export function Footer() {
               >
                 <LogoSvg size="lg" className="mb-6" />
                 <p className="text-gray-600 text-sm leading-relaxed mb-6 max-w-sm">
-                  Discover your fortune with personalized readings, lucky insights, 
-                  and ancient wisdom designed for your spiritual journey.
+                  Discover your fortune with personalized readings, lucky
+                  insights, and ancient wisdom designed for your spiritual
+                  journey.
                 </p>
-                
+
                 {/* Social Links */}
                 <div className="flex items-center gap-4">
                   {socialLinks.map((social) => {
@@ -139,9 +150,9 @@ export function Footer() {
                         whileTap={{ scale: 0.95 }}
                         className="p-3 rounded-xl text-gray-600 hover:text-indigo-600 transition-colors"
                         style={{
-                          background: 'rgba(255, 255, 255, 0.6)',
-                          backdropFilter: 'blur(10px)',
-                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          background: "rgba(255, 255, 255, 0.6)",
+                          backdropFilter: "blur(10px)",
+                          border: "1px solid rgba(255, 255, 255, 0.3)",
                         }}
                         title={social.name}
                       >
@@ -172,7 +183,10 @@ export function Footer() {
                       <Link
                         href={link.href}
                         className="text-sm text-gray-600 hover:text-indigo-600 transition-colors"
-                        {...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
+                        {...(link.external && {
+                          target: "_blank",
+                          rel: "noopener noreferrer",
+                        })}
                       >
                         {link.name}
                       </Link>
@@ -220,7 +234,7 @@ export function Footer() {
             >
               <p>&copy; 2024 Fortune-Cookie.me. All rights reserved.</p>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}

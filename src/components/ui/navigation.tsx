@@ -21,7 +21,8 @@ import { LogoSvg } from "./logo";
 import { authAPI } from "@/lib/api/auth";
 import { userAPI } from "@/lib/api/user";
 
-const publicNavigation = [{ name: "Pricing", href: "/pricing", icon: Star }];
+// const publicNavigation = [{ name: "Pricing", href: "/pricing", icon: Star }];
+const publicNavigation = [];
 
 const privateNavigation = [
   { name: "Order History", href: "/orders", icon: Package },
