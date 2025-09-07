@@ -104,7 +104,7 @@ export const reportsApi = {
   },
 
   async generateReport(
-    type: "YEARLY" | "MONTHLY"
+    type: "YEARLY" | "MONTHLY" | "DAILY"
   ): Promise<ApiResponse<Report>> {
     const endpoint = API_ENDPOINTS.USER.REPORT_GENERATE.replace(":type", type);
     return apiClient.post<Report>(endpoint, {});
