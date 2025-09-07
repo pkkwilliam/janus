@@ -46,7 +46,10 @@ export interface TranslatedContent {
 
 export interface TranslationToggleProps {
   reportContent: ReportContent;
-  onTranslationChange: (content: TranslatedContent, language: LanguageCode) => void;
+  onTranslationChange: (
+    content: TranslatedContent,
+    language: LanguageCode
+  ) => void;
 }
 
 export interface GlossaryTooltipProps {
@@ -68,7 +71,10 @@ export interface LuckyElementCardProps {
 
 export interface ReportHeaderProps {
   report: Report;
-  onTranslationChange: (content: TranslatedContent, language: LanguageCode) => void;
+  onTranslationChange: (
+    content: TranslatedContent,
+    language: LanguageCode
+  ) => void;
 }
 
 export interface ReportReadingProps {
@@ -93,4 +99,11 @@ export interface LuckyElementsGridProps {
 
 export type ReportType = Report["type"];
 export type DisplayType = Report["displayType"];
-export type LanguageCode = "ENGLISH" | "CHINESE" | "SPANISH" | "FRENCH" | "GERMAN" | "JAPANESE" | "KOREAN";
+export type LanguageCode =
+  | "ENGLISH"
+  | "CHINESE"
+  | "SPANISH"
+  | "FRENCH"
+  | "GERMAN"
+  | "JAPANESE"
+  | "KOREAN";

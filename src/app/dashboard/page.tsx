@@ -394,9 +394,11 @@ function DashboardContent() {
     setPlanLoading(true);
     try {
       const planResponse = await userAPI.getPlan();
-      setHasActiveSubscription(planResponse.data?.hasActiveSubscription || false);
+      setHasActiveSubscription(
+        planResponse.data?.hasActiveSubscription || false
+      );
     } catch (error) {
-      console.error('Failed to load plan information:', error);
+      console.error("Failed to load plan information:", error);
       setHasActiveSubscription(false);
     } finally {
       setPlanLoading(false);
@@ -466,14 +468,14 @@ function DashboardContent() {
     }
   };
 
-  const generateYearlyReport = async () => {
+  const generateDailyReport = async () => {
     if (generatingReport) return;
 
     setGeneratingReport(true);
     setGenerationError(null);
 
     try {
-      const response = await reportsApi.generateReport("YEARLY");
+      const response = await reportsApi.generateReport("DAILY");
 
       if (response.error) {
         setGenerationError(response.error.message);
@@ -504,12 +506,15 @@ function DashboardContent() {
 
   // Calculate total reports and average score from actual reports data
   const totalReports = reports.length;
-  const averageScore = reports.length > 0 
-    ? Math.round(reports.reduce((sum, report) => {
-        const score = parseInt(report.reportContent?.fortuneScore || '0');
-        return sum + score;
-      }, 0) / reports.length)
-    : 0;
+  const averageScore =
+    reports.length > 0
+      ? Math.round(
+          reports.reduce((sum, report) => {
+            const score = parseInt(report.reportContent?.fortuneScore || "0");
+            return sum + score;
+          }, 0) / reports.length
+        )
+      : 0;
 
   const handleProfileComplete = (profileData: any) => {
     // Profile update is already handled in the form component and auto-cached
@@ -541,7 +546,6 @@ function DashboardContent() {
     return null;
   }
 
-
   // If profile form is open, show it as overlay
   if (showBirthInfoForm) {
     return (
@@ -553,7 +557,9 @@ function DashboardContent() {
           initialData={{
             firstName: user.firstName || "",
             lastName: user.lastName || "",
-            gender: (user.gender as "MALE" | "FEMALE" | "PREFER_NOT_TO_SAY") || undefined,
+            gender:
+              (user.gender as "MALE" | "FEMALE" | "PREFER_NOT_TO_SAY") ||
+              undefined,
             birthDate: user.birthDate ? user.birthDate.replace(/\//g, "-") : "", // Convert from YYYY/MM/DD to YYYY-MM-DD for HTML input
             birthTime: user.birthTime || "",
             birthCity: user.birthCity || "",
@@ -645,7 +651,6 @@ function DashboardContent() {
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </motion.div>
@@ -715,7 +720,8 @@ function DashboardContent() {
                     Unlock Premium Features
                   </h3>
                   <p className="text-sm text-gray-600">
-                    Get unlimited reports, advanced insights, and personalized guidance
+                    Get unlimited reports, advanced insights, and personalized
+                    guidance
                   </p>
                 </div>
               </div>
@@ -789,7 +795,8 @@ function DashboardContent() {
               </div>
               <div className="text-xl font-light text-gray-900 mb-1">
                 {Math.floor(
-                  (Date.now() - new Date(user.joinDate || user.createTime).getTime()) /
+                  (Date.now() -
+                    new Date(user.joinDate || user.createTime).getTime()) /
                     (1000 * 60 * 60 * 24)
                 )}
               </div>
@@ -844,7 +851,8 @@ function DashboardContent() {
             </div>
             <div className="text-2xl font-light text-gray-900 mb-1">
               {Math.floor(
-                (Date.now() - new Date(user.joinDate || user.createTime).getTime()) /
+                (Date.now() -
+                  new Date(user.joinDate || user.createTime).getTime()) /
                   (1000 * 60 * 60 * 24)
               )}
             </div>
@@ -975,7 +983,7 @@ function DashboardContent() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={generateYearlyReport}
+                      onClick={generateDailyReport}
                       disabled={generatingReport || needsProfileCompletion}
                       className="px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-medium hover:from-purple-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 mx-auto shadow-lg"
                     >
@@ -984,7 +992,7 @@ function DashboardContent() {
                           <Loader2 className="w-5 h-5 animate-spin" />
                           <div className="text-left">
                             <div className="font-medium">
-                              Generating Your Yearly Report...
+                              Generating Your Daily Report...
                             </div>
                             <div className="text-xs opacity-90">
                               This may take up to 1 minute
@@ -998,7 +1006,7 @@ function DashboardContent() {
                           </div>
                           <div className="text-left">
                             <div className="font-medium">
-                              Generate Yearly Report
+                              Generate Daily Report
                             </div>
                             <div className="text-xs opacity-90">
                               Get your comprehensive fortune analysis
@@ -1076,7 +1084,11 @@ function DashboardContent() {
         <h2 className="text-xl md:text-2xl font-light text-gray-900 mb-4 md:mb-6">
           Quick Actions
         </h2>
-        <div className={`grid ${hasActiveSubscription ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4 md:gap-6`}>
+        <div
+          className={`grid ${
+            hasActiveSubscription ? "md:grid-cols-2" : "md:grid-cols-3"
+          } gap-4 md:gap-6`}
+        >
           <div
             className="p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
             style={{
@@ -1150,14 +1162,16 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <DashboardContent />
     </Suspense>
   );

@@ -70,7 +70,7 @@ export interface Language {
 export const SUPPORTED_LANGUAGES: Language[] = [
   { code: "ENGLISH", name: "English", flag: "🇺🇸" },
   { code: "CHINESE_SIMPLIFIED", name: "简体中文", flag: "🇨🇳" },
-  { code: "CHINESE_TRADITIONAL", name: "繁體中文", flag: "🇹🇼" },
+  { code: "CHINESE_TRADITIONAL", name: "繁體中文", flag: "🇭🇰" },
   { code: "SPANISH", name: "Español", flag: "🇪🇸" },
   { code: "FRENCH", name: "Français", flag: "🇫🇷" },
   { code: "GERMAN", name: "Deutsch", flag: "🇩🇪" },
