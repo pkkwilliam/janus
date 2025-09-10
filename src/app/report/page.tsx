@@ -27,6 +27,8 @@ import {
 } from "@/lib/api/translation";
 import { useAppInit } from "@/hooks/useAppInit";
 
+const SHOW_EXCLUSIVE = false; // Toggle to show/hide premium exclusive section
+
 // Tooltip component for glossary terms
 function GlossaryTooltip({
   term,
@@ -914,7 +916,7 @@ function ReportContent() {
       </motion.div>
 
       {/* Premium Exclusive Section Header */}
-      {displayType === "FULL" && (
+      {SHOW_EXCLUSIVE && displayType === "FULL" && (
         <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
