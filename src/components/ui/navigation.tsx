@@ -25,8 +25,8 @@ import { userAPI } from "@/lib/api/user";
 const publicNavigation: { name: string; href: string; icon: any }[] = [];
 
 const privateNavigation = [
-  { name: "Order History", href: "/orders", icon: Package },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Order History", href: "/orders", icon: Package, show: false },
+  { name: "Settings", href: "/settings", icon: Settings, show: true },
 ];
 
 export function Navigation() {
@@ -111,7 +111,7 @@ export function Navigation() {
 
   // Add "Upgrade to Premium" to private navigation if user doesn't have active subscription
   const filteredPrivateNavigation = [
-    ...privateNavigation,
+    ...privateNavigation.filter((item) => item.show),
     ...(!hasActiveSubscription
       ? [{ name: "Upgrade to Premium", href: "/pricing", icon: Crown }]
       : []),

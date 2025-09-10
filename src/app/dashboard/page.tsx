@@ -27,6 +27,8 @@ import { reportsApi, Report } from "@/lib/api/reports";
 import { useAppInit } from "@/hooks/useAppInit";
 import { FeedbackButton } from "@/components/ui/feedback-button";
 
+const SHOW_ORDER_HISHORY = false;
+
 // Mock user data
 const mockUser = {
   name: "Sarah Chen",
@@ -1131,26 +1133,28 @@ function DashboardContent() {
             </div>
           )}
 
-          <Link href="/orders">
-            <div
-              className="p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
-                backdropFilter: "blur(20px)",
-              }}
-            >
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Package className="w-8 h-8 text-white" />
+          {SHOW_ORDER_HISHORY && (
+            <Link href="/orders">
+              <div
+                className="p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 text-center cursor-pointer group hover:scale-105 transition-transform"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
+                  backdropFilter: "blur(20px)",
+                }}
+              >
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Package className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Order History
+                </h3>
+                <p className="text-sm text-gray-600">
+                  View your subscription orders
+                </p>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Order History
-              </h3>
-              <p className="text-sm text-gray-600">
-                View your subscription orders
-              </p>
-            </div>
-          </Link>
+            </Link>
+          )}
         </div>
       </motion.div>
 
