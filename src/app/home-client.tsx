@@ -1,13 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Moon, Stars, Heart, ArrowRight, Clock, Users, Shield, Play, Quote } from "lucide-react";
+import {
+  Sparkles,
+  Moon,
+  Stars,
+  Heart,
+  ArrowRight,
+  Clock,
+  Users,
+  Shield,
+  Play,
+  Quote,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { useAppInit } from "@/hooks/useAppInit";
 import { ContactForm } from "@/components/ui/contact-form";
 import { Footer } from "@/components/ui/footer";
+
+const SHOW_WATCH_DEMO_BUTTON = false;
 
 // Component to handle OAuth redirect logic
 function OAuthRedirectHandler() {
@@ -19,23 +32,23 @@ function OAuthRedirectHandler() {
   useEffect(() => {
     const handleOAuthRedirect = async () => {
       // Check if we have OAuth parameters from Google
-      const code = searchParams.get('code');
-      const error = searchParams.get('error');
-      
+      const code = searchParams.get("code");
+      const error = searchParams.get("error");
+
       if (code || error) {
         setOauthProcessing(true);
-        
+
         // Redirect to callback page with all OAuth parameters
         const params = new URLSearchParams();
         searchParams.forEach((value, key) => {
           params.set(key, value);
         });
-        
+
         // Add provider parameter for Google since backend response indicates Google OAuth
         if (code) {
-          params.set('provider', 'google');
+          params.set("provider", "google");
         }
-        
+
         router.replace(`/auth/callback?${params.toString()}`);
       }
     };
@@ -47,7 +60,9 @@ function OAuthRedirectHandler() {
 }
 
 export default function HomeClient() {
-  const { user, isLoading, isAuthenticated } = useAppInit({ requireAuth: false });
+  const { user, isLoading, isAuthenticated } = useAppInit({
+    requireAuth: false,
+  });
   const router = useRouter();
   const [showContactForm, setShowContactForm] = useState(false);
 
@@ -64,7 +79,7 @@ export default function HomeClient() {
       <Suspense fallback={null}>
         <OAuthRedirectHandler />
       </Suspense>
-      
+
       {/* Hero Section */}
       <div className="relative min-h-screen overflow-hidden">
         {/* Apple-style Background with Liquid Glass Effect */}
@@ -165,7 +180,7 @@ export default function HomeClient() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                Your Fortune Awaits
+                Ancient wisdom
               </motion.h1>
 
               <motion.p
@@ -174,9 +189,8 @@ export default function HomeClient() {
                 transition={{ duration: 1, delay: 0.6 }}
                 className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed"
               >
-                Discover personalized insights through the ancient wisdom of fortune telling, 
-                enhanced by modern technology. Unlock your potential with AI-powered readings 
-                tailored to your unique spiritual journey.
+                Unlock clarity in career, love, and life through wisdom crafted
+                for you.
               </motion.p>
 
               <motion.div
@@ -193,7 +207,8 @@ export default function HomeClient() {
                         whileTap={{ scale: 0.98 }}
                         className="group relative px-8 py-4 rounded-2xl text-white font-medium overflow-hidden text-lg"
                         style={{
-                          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          background:
+                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                           boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)",
                         }}
                       >
@@ -204,20 +219,22 @@ export default function HomeClient() {
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </motion.button>
                     </Link>
-                    <motion.button
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="px-8 py-4 rounded-2xl font-medium text-gray-700 transition-all duration-300 text-lg flex items-center gap-2"
-                      style={{
-                        background: "rgba(255, 255, 255, 0.7)",
-                        backdropFilter: "blur(20px)",
-                        border: "1px solid rgba(255, 255, 255, 0.3)",
-                      }}
-                      onClick={() => setShowContactForm(!showContactForm)}
-                    >
-                      <Play className="w-5 h-5" />
-                      Watch Demo
-                    </motion.button>
+                    {SHOW_WATCH_DEMO_BUTTON && (
+                      <motion.button
+                        whileHover={{ scale: 1.02, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="px-8 py-4 rounded-2xl font-medium text-gray-700 transition-all duration-300 text-lg flex items-center gap-2"
+                        style={{
+                          background: "rgba(255, 255, 255, 0.7)",
+                          backdropFilter: "blur(20px)",
+                          border: "1px solid rgba(255, 255, 255, 0.3)",
+                        }}
+                        onClick={() => setShowContactForm(!showContactForm)}
+                      >
+                        <Play className="w-5 h-5" />
+                        Watch Demo
+                      </motion.button>
+                    )}
                   </>
                 ) : (
                   <Link href="/dashboard">
@@ -226,7 +243,8 @@ export default function HomeClient() {
                       whileTap={{ scale: 0.98 }}
                       className="group relative px-8 py-4 rounded-2xl text-white font-medium overflow-hidden text-lg"
                       style={{
-                        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        background:
+                          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                         boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)",
                       }}
                     >
@@ -279,13 +297,18 @@ export default function HomeClient() {
               Fortune Cookie Features for Your Journey
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover the perfect blend of ancient wisdom and cutting-edge technology
+              Discover the perfect blend of ancient wisdom and cutting-edge
+              technology
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {features.map((feature, index) => (
-              <FeatureCard key={feature.title} feature={feature} index={index} />
+              <FeatureCard
+                key={feature.title}
+                feature={feature}
+                index={index}
+              />
             ))}
           </div>
         </div>
@@ -305,7 +328,8 @@ export default function HomeClient() {
               Your Journey in Three Simple Steps
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Getting started with personalized fortune readings has never been easier
+              Getting started with personalized fortune readings has never been
+              easier
             </p>
           </motion.div>
 
@@ -331,13 +355,18 @@ export default function HomeClient() {
               What Our Users Say
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Real stories from people who've transformed their lives with Fortune-Cookie.me
+              Real stories from people who've transformed their lives with
+              Fortune-Cookie.me
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={testimonial.name} testimonial={testimonial} index={index} />
+              <TestimonialCard
+                key={testimonial.name}
+                testimonial={testimonial}
+                index={index}
+              />
             ))}
           </div>
         </div>
@@ -358,7 +387,8 @@ export default function HomeClient() {
                 Get in Touch
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Have questions about your spiritual journey? We're here to help you every step of the way.
+                Have questions about your spiritual journey? We're here to help
+                you every step of the way.
               </p>
             </motion.div>
 
@@ -375,8 +405,9 @@ export default function HomeClient() {
                     Connect With Us
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Whether you're seeking guidance, have technical questions, or want to share your 
-                    fortune-telling experience, our team is always ready to listen and help.
+                    Whether you're seeking guidance, have technical questions,
+                    or want to share your fortune-telling experience, our team
+                    is always ready to listen and help.
                   </p>
                 </div>
 
@@ -396,7 +427,9 @@ export default function HomeClient() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">Privacy First</p>
-                      <p className="text-gray-600">Your information is always secure</p>
+                      <p className="text-gray-600">
+                        Your information is always secure
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -425,19 +458,22 @@ const features = [
   {
     icon: Sparkles,
     title: "Personalized Readings",
-    description: "AI-powered fortune analysis tailored to your birth information, current circumstances, and spiritual journey.",
+    description:
+      "AI-powered fortune analysis tailored to your birth information, current circumstances, and spiritual journey.",
     color: "from-blue-500 to-indigo-600",
   },
   {
     icon: Moon,
     title: "Weekly Insights",
-    description: "Regular fortune updates and cosmic guidance to help you navigate life's challenges with confidence.",
+    description:
+      "Regular fortune updates and cosmic guidance to help you navigate life's challenges with confidence.",
     color: "from-purple-500 to-pink-600",
   },
   {
     icon: Heart,
     title: "Spiritual Growth",
-    description: "Track your personal development and spiritual evolution with beautiful, intuitive progress tools.",
+    description:
+      "Track your personal development and spiritual evolution with beautiful, intuitive progress tools.",
     color: "from-pink-500 to-rose-500",
   },
 ];
@@ -446,19 +482,22 @@ const steps = [
   {
     number: "01",
     title: "Create Your Profile",
-    description: "Share your birth information and personal details to create a cosmic blueprint unique to you.",
+    description:
+      "Share your birth information and personal details to create a cosmic blueprint unique to you.",
     icon: Users,
   },
   {
-    number: "02", 
+    number: "02",
     title: "Get Your Reading",
-    description: "Receive personalized fortune insights powered by ancient wisdom and modern AI technology.",
+    description:
+      "Receive personalized fortune insights powered by ancient wisdom and modern AI technology.",
     icon: Stars,
   },
   {
     number: "03",
     title: "Track Your Journey",
-    description: "Monitor your spiritual growth and life changes with weekly updates and progress tracking.",
+    description:
+      "Monitor your spiritual growth and life changes with weekly updates and progress tracking.",
     icon: Heart,
   },
 ];
@@ -467,24 +506,33 @@ const testimonials = [
   {
     name: "Sarah Chen",
     role: "Marketing Director",
-    content: "Fortune-Cookie.me has completely transformed how I approach life decisions. The weekly readings are incredibly insightful and have helped me navigate challenging times with confidence.",
+    content:
+      "Fortune-Cookie.me has completely transformed how I approach life decisions. The weekly readings are incredibly insightful and have helped me navigate challenging times with confidence.",
     avatar: "SC",
   },
   {
     name: "Maria Rodriguez",
-    role: "Entrepreneur", 
-    content: "I was skeptical at first, but the accuracy of the readings is remarkable. It's like having a wise friend who always knows exactly what to say.",
+    role: "Entrepreneur",
+    content:
+      "I was skeptical at first, but the accuracy of the readings is remarkable. It's like having a wise friend who always knows exactly what to say.",
     avatar: "MR",
   },
   {
     name: "Emma Thompson",
     role: "Creative Director",
-    content: "The personalized insights have helped me understand myself better and make more aligned choices. This platform is a game-changer for personal growth.",
+    content:
+      "The personalized insights have helped me understand myself better and make more aligned choices. This platform is a game-changer for personal growth.",
     avatar: "ET",
   },
 ];
 
-function FeatureCard({ feature, index }: { feature: (typeof features)[0]; index: number }) {
+function FeatureCard({
+  feature,
+  index,
+}: {
+  feature: (typeof features)[0];
+  index: number;
+}) {
   const Icon = feature.icon;
 
   return (
@@ -506,7 +554,9 @@ function FeatureCard({ feature, index }: { feature: (typeof features)[0]; index:
         <div
           className="w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
           style={{
-            background: `linear-gradient(135deg, ${feature.color.split(' ')[1]}, ${feature.color.split(' ')[3]})`,
+            background: `linear-gradient(135deg, ${
+              feature.color.split(" ")[1]
+            }, ${feature.color.split(" ")[3]})`,
           }}
         >
           <Icon className="w-7 h-7 text-white" />
@@ -516,9 +566,7 @@ function FeatureCard({ feature, index }: { feature: (typeof features)[0]; index:
           {feature.title}
         </h3>
 
-        <p className="text-gray-600 leading-relaxed">
-          {feature.description}
-        </p>
+        <p className="text-gray-600 leading-relaxed">{feature.description}</p>
       </div>
 
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-pink-400/10 opacity-50 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
@@ -557,7 +605,13 @@ function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
   );
 }
 
-function TestimonialCard({ testimonial, index }: { testimonial: (typeof testimonials)[0]; index: number }) {
+function TestimonialCard({
+  testimonial,
+  index,
+}: {
+  testimonial: (typeof testimonials)[0];
+  index: number;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -573,8 +627,10 @@ function TestimonialCard({ testimonial, index }: { testimonial: (typeof testimon
       }}
     >
       <Quote className="w-8 h-8 text-indigo-400 mb-4" />
-      <p className="text-gray-700 leading-relaxed mb-6">{testimonial.content}</p>
-      
+      <p className="text-gray-700 leading-relaxed mb-6">
+        {testimonial.content}
+      </p>
+
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white font-medium">
           {testimonial.avatar}
