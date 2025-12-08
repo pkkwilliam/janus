@@ -45,7 +45,7 @@ export class ApiError extends Error {
 // Generic API client class
 export class ApiClient {
   private baseUrl: string;
-  private defaultTimeout: number = 30000; // 30 seconds
+  private defaultTimeout: number = 1000000; // 30 seconds
 
   constructor(baseUrl?: string) {
     this.baseUrl = baseUrl || getApiBaseUrl();
