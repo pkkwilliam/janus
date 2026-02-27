@@ -180,7 +180,7 @@ export default function HomeClient() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                Ancient wisdom
+                Your Chinese zodiac
               </motion.h1>
 
               <motion.p
@@ -189,8 +189,8 @@ export default function HomeClient() {
                 transition={{ duration: 1, delay: 0.6 }}
                 className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed"
               >
-                Unlock clarity in career, love, and life through wisdom crafted
-                for you.
+                Unlock clarity in career, love, and life through ancient Chinese
+                zodiac wisdom, updated monthly and yearly.
               </motion.p>
 
               <motion.div
@@ -294,11 +294,11 @@ export default function HomeClient() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Fortune Cookie Features for Your Journey
+              Chinese Zodiac Fortune Features
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover the perfect blend of ancient wisdom and cutting-edge
-              technology
+              Discover the perfect blend of ancient Chinese zodiac wisdom and
+              modern AI technology
             </p>
           </motion.div>
 
@@ -325,11 +325,11 @@ export default function HomeClient() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Your Journey in Three Simple Steps
+              Your Chinese Zodiac Journey in Three Steps
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Getting started with personalized fortune readings has never been
-              easier
+              Getting started with Chinese zodiac fortune readings has never
+              been easier
             </p>
           </motion.div>
 
@@ -356,7 +356,7 @@ export default function HomeClient() {
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Real stories from people who've transformed their lives with
-              Fortune-Cookie.me
+              Chinese zodiac fortune telling
             </p>
           </motion.div>
 
@@ -387,8 +387,8 @@ export default function HomeClient() {
                 Get in Touch
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Have questions about your spiritual journey? We're here to help
-                you every step of the way.
+                Have questions about your Chinese zodiac fortune? We're here to
+                help you every step of the way.
               </p>
             </motion.div>
 
@@ -405,9 +405,9 @@ export default function HomeClient() {
                     Connect With Us
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Whether you're seeking guidance, have technical questions,
-                    or want to share your fortune-telling experience, our team
-                    is always ready to listen and help.
+                    Whether you're seeking Chinese zodiac guidance, have
+                    technical questions, or want to share your fortune-telling
+                    experience, our team is always ready to listen and help.
                   </p>
                 </div>
 
@@ -457,23 +457,23 @@ export default function HomeClient() {
 const features = [
   {
     icon: Sparkles,
-    title: "Personalized Readings",
+    title: "Monthly Fortune Reports",
     description:
-      "AI-powered fortune analysis tailored to your birth information, current circumstances, and spiritual journey.",
+      "Get personalized Chinese zodiac insights every month. Discover what the stars have in store for your career, love life, and personal growth.",
     color: "from-blue-500 to-indigo-600",
   },
   {
     icon: Moon,
-    title: "Weekly Insights",
+    title: "Yearly Zodiac Reports",
     description:
-      "Regular fortune updates and cosmic guidance to help you navigate life's challenges with confidence.",
+      "Comprehensive yearly fortune analysis based on your Chinese zodiac sign. Plan ahead with ancient wisdom tailored to your birth year.",
     color: "from-purple-500 to-pink-600",
   },
   {
     icon: Heart,
-    title: "Spiritual Growth",
+    title: "Personalized Insights",
     description:
-      "Track your personal development and spiritual evolution with beautiful, intuitive progress tools.",
+      "AI-powered fortune analysis tailored to your Chinese zodiac sign, birth year, and current circumstances for accurate guidance.",
     color: "from-pink-500 to-rose-500",
   },
 ];
@@ -481,23 +481,23 @@ const features = [
 const steps = [
   {
     number: "01",
-    title: "Create Your Profile",
+    title: "Enter Your Birth Date",
     description:
-      "Share your birth information and personal details to create a cosmic blueprint unique to you.",
+      "Tell us your birth date and we'll reveal your Chinese zodiac sign and birth year for personalized readings.",
     icon: Users,
   },
   {
     number: "02",
-    title: "Get Your Reading",
+    title: "Get Your Monthly Fortune",
     description:
-      "Receive personalized fortune insights powered by ancient wisdom and modern AI technology.",
+      "Receive monthly Chinese zodiac insights tailored to your sign. Know what to expect this month in career, love, and life.",
     icon: Stars,
   },
   {
     number: "03",
-    title: "Track Your Journey",
+    title: "Plan Your Year Ahead",
     description:
-      "Monitor your spiritual growth and life changes with weekly updates and progress tracking.",
+      "Get comprehensive yearly fortune reports to navigate the year with clarity and confidence based on your zodiac wisdom.",
     icon: Heart,
   },
 ];
@@ -507,21 +507,21 @@ const testimonials = [
     name: "Sarah Chen",
     role: "Marketing Director",
     content:
-      "Fortune-Cookie.me has completely transformed how I approach life decisions. The weekly readings are incredibly insightful and have helped me navigate challenging times with confidence.",
+      "The monthly Chinese zodiac readings are spot-on. I've been following my Dragon sign's guidance for 6 months and it's helped me make better career decisions.",
     avatar: "SC",
   },
   {
     name: "Maria Rodriguez",
     role: "Entrepreneur",
     content:
-      "I was skeptical at first, but the accuracy of the readings is remarkable. It's like having a wise friend who always knows exactly what to say.",
+      "I was skeptical about Chinese zodiac, but the yearly report was surprisingly accurate. It predicted a major business opportunity that came true!",
     avatar: "MR",
   },
   {
     name: "Emma Thompson",
     role: "Creative Director",
     content:
-      "The personalized insights have helped me understand myself better and make more aligned choices. This platform is a game-changer for personal growth.",
+      "The personalized insights based on my Chinese zodiac sign have helped me understand myself better. The monthly updates are like having a wise friend guiding me.",
     avatar: "ET",
   },
 ];
