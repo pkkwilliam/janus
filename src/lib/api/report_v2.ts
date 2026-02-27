@@ -19,6 +19,7 @@ export interface ReportContentV2 {
   financial: string;
   general: string;
   health: string;
+  relationship: string;
   monthly: FortuneByMonth[];
   spiritualGuidance: string;
   title: string;
@@ -36,7 +37,7 @@ export interface ReportV2 {
   endTime: string;
   forYear: string;
   reportContent: ReportContentV2;
-  type: "YEARLY"
+  type: "YEARLY";
   reportVersion: string;
   startTime: string;
   userId: string;
@@ -102,8 +103,7 @@ export const reportsApi = {
     return apiClient.get<ReportV2>(endpoint);
   },
 
-  async generateReport(
-  ): Promise<ApiResponse<ReportV2>> {
+  async generateReport(): Promise<ApiResponse<ReportV2>> {
     const endpoint = API_ENDPOINTS.REPORT_V2.REQUEST;
     return apiClient.post<ReportV2>(endpoint, {});
   },
