@@ -27,6 +27,7 @@ import { reportsApi, Report } from "@/lib/api/reports";
 // import { reportsApi, ReportV2 as Report } from "@/lib/api/report_v2";
 import { useAppInit } from "@/hooks/useAppInit";
 import { FeedbackButton } from "@/components/ui/feedback-button";
+import { FortuneCookieAnimation } from "@/components/fortune-cookie";
 
 const SHOW_ORDER_HISHORY = false;
 
@@ -161,7 +162,7 @@ const mockReports = [
     },
 ];
 
-function ReportCard({ report, index }: { report: Report; index: number }) {
+function ReportCard({ report, index, onClick }: { report: Report; index: number; onClick?: () => void }) {
     const getScoreColor = (score: number) => {
         if (score >= 80) return "text-green-600 bg-green-50";
         if (score >= 60) return "text-yellow-600 bg-yellow-50";
@@ -275,16 +276,16 @@ function ReportCard({ report, index }: { report: Report; index: number }) {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             whileHover={{ y: -4, transition: { duration: 0.2 } }}
             className={getCardSize(report.type)}
+            onClick={onClick}
         >
-            <Link href={`/report?id=${report.id}`}>
-                <div
-                    className="group p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 cursor-pointer h-full"
-                    style={{
-                        background: "rgba(255, 255, 255, 0.4)",
-                        backdropFilter: "blur(20px)",
-                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-                    }}
-                >
+            <div
+                className="group p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/30 cursor-pointer h-full"
+                style={{
+                    background: "rgba(255, 255, 255, 0.4)",
+                    backdropFilter: "blur(20px)",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+                }}
+            >
                     <div className="flex justify-between items-start mb-3 md:mb-4">
                         <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
@@ -353,7 +354,6 @@ function ReportCard({ report, index }: { report: Report; index: number }) {
                         </div>
                     </div>
                 </div>
-            </Link>
         </motion.div>
     );
 }
@@ -378,7 +378,20 @@ function DashboardContent() {
     const [generationError, setGenerationError] = useState<string | null>(null);
     const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
     const [planLoading, setPlanLoading] = useState(true);
+    const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+    const [showFortuneCookie, setShowFortuneCookie] = useState(false);
     const dashboardPageSize = 6;
+
+    const handleReportClick = (report: Report) => {
+        setSelectedReport(report);
+        setShowFortuneCookie(true);
+    };
+
+    const handleFortuneCookieComplete = () => {
+        if (selectedReport) {
+            router.push(`/report?id=${selectedReport.id}`);
+        }
+    };
 
     useEffect(() => {
         if (searchParams.get("upgrade") === "true") {
@@ -960,7 +973,12 @@ function DashboardContent() {
                     <>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                             {filteredReports.map((report, index) => (
-                                <ReportCard key={report.id} report={report} index={index} />
+                                <ReportCard 
+                                    key={report.id} 
+                                    report={report} 
+                                    index={index} 
+                                    onClick={() => handleReportClick(report)}
+                                />
                             ))}
                         </div>
 
@@ -1161,6 +1179,14 @@ function DashboardContent() {
 
             {/* Feedback Button */}
             <FeedbackButton />
+
+            {/* Fortune Cookie Animation Overlay */}
+            <FortuneCookieAnimation
+                isOpen={showFortuneCookie}
+                onClose={() => setShowFortuneCookie(false)}
+                onComplete={handleFortuneCookieComplete}
+                fortuneText={selectedReport?.reportContent?.spiritualGuidance || "Your destiny awaits..."}
+            />
         </div>
     );
 }
