@@ -9,6 +9,13 @@ import {
   BookOpen,
   Crown,
   Loader2,
+  Sparkles,
+  Briefcase,
+  Wallet,
+  Heart,
+  Activity,
+  User,
+  Compass,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { reportsApi, ReportV2 } from "@/lib/api/report_v2";
@@ -35,6 +42,111 @@ import {
 
 const SHOW_TRANSLATION_TOGGLE = false;
 const SHOW_EXCLUSIVE = false; // Toggle to show/hide premium exclusive section
+const SHOW_FORTUNE_READING_SECTION_TITLE = false;
+
+// ==================== LOVE SECTION STYLE SYSTEM ====================
+// Choose your style preset: "default" | "chroma" | "romantic" | "minimal"
+const LOVE_SECTION_STYLE_PRESET = "chroma";
+
+// Style Preset Definitions - Add new presets here!
+const LOVE_STYLE_PRESETS = {
+  // Default: Soft rose/pink theme
+  default: {
+    showAnimation: true,
+    borderColor: "border-rose-300",
+    ringColor: "ring-rose-200",
+    bgGradient: "from-rose-50 via-pink-50 to-rose-50",
+    bgColor: "bg-rose-50",
+    titleColor: "text-rose-700",
+    textColor: "text-rose-800/70",
+    heartSize: "w-6 h-6",
+    smallHeartSize: "w-4 h-4",
+    heartOpacity: 0.5,
+    badgeGradient: "from-rose-500 to-pink-500",
+    badgeText: "✨ Popular",
+    chromaAnimation: false,
+    cardBgOpacity: 0.85,
+  },
+
+  // Chroma: Razer-like cycling red/purple colors
+  chroma: {
+    showAnimation: true,
+    borderColor: "border-fuchsia-300",
+    ringColor: "ring-fuchsia-200",
+    bgGradient: "from-rose-100 via-fuchsia-50 to-purple-100",
+    bgColor: "bg-fuchsia-50",
+    titleColor: "text-fuchsia-800",
+    textColor: "text-purple-900/75",
+    heartSize: "w-8 h-8",
+    smallHeartSize: "w-5 h-5",
+    heartOpacity: 0.6,
+    badgeGradient: "from-rose-600 via-fuchsia-500 to-purple-600",
+    badgeText: "❤️ Most Read",
+    chromaAnimation: true, // Enable color cycling
+    cardBgOpacity: 0.9,
+  },
+
+  // Romantic: Deep reds and passionate pinks
+  romantic: {
+    showAnimation: true,
+    borderColor: "border-red-300",
+    ringColor: "ring-red-200",
+    bgGradient: "from-red-50 via-rose-100 to-pink-50",
+    bgColor: "bg-red-50",
+    titleColor: "text-red-800",
+    textColor: "text-rose-900/80",
+    heartSize: "w-8 h-8",
+    smallHeartSize: "w-5 h-5",
+    heartOpacity: 0.55,
+    badgeGradient: "from-red-500 to-rose-600",
+    badgeText: "❤️ Most Read",
+    chromaAnimation: false,
+    cardBgOpacity: 0.88,
+  },
+
+  // Minimal: Clean and subtle
+  minimal: {
+    showAnimation: false,
+    borderColor: "border-gray-200",
+    ringColor: "ring-gray-100",
+    bgGradient: "from-gray-50 to-white",
+    bgColor: "bg-white",
+    titleColor: "text-gray-800",
+    textColor: "text-gray-600",
+    heartSize: "w-5 h-5",
+    smallHeartSize: "w-3 h-3",
+    heartOpacity: 0.3,
+    badgeGradient: "from-gray-500 to-gray-600",
+    badgeText: "Popular",
+    chromaAnimation: false,
+    cardBgOpacity: 0.7,
+  },
+};
+
+// Individual overrides object - Set any value to uncomment to override preset
+const LOVE_STYLE_OVERRIDES = {
+  // showAnimation: false,
+  // borderColor: "border-red-400",
+  // ringColor: "ring-red-300",
+  // bgGradient: "from-red-50 via-pink-50 to-red-50",
+  // bgColor: "bg-red-50",
+  // titleColor: "text-red-800",
+  // textColor: "text-red-900/70",
+  // heartSize: "w-8 h-8",
+  // smallHeartSize: "w-5 h-5",
+  // heartOpacity: 0.6,
+  // badgeGradient: "from-red-500 to-pink-600",
+  // badgeText: "❤️ Popular",
+  // chromaAnimation: true,
+  // cardBgOpacity: 0.9,
+};
+
+// Merge preset with overrides to get final style config
+const LOVE_STYLE = {
+  ...LOVE_STYLE_PRESETS[LOVE_SECTION_STYLE_PRESET],
+  ...LOVE_STYLE_OVERRIDES,
+};
+// ===================================================================
 
 type SubSectionProps = {
   getCurrentContent: () => any;
@@ -187,28 +299,52 @@ function ReportContent() {
     const reportContent = getCurrentContent();
     return [
       {
-        title: "General",
+        title: "General Overview",
         reading: reportContent?.general,
+        icon: Compass,
+        gradient: "from-indigo-500 to-purple-600",
+        bgColor: "bg-indigo-50",
+        borderColor: "border-indigo-100",
       },
       {
-        title: "Career",
+        title: "Career & Work",
         reading: reportContent?.career,
+        icon: Briefcase,
+        gradient: "from-blue-500 to-cyan-600",
+        bgColor: "bg-blue-50",
+        borderColor: "border-blue-100",
       },
       {
-        title: "Financial",
+        title: "Financial Fortune",
         reading: reportContent?.financial,
+        icon: Wallet,
+        gradient: "from-emerald-500 to-teal-600",
+        bgColor: "bg-emerald-50",
+        borderColor: "border-emerald-100",
       },
       {
-        title: "Health",
+        title: "Health & Wellness",
         reading: reportContent?.health,
+        icon: Activity,
+        gradient: "from-rose-500 to-pink-600",
+        bgColor: "bg-rose-50",
+        borderColor: "border-rose-100",
       },
       {
-        title: "Romance",
+        title: "Love & Relationships",
         reading: reportContent?.relationship,
+        icon: Heart,
+        gradient: "from-amber-500 to-orange-600",
+        bgColor: "bg-amber-50",
+        borderColor: "border-amber-100",
       },
       {
-        title: "Born Year",
+        title: "Born Year Insights",
         reading: reportContent?.bornYear,
+        icon: User,
+        gradient: "from-violet-500 to-purple-600",
+        bgColor: "bg-violet-50",
+        borderColor: "border-violet-100",
       },
     ];
   };
@@ -378,54 +514,310 @@ function ReportContent() {
         <LuckyEnhancerSection getCurrentContent={getCurrentContent} />
       </div>
 
-      {/* Main Reading */}
+      {/* Main Reading - Redesigned */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="mb-8"
       >
-        <div
-          className="relative p-8 rounded-3xl border border-white/30 overflow-hidden"
-          style={{
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(20px)",
-          }}
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <BookOpen className="w-6 h-6 text-indigo-600" />
-            <h2 className="text-xl font-medium text-gray-900">Your Reading</h2>
+        {/* Section Header */}
+        {SHOW_FORTUNE_READING_SECTION_TITLE && (
+          <div className="flex items-center gap-3 mb-6 px-2">
+            <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-200">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-2xl font-light text-gray-900">
+              Your Fortune Reading
+            </h2>
           </div>
+        )}
 
-          <div className="flex flex-col gap-10">
-            {getCurrentContentV2().map((section, index) => (
-              <div
+        {/* Reading Cards Grid */}
+        <div className="flex flex-col gap-6">
+          {getCurrentContentV2().map((section, index) => {
+            const IconComponent = section.icon;
+            const isLoveSection = section.title === "Love & Relationships";
+
+            // Get love section styles from merged config
+            const loveShowAnimation = LOVE_STYLE.showAnimation;
+            const loveBorderColor = LOVE_STYLE.borderColor;
+            const loveRingColor = LOVE_STYLE.ringColor;
+            const loveBgGradient = LOVE_STYLE.bgGradient;
+            const loveBgColor = LOVE_STYLE.bgColor;
+            const loveTitleColor = LOVE_STYLE.titleColor;
+            const loveTextColor = LOVE_STYLE.textColor;
+            const loveHeartSize = LOVE_STYLE.heartSize;
+            const loveSmallHeartSize = LOVE_STYLE.smallHeartSize;
+            const loveHeartOpacity = LOVE_STYLE.heartOpacity;
+            const loveBadgeGradient = LOVE_STYLE.badgeGradient;
+            const loveBadgeText = LOVE_STYLE.badgeText;
+            const loveChromaAnimation = LOVE_STYLE.chromaAnimation;
+            const loveCardBgOpacity = LOVE_STYLE.cardBgOpacity;
+
+            return (
+              <motion.div
                 key={`section-${index}`}
-                className="relative flex flex-col gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + index * 0.05 }}
+                className="group"
               >
-                {/* Elegant Section Label */}
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-gradient-to-r from-indigo-200/60 to-transparent" />
-                  <h3 className="text-sm tracking-widest uppercase text-indigo-600 font-semibold">
-                    {section.title}
-                  </h3>
-                  <div className="h-px flex-1 bg-gradient-to-l from-indigo-200/60 to-transparent" />
-                </div>
-
-                {/* Reading Content */}
-                <p className="text-gray-800/90 leading-8 text-[15.5px] font-light whitespace-pre-line">
-                  {processTextWithGlossary(
-                    truncateReadingForPreview(section.reading, displayType),
-                    report?.reportContent?.glossary || [],
+                <div
+                  className={`relative rounded-2xl border ${isLoveSection ? loveBorderColor : section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-${section.bgColor}/50 ${isLoveSection ? `ring-2 ${loveRingColor}` : ""}`}
+                  style={{
+                    background: isLoveSection
+                      ? `rgba(255, 245, 250, ${loveCardBgOpacity})`
+                      : "rgba(255, 255, 255, 0.7)",
+                    backdropFilter: "blur(20px)",
+                  }}
+                >
+                  {/* Chroma Color Cycling Background - Only for Love Section */}
+                  {isLoveSection && loveChromaAnimation && (
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                      <motion.div
+                        className="absolute inset-0 opacity-30"
+                        animate={{
+                          background: [
+                            "radial-gradient(circle at 30% 30%, rgba(244, 63, 94, 0.4) 0%, transparent 50%)",
+                            "radial-gradient(circle at 70% 70%, rgba(168, 85, 247, 0.4) 0%, transparent 50%)",
+                            "radial-gradient(circle at 30% 70%, rgba(236, 72, 153, 0.4) 0%, transparent 50%)",
+                            "radial-gradient(circle at 70% 30%, rgba(244, 63, 94, 0.4) 0%, transparent 50%)",
+                          ],
+                        }}
+                        transition={{
+                          duration: 8,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                      <motion.div
+                        className="absolute inset-0 opacity-20"
+                        animate={{
+                          background: [
+                            "linear-gradient(45deg, rgba(244, 63, 94, 0.3) 0%, rgba(168, 85, 247, 0.3) 50%, rgba(236, 72, 153, 0.3) 100%)",
+                            "linear-gradient(45deg, rgba(168, 85, 247, 0.3) 0%, rgba(236, 72, 153, 0.3) 50%, rgba(244, 63, 94, 0.3) 100%)",
+                            "linear-gradient(45deg, rgba(236, 72, 153, 0.3) 0%, rgba(244, 63, 94, 0.3) 50%, rgba(168, 85, 247, 0.3) 100%)",
+                            "linear-gradient(45deg, rgba(244, 63, 94, 0.3) 0%, rgba(168, 85, 247, 0.3) 50%, rgba(236, 72, 153, 0.3) 100%)",
+                          ],
+                        }}
+                        transition={{
+                          duration: 6,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                    </div>
                   )}
-                </p>
-              </div>
-            ))}
-          </div>
 
-          {/* Show blur overlay for non-premium users */}
-          {/* {displayType === "PARTIAL" && <ReadingBlurOverlay />} */}
+                  {/* Floating Hearts Animation - Only for Love & Relationships */}
+                  {isLoveSection && loveShowAnimation && (
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                      {/* Large floating hearts with chroma colors */}
+                      {[...Array(8)].map((_, i) => (
+                        <motion.div
+                          key={`heart-${i}`}
+                          className="absolute"
+                          style={{
+                            left: `${10 + Math.random() * 80}%`,
+                            bottom: "-20px",
+                          }}
+                          animate={{
+                            y: [0, -400 - Math.random() * 200],
+                            x: [0, (Math.random() - 0.5) * 100],
+                            opacity: [0, loveHeartOpacity, loveHeartOpacity, 0],
+                            scale: [0.5, 1, 1, 0.8],
+                            rotate: [0, (Math.random() - 0.5) * 30],
+                            color: loveChromaAnimation
+                              ? [
+                                  "rgb(244, 63, 94)",
+                                  "rgb(168, 85, 247)",
+                                  "rgb(236, 72, 153)",
+                                  "rgb(244, 63, 94)",
+                                ]
+                              : undefined,
+                          }}
+                          transition={{
+                            duration: 8 + Math.random() * 4,
+                            repeat: Infinity,
+                            delay: i * 1.2,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Heart
+                            className={`${loveHeartSize} ${loveChromaAnimation ? "text-rose-500" : "text-rose-400"} ${loveChromaAnimation ? "fill-rose-400/50" : "fill-rose-300/40"}`}
+                            style={{
+                              filter: loveChromaAnimation
+                                ? "drop-shadow(0 0 8px rgba(244, 63, 94, 0.5)) drop-shadow(0 0 16px rgba(168, 85, 247, 0.3))"
+                                : "drop-shadow(0 2px 4px rgba(244, 63, 94, 0.25))",
+                            }}
+                          />
+                        </motion.div>
+                      ))}
+                      {/* Smaller floating hearts */}
+                      {[...Array(6)].map((_, i) => (
+                        <motion.div
+                          key={`small-heart-${i}`}
+                          className="absolute"
+                          style={{
+                            left: `${15 + Math.random() * 70}%`,
+                            bottom: "-15px",
+                          }}
+                          animate={{
+                            y: [0, -350 - Math.random() * 150],
+                            x: [0, (Math.random() - 0.5) * 60],
+                            opacity: [
+                              0,
+                              loveHeartOpacity * 0.7,
+                              loveHeartOpacity * 0.7,
+                              0,
+                            ],
+                            scale: [0.3, 0.7, 0.7, 0.5],
+                          }}
+                          transition={{
+                            duration: 6 + Math.random() * 3,
+                            repeat: Infinity,
+                            delay: i * 0.8 + 0.5,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <Heart
+                            className={`${loveSmallHeartSize} ${loveChromaAnimation ? "text-fuchsia-400" : "text-pink-400"} ${loveChromaAnimation ? "fill-fuchsia-300/40" : "fill-pink-300/30"}`}
+                          />
+                        </motion.div>
+                      ))}
+                      {/* Sparkle effects with chroma colors */}
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={`sparkle-${i}`}
+                          className="absolute"
+                          style={{
+                            left: `${20 + Math.random() * 60}%`,
+                            bottom: `${20 + Math.random() * 60}%`,
+                          }}
+                          animate={{
+                            opacity: [0, 1, 0],
+                            scale: [0, 1, 0],
+                            rotate: [0, 180, 360],
+                          }}
+                          transition={{
+                            duration: 2 + Math.random() * 2,
+                            repeat: Infinity,
+                            delay: i * 0.7,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Sparkles
+                            className={`w-3 h-3 ${loveChromaAnimation ? "text-fuchsia-400" : "text-rose-400"}`}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Card Header with Gradient */}
+                  <div
+                    className={`relative px-6 py-4 ${isLoveSection ? loveBgColor : section.bgColor} border-b ${isLoveSection ? loveBorderColor : section.borderColor} ${isLoveSection ? `bg-gradient-to-r ${loveBgGradient}` : ""}`}
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Icon Container with chroma glow */}
+                      <motion.div
+                        className={`p-2.5 rounded-xl bg-gradient-to-br ${section.gradient} shadow-md group-hover:scale-110 transition-transform duration-300 ${isLoveSection ? "shadow-rose-200" : ""}`}
+                        animate={
+                          isLoveSection && loveChromaAnimation
+                            ? {
+                                boxShadow: [
+                                  "0 0 20px rgba(244, 63, 94, 0.4)",
+                                  "0 0 20px rgba(168, 85, 247, 0.4)",
+                                  "0 0 20px rgba(236, 72, 153, 0.4)",
+                                  "0 0 20px rgba(244, 63, 94, 0.4)",
+                                ],
+                              }
+                            : {}
+                        }
+                        transition={
+                          isLoveSection && loveChromaAnimation
+                            ? {
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: "linear",
+                              }
+                            : {}
+                        }
+                      >
+                        <IconComponent className="w-5 h-5 text-white" />
+                      </motion.div>
+
+                      {/* Title */}
+                      <h3
+                        className={`text-lg font-medium ${isLoveSection ? loveTitleColor : "text-gray-900"}`}
+                      >
+                        {section.title}
+                      </h3>
+
+                      {/* Special badge for Love section */}
+                      {isLoveSection && (
+                        <motion.span
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className={`ml-auto px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${loveBadgeGradient} text-white shadow-md`}
+                        >
+                          {loveBadgeText}
+                        </motion.span>
+                      )}
+                    </div>
+
+                    {/* Decorative gradient line with chroma animation */}
+                    <motion.div
+                      className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${section.gradient} opacity-30 ${isLoveSection ? "opacity-60" : ""}`}
+                      animate={
+                        isLoveSection && loveChromaAnimation
+                          ? {
+                              background: [
+                                "linear-gradient(90deg, rgba(244, 63, 94, 0.8) 0%, rgba(168, 85, 247, 0.8) 100%)",
+                                "linear-gradient(90deg, rgba(168, 85, 247, 0.8) 0%, rgba(236, 72, 153, 0.8) 100%)",
+                                "linear-gradient(90deg, rgba(236, 72, 153, 0.8) 0%, rgba(244, 63, 94, 0.8) 100%)",
+                                "linear-gradient(90deg, rgba(244, 63, 94, 0.8) 0%, rgba(168, 85, 247, 0.8) 100%)",
+                              ],
+                            }
+                          : {}
+                      }
+                      transition={
+                        isLoveSection && loveChromaAnimation
+                          ? {
+                              duration: 4,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }
+                          : {}
+                      }
+                    />
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="p-6 relative z-10">
+                    <p
+                      className={`leading-relaxed text-[16px] font-normal whitespace-pre-line ${isLoveSection ? loveTextColor : "text-gray-700"}`}
+                    >
+                      {processTextWithGlossary(
+                        truncateReadingForPreview(section.reading, displayType),
+                        report?.reportContent?.glossary || [],
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Subtle corner decoration */}
+                  <div
+                    className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${section.gradient} opacity-5 rounded-bl-full pointer-events-none ${isLoveSection ? "opacity-10" : ""}`}
+                  />
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
+
+        {/* Show blur overlay for non-premium users */}
+        {/* {displayType === "PARTIAL" && <ReadingBlurOverlay />} */}
       </motion.div>
 
       {/* Born Year - Chinese Zodiac Display */}
@@ -437,7 +829,7 @@ function ReportContent() {
       {/* Monthly Breakdown - Collapsible List */}
       <MonthlyBreakdownSection monthly={getCurrentContent()?.monthly || []} />
 
-      {/* Key Themes */}
+      {/* Key Themes - Redesigned */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -445,26 +837,44 @@ function ReportContent() {
         className="mb-8"
       >
         <div
-          className="p-6 rounded-3xl border border-white/30"
+          className="rounded-3xl border border-white/30 overflow-hidden"
           style={{
-            background: "rgba(255, 255, 255, 0.4)",
+            background: "rgba(255, 255, 255, 0.5)",
             backdropFilter: "blur(20px)",
           }}
         >
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Key Themes</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {(getCurrentContent()?.keyThemes || []).map(
-              (theme: string, index: number) => (
-                <div
-                  key={index}
-                  className="p-3 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100"
-                >
-                  <span className="text-sm font-medium text-indigo-700">
-                    {theme}
-                  </span>
-                </div>
-              ),
-            )}
+          {/* Header */}
+          <div className="px-6 py-4 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 border-b border-indigo-100/50">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+                <Star className="w-4 h-4 text-white" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900">Key Themes</h3>
+            </div>
+          </div>
+
+          {/* Themes Grid */}
+          <div className="p-6">
+            <div className="flex flex-wrap gap-3">
+              {(getCurrentContent()?.keyThemes || []).map(
+                (theme: string, index: number) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.3 + index * 0.05 }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    className="group"
+                  >
+                    <div className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 hover:border-indigo-300 hover:shadow-md hover:shadow-indigo-100 transition-all duration-300 cursor-default">
+                      <span className="text-sm font-medium text-indigo-700 group-hover:text-indigo-800">
+                        {theme}
+                      </span>
+                    </div>
+                  </motion.div>
+                ),
+              )}
+            </div>
           </div>
         </div>
       </motion.div>
