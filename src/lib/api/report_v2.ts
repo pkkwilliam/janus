@@ -23,12 +23,13 @@ export interface ReportContentV2 {
   monthly: FortuneByMonth[];
   spiritualGuidance: string;
   title: string;
+  zodiac: string;
 }
 
 export interface FortuneByMonth {
   dateEnd: string;
   dateStart: string;
-  readings: string[];
+  reading: string;
 }
 
 // Report structure

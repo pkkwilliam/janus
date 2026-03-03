@@ -6,16 +6,9 @@ import {
   ArrowLeft,
   Calendar,
   Star,
-  Gem,
-  Palette,
-  Hash,
   BookOpen,
-  Lightbulb,
   Crown,
   Loader2,
-  Globe,
-  Check,
-  ChevronDown,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { reportsApi, ReportV2 } from "@/lib/api/report_v2";
@@ -26,477 +19,26 @@ import {
   LanguageCode,
 } from "@/lib/api/translation";
 import { useAppInit } from "@/hooks/useAppInit";
-import { read } from "fs";
+import {
+  GlossaryTooltip,
+  TranslationToggle,
+  LuckyColorSection,
+  LuckyNumberSection,
+  LuckyGemstonesSection,
+  LuckyEnhancerSection,
+  SpiritualGuidanceSection,
+  BornYearSection,
+  MonthlyBreakdownSection,
+  ReadingBlurOverlay,
+  LuckyElementsBlurOverlay,
+} from "./components";
 
 const SHOW_TRANSLATION_TOGGLE = false;
 const SHOW_EXCLUSIVE = false; // Toggle to show/hide premium exclusive section
 
 type SubSectionProps = {
-  getCurrentContent: any;
+  getCurrentContent: () => any;
 };
-
-// Tooltip component for glossary terms
-function GlossaryTooltip({
-  term,
-  meaning,
-  pinyin,
-}: {
-  term: string;
-  meaning: string;
-  pinyin: string;
-}) {
-  const [isVisible, setIsVisible] = useState(false);
-
-  return (
-    <span className="relative">
-      <span
-        className="cursor-pointer text-indigo-600 underline decoration-dotted hover:text-indigo-800 transition-colors"
-        onMouseEnter={() => setIsVisible(true)}
-        onMouseLeave={() => setIsVisible(false)}
-        onClick={() => setIsVisible(!isVisible)}
-      >
-        {term}
-      </span>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 10, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="absolute bottom-full mb-2 z-50 left-1/2 transform -translate-x-1/2"
-        >
-          <div
-            className="p-4 rounded-2xl border border-white/30 shadow-xl"
-            style={{
-              background: "rgba(255, 255, 255, 0.95)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              width: "min(20rem, calc(100vw - 2rem))",
-              maxWidth: "24rem",
-            }}
-          >
-            <div className="text-sm md:text-base font-semibold text-gray-900 mb-2">
-              {term}
-            </div>
-            <div className="text-xs md:text-sm text-indigo-600 mb-2 md:mb-3 font-medium">
-              {pinyin}
-            </div>
-            <div className="text-xs md:text-sm text-gray-700 leading-relaxed">
-              {meaning}
-            </div>
-            {/* Small arrow pointing down */}
-            <div
-              className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0"
-              style={{
-                borderLeft: "8px solid transparent",
-                borderRight: "8px solid transparent",
-                borderTop: "8px solid rgba(255, 255, 255, 0.95)",
-              }}
-            />
-          </div>
-        </motion.div>
-      )}
-    </span>
-  );
-}
-
-// Translation toggle component
-function TranslationToggle({
-  reportContent,
-  onTranslationChange,
-}: {
-  reportContent: any;
-  onTranslationChange: (content: any, language: LanguageCode) => void;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(
-    SUPPORTED_LANGUAGES[0],
-  );
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [translationError, setTranslationError] = useState<string | null>(null);
-
-  const translateContent = async (targetLanguage: Language) => {
-    if (targetLanguage.code === "ENGLISH") {
-      // If English is selected, use original content
-      onTranslationChange(reportContent, "ENGLISH");
-      setCurrentLanguage(targetLanguage);
-      setIsOpen(false);
-      return;
-    }
-
-    setIsTranslating(true);
-    setTranslationError(null);
-
-    try {
-      // Use the translation API
-      const response = await translationApi.translateContent(
-        {
-          readings: reportContent.readings || [],
-          keyThemes: reportContent.keyThemes,
-          spiritualGuidance: reportContent.spiritualGuidance,
-          luckyGemstones: reportContent.luckyGemstones || [],
-          luckyEnhancer: reportContent.luckyEnhancer || [],
-          glossary: reportContent.glossary.map((item: any) => ({
-            term: item.term,
-            meaning: item.meaning,
-            pinyin: item.pinyin,
-          })),
-        },
-        targetLanguage.code as LanguageCode,
-        "ENGLISH",
-      );
-
-      if (response.error) {
-        // If it's an auth error, try the manual method
-        if (
-          response.error.code === "AUTH_ERROR" ||
-          response.error.httpStatus === 401 ||
-          response.error.httpStatus === 403
-        ) {
-          console.log("🔄 Trying manual fetch method due to auth error...");
-          const manualResponse = await translationApi.translateContentManual(
-            {
-              readings: reportContent.readings || [],
-              keyThemes: reportContent.keyThemes,
-              spiritualGuidance: reportContent.spiritualGuidance,
-              luckyGemstones: reportContent.luckyGemstones || [],
-              luckyEnhancer: reportContent.luckyEnhancer || [],
-              glossary: reportContent.glossary.map((item: any) => ({
-                term: item.term,
-                meaning: item.meaning,
-                pinyin: item.pinyin,
-              })),
-            },
-            targetLanguage.code as LanguageCode,
-            "ENGLISH",
-          );
-
-          if (manualResponse.error) {
-            throw new Error(manualResponse.error.message);
-          }
-
-          if (manualResponse.data?.success) {
-            onTranslationChange(
-              manualResponse.data.translatedContent,
-              targetLanguage.code,
-            );
-            setCurrentLanguage(targetLanguage);
-            setIsOpen(false);
-            return;
-          } else {
-            throw new Error(manualResponse.data?.error || "Translation failed");
-          }
-        } else {
-          throw new Error(response.error.message);
-        }
-      }
-
-      if (response.data?.success) {
-        onTranslationChange(
-          response.data.translatedContent,
-          targetLanguage.code,
-        );
-        setCurrentLanguage(targetLanguage);
-        setIsOpen(false);
-      } else {
-        throw new Error(response.data?.error || "Translation failed");
-      }
-    } catch (error) {
-      console.error("Translation error:", error);
-      setTranslationError("Translation failed. Please try again.");
-    } finally {
-      setIsTranslating(false);
-    }
-  };
-
-  return (
-    <div className="relative">
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        disabled={isTranslating}
-      >
-        {isTranslating ? (
-          <Loader2 className="w-4 h-4 animate-spin text-indigo-600" />
-        ) : (
-          <Globe className="w-4 h-4 text-indigo-600" />
-        )}
-        <span className="text-sm font-medium text-gray-700">
-          {currentLanguage.flag} {currentLanguage.name}
-        </span>
-        <ChevronDown
-          className={`w-4 h-4 text-gray-500 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </motion.button>
-
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 10, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 10, scale: 0.95 }}
-          className="absolute top-full mt-2 right-0 z-50 w-64 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden"
-          style={{
-            backdropFilter: "blur(20px)",
-            background: "rgba(255, 255, 255, 0.95)",
-          }}
-        >
-          <div className="p-3">
-            <div className="text-xs font-semibold text-gray-500 mb-2 px-2">
-              Select Language
-            </div>
-            <div className="max-h-64 overflow-y-auto">
-              {SUPPORTED_LANGUAGES.map((language) => (
-                <button
-                  key={language.code}
-                  onClick={() => translateContent(language)}
-                  disabled={isTranslating}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all hover:bg-indigo-50 ${
-                    currentLanguage.code === language.code
-                      ? "bg-indigo-100 text-indigo-700"
-                      : "text-gray-700"
-                  } ${isTranslating ? "opacity-50 cursor-not-allowed" : ""}`}
-                >
-                  <span className="text-lg">{language.flag}</span>
-                  <span className="text-sm font-medium flex-1 text-left">
-                    {language.name}
-                  </span>
-                  {currentLanguage.code === language.code && (
-                    <Check className="w-4 h-4 text-indigo-600" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Translation error notification */}
-      {translationError && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-full mt-2 right-0 z-50 p-3 bg-red-50 border border-red-200 rounded-xl shadow-lg"
-        >
-          <div className="text-sm text-red-700">{translationError}</div>
-          <button
-            onClick={() => setTranslationError(null)}
-            className="text-xs text-red-500 hover:text-red-700 mt-1"
-          >
-            Dismiss
-          </button>
-        </motion.div>
-      )}
-
-      {/* Click outside to close */}
-      {isOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-      )}
-    </div>
-  );
-}
-
-// Reusable Lucky Element Card component
-function LuckyElementCard({
-  icon,
-  title,
-  subtitle,
-  iconBgGradient,
-  iconTextColor,
-  subtitleColor,
-  delay,
-  renderContent,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  subtitle: string;
-  iconBgGradient: string;
-  iconTextColor: string;
-  subtitleColor: string;
-  delay: number;
-  renderContent: () => React.ReactNode;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
-      whileHover={{ scale: 1.02, y: -5 }}
-      className="group"
-    >
-      <div
-        className="relative p-6 rounded-3xl h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
-          backdropFilter: "blur(30px)",
-          border: "1px solid transparent",
-          backgroundClip: "padding-box",
-          boxShadow:
-            "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
-        }}
-      >
-        {/* Gradient border using pseudo-element */}
-        <div
-          className="absolute inset-0 rounded-3xl pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
-            mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-            maskComposite: "xor",
-            WebkitMask:
-              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-            WebkitMaskComposite: "xor",
-            padding: "1px",
-          }}
-        />
-
-        {/* Shimmer effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-        </div>
-
-        {/* Premium indicator with pulse */}
-        <div className="absolute top-3 right-3">
-          <motion.div
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 2, repeat: Infinity, delay }}
-            className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg"
-          />
-        </div>
-
-        <div className="flex items-center gap-3 mb-4 relative z-10">
-          <div className={`p-2 rounded-xl ${iconBgGradient}`}>
-            <div className={iconTextColor}>{icon}</div>
-          </div>
-          <div>
-            <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-            <p className={`text-xs font-medium ${subtitleColor}`}>{subtitle}</p>
-          </div>
-        </div>
-        <div className="relative z-10">{renderContent()}</div>
-      </div>
-    </motion.div>
-  );
-}
-
-// Single blur overlay component for entire Lucky Elements section
-function LuckyElementsBlurOverlay() {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center z-10 rounded-3xl overflow-hidden">
-      <div className="absolute inset-0 backdrop-blur-md bg-white/20" />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center p-6 relative z-20"
-      >
-        <div className="p-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 mb-4 inline-block">
-          <Crown className="w-8 h-8 text-white" />
-        </div>
-        <h4 className="text-lg font-semibold text-gray-900 mb-3">
-          Premium Feature
-        </h4>
-        <p className="text-sm text-gray-600 mb-4 max-w-xs">
-          Unlock Lucky Elements guidance with Premium
-        </p>
-        <button
-          onClick={() => window.open("/pricing", "_blank")}
-          className="px-6 py-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-medium rounded-full hover:from-amber-500 hover:to-orange-600 transition-all transform hover:scale-105 shadow-lg"
-        >
-          Upgrade to Premium
-        </button>
-      </motion.div>
-    </div>
-  );
-}
-
-// Reading section blur overlay component for non-premium users
-function ReadingBlurOverlay() {
-  return (
-    <div className="absolute bottom-0 left-0 right-0 h-4/5 flex items-end justify-center z-10 rounded-b-3xl overflow-hidden">
-      {/* Ultra-smooth gradient fade with natural top and bottom transitions */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.002) 10%, rgba(255, 255, 255, 0.008) 20%, rgba(255, 255, 255, 0.02) 30%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.25) 70%, rgba(255, 255, 255, 0.4) 80%, rgba(255, 255, 255, 0.6) 90%, rgba(255, 255, 255, 0.45) 100%)",
-        }}
-      />
-      {/* Graduated blur layers with soft edges top and bottom */}
-      <div
-        className="absolute top-1/4 left-0 right-0 bottom-2"
-        style={{
-          backdropFilter: "blur(1px)",
-          WebkitBackdropFilter: "blur(1px)",
-          maskImage:
-            "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
-        }}
-      />
-      <div
-        className="absolute top-1/2 left-0 right-0 bottom-4"
-        style={{
-          backdropFilter: "blur(3px)",
-          WebkitBackdropFilter: "blur(3px)",
-          maskImage:
-            "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
-        }}
-      />
-      <div
-        className="absolute top-3/4 left-0 right-0 bottom-6"
-        style={{
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
-          maskImage:
-            "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)",
-        }}
-      />
-      {/* Ultra-light background wash with soft edges */}
-      <div
-        className="absolute top-1/2 left-0 right-0 bottom-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent 0%, rgba(248, 250, 252, 0.03) 20%, rgba(248, 250, 252, 0.1) 40%, rgba(248, 250, 252, 0.25) 60%, rgba(248, 250, 252, 0.35) 80%, rgba(248, 250, 252, 0.25) 100%)",
-        }}
-      />
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="text-center p-4 sm:p-6 relative z-20 mb-8"
-      >
-        <div
-          className="p-3 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 mb-3 inline-block"
-          style={{ boxShadow: "0 2px 8px rgba(99, 102, 241, 0.15)" }}
-        >
-          <BookOpen className="w-6 h-6 text-white" />
-        </div>
-        <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-          Continue Reading with Premium
-        </h4>
-        <p className="text-xs sm:text-sm text-gray-600 mb-3 max-w-xs">
-          Unlock the complete fortune reading and detailed insights
-        </p>
-        <button
-          onClick={() => window.open("/pricing", "_blank")}
-          className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-indigo-400 to-purple-500 text-white text-xs sm:text-sm font-medium rounded-full hover:from-indigo-500 hover:to-purple-600 transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
-          style={{
-            boxShadow: "0 2px 8px rgba(99, 102, 241, 0.15)",
-          }}
-          aria-label="Upgrade to Premium to read the complete fortune reading"
-        >
-          Unlock Full Reading
-        </button>
-      </motion.div>
-    </div>
-  );
-}
 
 // Helper functions for report types
 function getTypeGradient(type: string) {
@@ -642,30 +184,31 @@ function ReportContent() {
   };
 
   const getCurrentContentV2 = () => {
+    const reportContent = getCurrentContent();
     return [
       {
         title: "General",
-        reading: reportContent.general,
+        reading: reportContent?.general,
       },
       {
         title: "Career",
-        reading: reportContent.career,
+        reading: reportContent?.career,
       },
       {
         title: "Financial",
-        reading: reportContent.financial,
+        reading: reportContent?.financial,
       },
       {
         title: "Health",
-        reading: reportContent.health,
+        reading: reportContent?.health,
       },
       {
         title: "Romance",
-        reading: reportContent.relationship,
+        reading: reportContent?.relationship,
       },
       {
         title: "Born Year",
-        reading: reportContent.bornYear,
+        reading: reportContent?.bornYear,
       },
     ];
   };
@@ -755,6 +298,7 @@ function ReportContent() {
   const { reportContent, type } = report;
   // Determine display type - you might want to check user's subscription status here
   const displayType = "FULL";
+
   return (
     <div className="min-h-screen px-4 py-8 max-w-4xl mx-auto">
       {/* Header */}
@@ -884,6 +428,15 @@ function ReportContent() {
         </div>
       </motion.div>
 
+      {/* Born Year - Chinese Zodiac Display */}
+      <BornYearSection
+        zodiac={reportContent.zodiac}
+        bornYear={reportContent.bornYear}
+      />
+
+      {/* Monthly Breakdown - Collapsible List */}
+      <MonthlyBreakdownSection monthly={getCurrentContent()?.monthly || []} />
+
       {/* Key Themes */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -900,16 +453,18 @@ function ReportContent() {
         >
           <h3 className="text-lg font-medium text-gray-900 mb-4">Key Themes</h3>
           <div className="grid grid-cols-2 gap-3">
-            {(getCurrentContent()?.keyThemes || []).map((theme, index) => (
-              <div
-                key={index}
-                className="p-3 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100"
-              >
-                <span className="text-sm font-medium text-indigo-700">
-                  {theme}
-                </span>
-              </div>
-            ))}
+            {(getCurrentContent()?.keyThemes || []).map(
+              (theme: string, index: number) => (
+                <div
+                  key={index}
+                  className="p-3 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100"
+                >
+                  <span className="text-sm font-medium text-indigo-700">
+                    {theme}
+                  </span>
+                </div>
+              ),
+            )}
           </div>
         </div>
       </motion.div>
@@ -1125,211 +680,6 @@ function ReportContent() {
         </motion.div>
       )}
     </div>
-  );
-}
-
-function LuckyColorSection({ getCurrentContent }: SubSectionProps) {
-  return (
-    <LuckyElementCard
-      icon={<Palette className="w-5 h-5" />}
-      title="Lucky Colors"
-      subtitle="Exclusively Yours"
-      iconBgGradient="bg-gradient-to-r from-pink-100 to-purple-100"
-      iconTextColor="text-purple-600"
-      subtitleColor="text-purple-600"
-      delay={0.3}
-      renderContent={() => (
-        <div className="space-y-2">
-          {(getCurrentContent()?.luckyColors || []).length > 0 ? (
-            (getCurrentContent()?.luckyColors || []).map((color, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <div
-                  className="w-4 h-4 rounded-full"
-                  style={{ backgroundColor: color.toLowerCase() }}
-                />
-                <span className="text-sm text-gray-700">{color}</span>
-              </div>
-            ))
-          ) : (
-            <div className="text-sm text-gray-500 italic">
-              No specific lucky colors for this period
-            </div>
-          )}
-        </div>
-      )}
-    />
-  );
-}
-
-function LuckyNumberSection({ getCurrentContent }: SubSectionProps) {
-  return (
-    <LuckyElementCard
-      icon={<Hash className="w-5 h-5" />}
-      title="Lucky Numbers"
-      subtitle="Power Numbers"
-      iconBgGradient="bg-gradient-to-r from-blue-100 to-indigo-100"
-      iconTextColor="text-indigo-600"
-      subtitleColor="text-indigo-600"
-      delay={0.4}
-      renderContent={() => (
-        <div className="flex gap-2 flex-wrap">
-          {(getCurrentContent()?.luckyNumbers || []).length > 0 ? (
-            (getCurrentContent()?.luckyNumbers || []).map((number, index) => (
-              <div
-                key={index}
-                className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium"
-              >
-                {number}
-              </div>
-            ))
-          ) : (
-            <div className="text-sm text-gray-500 italic">
-              No specific lucky numbers for this period
-            </div>
-          )}
-        </div>
-      )}
-    />
-  );
-}
-
-function LuckyGemstonesSection(props: SubSectionProps) {
-  return (
-    <LuckyElementCard
-      icon={<Gem className="w-5 h-5" />}
-      title="Lucky Gemstones"
-      subtitle="Sacred Crystals"
-      iconBgGradient="bg-gradient-to-r from-emerald-100 to-teal-100"
-      iconTextColor="text-emerald-600"
-      subtitleColor="text-emerald-600"
-      delay={0.5}
-      renderContent={() => (
-        <div className="space-y-2">
-          {(props.getCurrentContent()?.luckyGemstones || []).length > 0 ? (
-            (props.getCurrentContent()?.luckyGemstones || []).map(
-              (gemstone, index) => (
-                <div key={index} className="text-sm text-gray-700">
-                  {gemstone}
-                </div>
-              ),
-            )
-          ) : (
-            <div className="text-sm text-gray-500 italic">
-              No specific lucky gemstones for this period
-            </div>
-          )}
-        </div>
-      )}
-    />
-  );
-}
-
-function LuckyEnhancerSection({ getCurrentContent }: SubSectionProps) {
-  return (
-    (getCurrentContent()?.luckyEnhancer || []).length > 0 && (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        whileHover={{ scale: 1.01, y: -3 }}
-        className="md:col-span-3 group"
-      >
-        <div
-          className="relative p-6 rounded-3xl h-full overflow-hidden transition-all duration-300 group-hover:shadow-2xl"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%)",
-            backdropFilter: "blur(30px)",
-            border: "1px solid transparent",
-            backgroundClip: "padding-box",
-            boxShadow:
-              "0 12px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 215, 0, 0.1)",
-          }}
-        >
-          {/* Gradient border using pseudo-element */}
-          <div
-            className="absolute inset-0 rounded-3xl pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(138, 43, 226, 0.4))",
-              mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              maskComposite: "xor",
-              WebkitMask:
-                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              padding: "1px",
-            }}
-          />
-          {/* Shimmer effect */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-          </div>
-
-          {/* Premium indicator with pulse */}
-          <div className="absolute top-3 right-3">
-            <motion.div
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity, delay: 0.9 }}
-              className="w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg"
-            />
-          </div>
-
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-xl bg-gradient-to-r from-amber-100 to-yellow-100">
-              <Lightbulb className="w-5 h-5 text-amber-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-gray-900">
-                Lucky Enhancement Suggestions
-              </h3>
-              <p className="text-xs text-amber-600 font-medium">
-                Premium Insights
-              </p>
-            </div>
-          </div>
-          <div className="space-y-3">
-            {(getCurrentContent()?.luckyEnhancer || []).map(
-              (enhancer, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
-                  <div className="text-sm text-gray-700 leading-relaxed">
-                    {enhancer}
-                  </div>
-                </div>
-              ),
-            )}
-          </div>
-        </div>
-      </motion.div>
-    )
-  );
-}
-
-function SpiritualGuidanceSection({ getCurrentContent }: SubSectionProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.7 }}
-      className="mb-8"
-    >
-      <div
-        className="p-6 rounded-3xl border border-white/30 bg-gradient-to-r from-purple-50/50 to-indigo-50/50"
-        style={{
-          backdropFilter: "blur(20px)",
-        }}
-      >
-        <div className="flex items-center gap-3 mb-4">
-          <Lightbulb className="w-6 h-6 text-purple-600" />
-          <h3 className="text-lg font-medium text-gray-900">
-            Spiritual Guidance
-          </h3>
-        </div>
-        <p className="text-gray-700 leading-relaxed italic">
-          "{getCurrentContent()?.spiritualGuidance || ""}"
-        </p>
-      </div>
-    </motion.div>
   );
 }
 
