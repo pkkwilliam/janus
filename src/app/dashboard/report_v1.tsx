@@ -29,7 +29,7 @@ import { useAppInit } from "@/hooks/useAppInit";
 import { FeedbackButton } from "@/components/ui/feedback-button";
 import { FortuneCookieAnimation } from "@/components/fortune-cookie";
 
-const SHOW_ORDER_HISHORY = false;
+const SHOW_ORDER_HISHORY = true;
 
 // Mock user data
 const mockUser = {
