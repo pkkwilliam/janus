@@ -159,7 +159,10 @@ function normalizeZodiac(input: string): ZodiacAnimal | null {
   return null;
 }
 
-export default function BornYearSection({ zodiac, bornYear }: BornYearSectionProps) {
+export default function BornYearSection({
+  zodiac,
+  bornYear,
+}: BornYearSectionProps) {
   if (!zodiac) return null;
 
   const zodiacKey = normalizeZodiac(zodiac);
@@ -237,10 +240,14 @@ export default function BornYearSection({ zodiac, bornYear }: BornYearSectionPro
           {/* Content */}
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className={`text-xs font-semibold uppercase tracking-wider ${config.accentColor}`}>
+              <span
+                className={`text-xs font-semibold uppercase tracking-wider ${config.accentColor}`}
+              >
                 Birth Year
               </span>
-              <div className={`h-px flex-1 bg-gradient-to-r from-current to-transparent opacity-30 ${config.accentColor}`} />
+              <div
+                className={`h-px flex-1 bg-gradient-to-r from-current to-transparent opacity-30 ${config.accentColor}`}
+              />
             </div>
             <div className="flex items-baseline gap-2">
               <h3 className="text-xl font-medium text-gray-900">
@@ -257,7 +264,7 @@ export default function BornYearSection({ zodiac, bornYear }: BornYearSectionPro
             </div>
             {bornYear && (
               <p className={`text-sm mt-1 opacity-80 ${config.accentColor}`}>
-                {bornYear} — Your Chinese zodiac sign influences your destiny and fortune
+                {bornYear}
               </p>
             )}
           </div>
