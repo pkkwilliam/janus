@@ -39,6 +39,7 @@ import {
   ReadingBlurOverlay,
   LuckyElementsBlurOverlay,
 } from "./components";
+import YearlyPaymentButton from "@/components/payment/YearlyPaymentButton";
 
 const SHOW_TRANSLATION_TOGGLE = false;
 const SHOW_EXCLUSIVE = false; // Toggle to show/hide premium exclusive section
@@ -459,6 +460,8 @@ function ReportContent() {
               onTranslationChange={handleTranslationChange}
             />
           )}
+          {report.accessType === 'FREE' && <YearlyPaymentButton />}
+
         </div>
 
         <div

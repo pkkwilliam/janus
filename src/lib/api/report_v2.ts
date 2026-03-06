@@ -35,6 +35,7 @@ export interface FortuneByMonth {
 // Report structure
 export interface ReportV2 {
   id: string;
+  accessType: 'FREE' | 'PAID';
   endTime: string;
   forYear: string;
   reportContent: ReportContentV2;
