@@ -1035,7 +1035,7 @@ function DashboardContent() {
                           </div>
                           <div className="text-left">
                             <div className="font-medium">
-                              Generate Daily Report
+                              Reveal Your Fortune
                             </div>
                             <div className="text-xs opacity-90">
                               Get your comprehensive fortune analysis
