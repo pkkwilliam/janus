@@ -794,7 +794,7 @@ function ReportContent() {
                       className={`leading-relaxed text-[16px] font-normal whitespace-pre-line ${isLoveSection ? loveTextColor : "text-gray-700"}`}
                     >
                       {processTextWithGlossary(
-                        truncateReadingForPreview(section.reading, displayType),
+                        truncateReadingForPreview(section?.reading ?? "", displayType),
                         report?.reportContent?.glossary || [],
                       )}
                     </p>
