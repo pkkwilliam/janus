@@ -279,11 +279,6 @@ function ReportContent() {
   // Get report ID from URL search params
   const reportId = searchParams.get("id");
 
-  // Handle translation changes
-  const handleTranslationChange = (content: any, language: LanguageCode) => {
-    setCurrentLanguage(language);
-  };
-
   // Get current content (original or translated)
   const getCurrentContent = () => {
     return report?.reportContent;
@@ -447,14 +442,16 @@ function ReportContent() {
             <span className="text-sm sm:text-base">Back</span>
           </button>
 
-          {/* Translation Toggle */}
-          {SHOW_TRANSLATION_TOGGLE && report && (
-            <TranslationToggleV2
-                currentLanguage={currentLanguage}
-                onLanguageSelected={setCurrentLanguage}
-            />
-          )}
-          {report.accessType === 'FREE' && <YearlyPaymentButton />}
+          <div className="flex">
+              {/* Translation Toggle */}
+              {SHOW_TRANSLATION_TOGGLE && report && (
+                  <TranslationToggleV2
+                      currentLanguage={currentLanguage}
+                      onLanguageSelected={setCurrentLanguage}
+                  />
+              )}
+              {report.accessType === 'FREE' && <YearlyPaymentButton />}
+          </div>
 
         </div>
 
