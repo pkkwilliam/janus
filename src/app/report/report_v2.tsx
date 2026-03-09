@@ -28,7 +28,6 @@ import {
 import { useAppInit } from "@/hooks/useAppInit";
 import {
   GlossaryTooltip,
-  TranslationToggle,
   LuckyColorSection,
   LuckyNumberSection,
   LuckyGemstonesSection,
@@ -40,8 +39,9 @@ import {
   LuckyElementsBlurOverlay,
 } from "./components";
 import YearlyPaymentButton from "@/components/payment/YearlyPaymentButton";
+import TranslationToggleV2 from "@/app/report/components/TranslationToggleV2";
 
-const SHOW_TRANSLATION_TOGGLE = false;
+const SHOW_TRANSLATION_TOGGLE = true;
 const SHOW_EXCLUSIVE = false; // Toggle to show/hide premium exclusive section
 const SHOW_FORTUNE_READING_SECTION_TITLE = false;
 
@@ -272,28 +272,21 @@ function ReportContent() {
   const searchParams = useSearchParams();
   const { user, isLoading } = useAppInit({ requireAuth: true });
   const [report, setReport] = useState<ReportV2 | null>(null);
+  const [currentLanguage, setCurrentLanguage] = useState<Language>(SUPPORTED_LANGUAGES[0]);
   const [reportLoading, setReportLoading] = useState(true);
   const [reportError, setReportError] = useState<string | null>(null);
-
-  // Translation state
-  const [translatedContent, setTranslatedContent] = useState<any>(null);
-  const [currentLanguage, setCurrentLanguage] =
-    useState<LanguageCode>("ENGLISH");
 
   // Get report ID from URL search params
   const reportId = searchParams.get("id");
 
   // Handle translation changes
   const handleTranslationChange = (content: any, language: LanguageCode) => {
-    setTranslatedContent(content);
     setCurrentLanguage(language);
   };
 
   // Get current content (original or translated)
   const getCurrentContent = () => {
-    return currentLanguage === "ENGLISH" || !translatedContent
-      ? report?.reportContent
-      : translatedContent;
+    return report?.reportContent;
   };
 
   const getCurrentContentV2 = () => {
@@ -358,7 +351,7 @@ function ReportContent() {
       // No report ID provided, redirect to dashboard
       router.push("/dashboard");
     }
-  }, [user, reportId, router]);
+  }, [user, reportId, currentLanguage, router]);
 
   const loadReport = async () => {
     if (!reportId) return;
@@ -367,7 +360,8 @@ function ReportContent() {
     setReportError(null);
 
     try {
-      const response = await reportsApi.getReportById(reportId);
+      const response =
+          await reportsApi.getReportById(reportId, currentLanguage.code);
 
       if (response.error) {
         setReportError(response.error.message);
@@ -455,9 +449,9 @@ function ReportContent() {
 
           {/* Translation Toggle */}
           {SHOW_TRANSLATION_TOGGLE && report && (
-            <TranslationToggle
-              reportContent={report.reportContent}
-              onTranslationChange={handleTranslationChange}
+            <TranslationToggleV2
+                currentLanguage={currentLanguage}
+                onLanguageSelected={setCurrentLanguage}
             />
           )}
           {report.accessType === 'FREE' && <YearlyPaymentButton />}

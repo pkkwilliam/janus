@@ -64,7 +64,7 @@ export const API_ENDPOINTS = {
     REQUEST: "/reports/v1/request",
   },
   REPORT_V2: {
-    DETAIL: "/user/report/v2/:id",
+    DETAIL: "/user/report/v2/:id?language=languageCode",
     LIST: "/user/report/v2/pagination",
     REQUEST: "/user/report/v2",
   },

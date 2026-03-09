@@ -1,5 +1,6 @@
 import { apiClient, ApiResponse } from "./client";
 import { API_ENDPOINTS } from "./config";
+import {LanguageCode} from "@/lib/api/translation";
 
 // Report content structure
 export interface ReportContentV2 {
@@ -100,8 +101,10 @@ export const reportsApi = {
     );
   },
 
-  async getReportById(id: string): Promise<ApiResponse<ReportV2>> {
-    const endpoint = API_ENDPOINTS.REPORT_V2.DETAIL.replace(":id", id);
+  async getReportById(id: string, language: LanguageCode): Promise<ApiResponse<ReportV2>> {
+    const endpoint = API_ENDPOINTS.REPORT_V2.DETAIL
+        .replace(":id", id)
+        .replace("languageCode", language);
     return apiClient.get<ReportV2>(endpoint);
   },
 
