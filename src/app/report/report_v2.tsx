@@ -294,6 +294,7 @@ function ReportContent() {
         gradient: "from-indigo-500 to-purple-600",
         bgColor: "bg-indigo-50",
         borderColor: "border-indigo-100",
+        show: true,
       },
       {
         title: "Career & Work",
@@ -302,6 +303,7 @@ function ReportContent() {
         gradient: "from-blue-500 to-cyan-600",
         bgColor: "bg-blue-50",
         borderColor: "border-blue-100",
+        show: true,
       },
       {
         title: "Financial Fortune",
@@ -310,6 +312,7 @@ function ReportContent() {
         gradient: "from-emerald-500 to-teal-600",
         bgColor: "bg-emerald-50",
         borderColor: "border-emerald-100",
+        show: true,
       },
       {
         title: "Health & Wellness",
@@ -318,6 +321,7 @@ function ReportContent() {
         gradient: "from-rose-500 to-pink-600",
         bgColor: "bg-rose-50",
         borderColor: "border-rose-100",
+        show: true,
       },
       {
         title: "Love & Relationships",
@@ -326,6 +330,7 @@ function ReportContent() {
         gradient: "from-amber-500 to-orange-600",
         bgColor: "bg-amber-50",
         borderColor: "border-amber-100",
+        show: true,
       },
       {
         title: "Born Year Insights",
@@ -334,6 +339,7 @@ function ReportContent() {
         gradient: "from-violet-500 to-purple-600",
         bgColor: "bg-violet-50",
         borderColor: "border-violet-100",
+        show: false
       },
     ];
   };
@@ -529,7 +535,9 @@ function ReportContent() {
 
         {/* Reading Cards Grid */}
         <div className="flex flex-col gap-6">
-          {getCurrentContentV2().map((section, index) => {
+          {getCurrentContentV2()
+              .filter(section => section.show)
+              .map((section, index) => {
             const IconComponent = section.icon;
             const isLoveSection = section.title === "Love & Relationships";
 
