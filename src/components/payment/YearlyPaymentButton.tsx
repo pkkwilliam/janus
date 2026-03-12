@@ -6,7 +6,13 @@ import { usePaymentFlowV2 } from "@/hooks/usePaymentFlowV2";
 const ENABLE_BLUR_PREVIEW = false;
 const BUTTON_SIZE: "sm" | "md" | "lg" = "md";
 const PRICE = "$29.99";
-
+const MONEY_BACK_LABEL = [
+    "30-Day Money-Back Guarantee",
+    "100% Satisfaction Guaranteed",
+    "100% money-back guarantee",
+    "Love It or Your Money Back",
+    "No Questions Asked Refunds"
+]
 /* ---------------------------------------- */
 
 type YearlyPaymentButtonProps = {
@@ -81,17 +87,24 @@ function YearlyPaymentButton({ children }: YearlyPaymentButtonProps) {
             p-4 z-20 animate-fade-in"
                     >
                         <p className="text-sm text-gray-600 mb-2">
-                            Unlock your complete personalized reading.
+                            Get Your Full Reading
                         </p>
 
-                        <div className="text-lg font-semibold text-gray-900 mb-3">
+                        <div className="text-lg font-semibold text-gray-900 mb-2">
                             {PRICE}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 text-green-600 mb-3">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <p className="text-xs font-medium">{MONEY_BACK_LABEL[0]}</p>
                         </div>
 
                         <button
                             onClick={onConfirmPayment}
                             disabled={isProcessing}
-                            className="w-full rounded-md bg-purple-500/80 hover:bg-purple-500
+                            className="w-full rounded-md bg-purple-500 hover:bg-purple-500
               text-white py-2 text-sm transition disabled:opacity-50"
                         >
                             {isProcessing ? "Processing..." : "Continue to Payment"}
