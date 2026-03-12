@@ -106,6 +106,9 @@ export default function RootLayout({
             gtag('config', 'AW-17439671337');
           `
         }} />
+
+        {/* HotJar Contentsquare UX Analytics */}
+        <script async src="https://t.contentsquare.net/uxa/fafd01b3e7983.js"></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen text-gray-900 overflow-x-hidden`}
