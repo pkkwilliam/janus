@@ -7,16 +7,16 @@ type StateBannerProps = {
     averageScore: number
     totalReports: number;
     user: UserProfileResponse;
-    maxItems?: 2 | 3 | 4; // Control how many stats to show (default: show all 3)
+    maxVisible?: 2 | 3 | 4; // How many items to show at once (triggers scroll if more exist)
 }
 
-function StateBanner({averageScore, totalReports, user, maxItems = 2}: StateBannerProps) {
+function StateBanner({averageScore, totalReports, user, maxVisible = 2}: StateBannerProps) {
     const daysJourney = Math.floor(
         (Date.now() - new Date(user.joinDate || user.createTime).getTime()) /
         (1000 * 60 * 60 * 24),
     );
 
-    // Define all possible stats
+    // Define all possible stats (always 3 for now, but extensible)
     const allStats = [
         {
             key: 'totalReports',
@@ -44,16 +44,21 @@ function StateBanner({averageScore, totalReports, user, maxItems = 2}: StateBann
         },
     ];
 
-    // Slice to maxItems if specified
-    const stats = maxItems ? allStats.slice(0, maxItems) : allStats;
-    const itemCount = stats.length;
+    const needsScroll = allStats.length > maxVisible;
+    
+    // Calculate card width based on maxVisible
+    const getMobileCardWidth = () => {
+        if (maxVisible === 2) return 'min-w-[calc(50%-4px)]'; // 50% minus half gap
+        if (maxVisible === 3) return 'min-w-[calc(33.333%-6px)]'; // 33% minus gap adjustment
+        return 'min-w-[calc(25%-6px)]'; // 25% for 4 items
+    };
 
-    // Calculate grid columns based on item count
-    // Mobile: flex scroll, Desktop: fit to width with max 4 cols
+    // Calculate grid columns for desktop
     const getGridCols = () => {
-        if (itemCount === 1) return 'md:grid-cols-1';
-        if (itemCount === 2) return 'md:grid-cols-2';
-        if (itemCount === 3) return 'md:grid-cols-3';
+        const count = Math.min(allStats.length, maxVisible);
+        if (count === 1) return 'md:grid-cols-1';
+        if (count === 2) return 'md:grid-cols-2';
+        if (count === 3) return 'md:grid-cols-3';
         return 'md:grid-cols-4';
     };
 
@@ -63,18 +68,16 @@ function StateBanner({averageScore, totalReports, user, maxItems = 2}: StateBann
         transition={{delay: 0.1}}
         className="mb-6 md:mb-8"
     >
-        {/* Mobile: Horizontal Scroll - cards shrink to fit */}
+        {/* Mobile: Grid if fits, Scroll if overflow */}
         <div className="md:hidden">
-            <div
-                className="grid gap-2 px-1"
-                style={{
-                    gridTemplateColumns: `repeat(${itemCount}, minmax(0, 1fr))`,
-                }}
+            <div 
+                className={`flex gap-2 ${needsScroll ? 'overflow-x-auto pb-2 snap-x snap-mandatory' : ''}`}
+                style={needsScroll ? {} : { display: 'grid', gridTemplateColumns: `repeat(${allStats.length}, minmax(0, 1fr))` }}
             >
-                {stats.map((stat) => (
+                {allStats.map((stat) => (
                     <div
                         key={stat.key}
-                        className="px-2 py-2 rounded-xl border border-white/30 text-center"
+                        className={`px-2 py-2 rounded-xl border border-white/30 text-center ${needsScroll ? `${getMobileCardWidth()} flex-shrink-0 snap-center` : ''}`}
                         style={{
                             background: "rgba(255, 255, 255, 0.4)",
                             backdropFilter: "blur(20px)",
@@ -92,9 +95,9 @@ function StateBanner({averageScore, totalReports, user, maxItems = 2}: StateBann
             </div>
         </div>
 
-        {/* Desktop: Grid Layout - fits to width */}
+        {/* Desktop: Grid Layout - show up to maxVisible */}
         <div className={`hidden md:grid gap-4 ${getGridCols()}`}>
-            {stats.map((stat) => (
+            {allStats.slice(0, maxVisible).map((stat) => (
                 <div
                     key={stat.key}
                     className="p-4 lg:p-5 rounded-2xl border border-white/30 text-center"
