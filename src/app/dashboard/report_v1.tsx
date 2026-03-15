@@ -29,7 +29,7 @@ import { useAppInit } from "@/hooks/useAppInit";
 import { FeedbackButton } from "@/components/ui/feedback-button";
 import { FortuneCookieAnimation } from "@/components/fortune-cookie";
 import WelcomeBackBanner from "@/app/dashboard/WelcomeBackBanner";
-import ProfileCompletionBanner from "@/app/dashboard/ProfileCompletionBanner";
+import CompleteProfileBanner from "@/app/dashboard/CompleteProfileBanner";
 import SubscriptionUpgradeBanner from "@/app/dashboard/SubscriptionUpgradeBanner";
 import SubscriptionSelectorOverlay from "@/app/dashboard/SubscriptionSelectorOverlay";
 import StateBanner from "@/app/dashboard/StateBanner";
@@ -285,7 +285,7 @@ function DashboardContent() {
 
       {/* Profile Completion Banner */}
       {needsProfileCompletion
-          && <ProfileCompletionBanner setShowBirthInfoForm={setShowBirthInfoForm} />}
+          && <CompleteProfileBanner setShowBirthInfoForm={setShowBirthInfoForm} />}
 
       {/* Subscription Upgrade Banner */}
       {!planLoading && !hasActiveSubscription

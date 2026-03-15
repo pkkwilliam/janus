@@ -6,7 +6,7 @@ type ProfileCompletionBannerProps = {
     setShowBirthInfoForm: (show: boolean) => void;
 }
 
-function ProfileCompletionBanner({setShowBirthInfoForm}: ProfileCompletionBannerProps) {
+function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerProps) {
     return <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -43,4 +43,4 @@ function ProfileCompletionBanner({setShowBirthInfoForm}: ProfileCompletionBanner
     </motion.div>
 }
 
-export default ProfileCompletionBanner;
+export default CompleteProfileBanner;
