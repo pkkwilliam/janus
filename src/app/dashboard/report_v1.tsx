@@ -93,6 +93,11 @@ function DashboardContent() {
     }
   }, [user]);
 
+  // Scroll to top on mount to prevent unwanted scroll offset
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const loadPlanInfo = async () => {
     setPlanLoading(true);
     try {
