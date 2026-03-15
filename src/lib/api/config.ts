@@ -76,6 +76,7 @@ export const API_ENDPOINTS = {
     ORDER_DETAIL: "/user/order/v1/:orderId",
     ORDER_PAGINATION: "/user/order/v1/pagination",
     ORDER_PAYMENT: "/user/payment/v1/requestSubscriptionPayment/:orderId",
+    REQUEST_REFUND: "/user/order/v1/request_refund",
     // Deprecated endpoints - remove after migration
     CREATE_SUBSCRIPTION: "/user/payment/v1",
     SUBSCRIPTION_STATUS: "/user/payment/v1/:transactionId/status",

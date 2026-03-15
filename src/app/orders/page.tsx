@@ -1,11 +1,217 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Package, Calendar, DollarSign, CheckCircle, Clock, XCircle, RefreshCw, Crown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Package, Calendar, DollarSign, CheckCircle, Clock, XCircle, RefreshCw, Crown, X, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useAppInit } from '@/hooks/useAppInit';
 import { subscriptionApi, Order, OrdersPaginationResponse } from '@/lib/api/subscription';
+
+// Toast notification component
+function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -50, x: 50 }}
+      animate={{ opacity: 1, y: 0, x: 0 }}
+      exit={{ opacity: 0, y: -20, x: 50 }}
+      className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 ${
+        type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'
+      }`}
+    >
+      {type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+      <span className="text-sm font-medium">{message}</span>
+      <button onClick={onClose} className="ml-2 hover:opacity-70">
+        <X className="w-4 h-4" />
+      </button>
+    </motion.div>
+  );
+}
+
+// Refund Modal Component
+function RefundModal({ 
+  order, 
+  isOpen, 
+  onClose, 
+  onSubmit, 
+  isProcessing 
+}: { 
+  order: Order | null; 
+  isOpen: boolean; 
+  onClose: () => void; 
+  onSubmit: (reason: string, amount: string, keepFee: boolean) => void;
+  isProcessing: boolean;
+}) {
+  const [reason, setReason] = useState('');
+  const [refundAmount, setRefundAmount] = useState('');
+  const [keepFee, setKeepFee] = useState(true);
+
+  useEffect(() => {
+    if (order) {
+      const maxAmount = order.totalAmount;
+      setRefundAmount(keepFee ? Math.max(0, maxAmount - 3).toFixed(2) : maxAmount.toFixed(2));
+    }
+  }, [order, keepFee]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setReason('');
+      setKeepFee(true);
+    }
+  }, [isOpen]);
+
+  if (!isOpen || !order) return null;
+
+  const maxRefund = order.totalAmount;
+  const minFee = 3;
+
+  const handleAmountChange = (value: string) => {
+    const numValue = parseFloat(value);
+    if (isNaN(numValue)) {
+      setRefundAmount('');
+      return;
+    }
+    if (numValue > maxRefund) {
+      setRefundAmount(maxRefund.toFixed(2));
+    } else if (numValue < 0) {
+      setRefundAmount('0');
+    } else {
+      setRefundAmount(value);
+    }
+  };
+
+  const actualRefund = keepFee ? Math.max(0, parseFloat(refundAmount || '0') - minFee).toFixed(2) : refundAmount;
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+        onClick={onClose}
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50"
+      >
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Request Refund</h2>
+            <button 
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
+          </div>
+
+          <div className="mb-6">
+            <p className="text-sm text-gray-600 mb-2">
+              Order #{order.id.slice(-8)} • ${order.totalAmount.toFixed(2)}
+            </p>
+            <p className="text-gray-700">
+              We&apos;re sorry to see you go. To help us improve, could you let us know why you&apos;re requesting a refund?
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Reason for refund (optional)
+              </label>
+              <textarea
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="Tell us what went wrong..."
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none resize-none text-sm"
+                rows={3}
+              />
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={keepFee}
+                  onChange={(e) => setKeepFee(e.target.checked)}
+                  className="mt-1 w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                />
+                <div className="text-sm">
+                  <span className="font-medium text-amber-900">Support our small team?</span>
+                  <p className="text-amber-800 mt-1">
+                    Would you be okay leaving ${minFee} to help cover transaction fees and processing costs? 
+                    This helps us keep the lights on and continue improving our service.
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Refund amount (max: ${maxRefund.toFixed(2)})
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                <input
+                  type="number"
+                  value={refundAmount}
+                  onChange={(e) => handleAmountChange(e.target.value)}
+                  max={maxRefund}
+                  min={0}
+                  step="0.01"
+                  className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm"
+                />
+              </div>
+              {keepFee && parseFloat(refundAmount || '0') > 0 && (
+                <p className="text-xs text-amber-700 mt-2">
+                  You&apos;ll receive ${actualRefund} after the ${minFee} processing fee.
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex gap-3 mt-6">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onClose}
+              className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors text-sm"
+            >
+              Cancel
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onSubmit(reason, refundAmount, keepFee)}
+              disabled={isProcessing || !refundAmount || parseFloat(refundAmount) <= 0}
+              className="flex-1 px-4 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isProcessing ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                  />
+                  Processing...
+                </>
+              ) : (
+                'Submit Refund'
+              )}
+            </motion.button>
+          </div>
+        </div>
+      </motion.div>
+    </>
+  );
+}
 
 export default function OrdersPage() {
   const { isAuthenticated } = useAppInit({ requireAuth: true });
@@ -17,6 +223,10 @@ export default function OrdersPage() {
   const [totalElements, setTotalElements] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [processingPayment, setProcessingPayment] = useState<string | null>(null);
+  const [processingRefund, setProcessingRefund] = useState<string | null>(null);
+  const [refundModalOpen, setRefundModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   
   const pageSize = 10;
 
@@ -65,13 +275,54 @@ export default function OrdersPage() {
         throw new Error('Failed to get payment URL');
       }
 
-      // Redirect to Stripe checkout
       window.location.href = response.data.requestUrl;
       
     } catch (error) {
       console.error('Payment process failed:', error);
-      alert('Payment process failed. Please try again.');
+      setToast({ message: 'Payment process failed. Please try again.', type: 'error' });
       setProcessingPayment(null);
+    }
+  };
+
+  const openRefundModal = (order: Order) => {
+    setSelectedOrder(order);
+    setRefundModalOpen(true);
+  };
+
+  const handleRequestRefund = async (reason: string, amount: string, keepFee: boolean) => {
+    if (!selectedOrder) return;
+    
+    setProcessingRefund(selectedOrder.id);
+    
+    try {
+      const finalAmount = keepFee 
+        ? (parseFloat(amount) - 3).toFixed(2) 
+        : amount;
+      
+      const response = await subscriptionApi.requestRefund(
+        selectedOrder.id,
+        finalAmount,
+        selectedOrder.internalTransactionId || ''
+      );
+      
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      if (!response.data) {
+        throw new Error('Failed to process refund request');
+      }
+
+      setRefundModalOpen(false);
+      setToast({ message: 'Refund request submitted successfully', type: 'success' });
+      fetchOrders(currentPage);
+      
+    } catch (error) {
+      console.error('Refund request failed:', error);
+      setToast({ message: error instanceof Error ? error.message : 'Failed to submit refund request', type: 'error' });
+    } finally {
+      setProcessingRefund(null);
+      setSelectedOrder(null);
     }
   };
 
@@ -131,11 +382,38 @@ export default function OrdersPage() {
   };
 
   if (!isAuthenticated) {
-    return null; // useAppInit will handle redirect
+    return null;
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Toast Notifications */}
+      <AnimatePresence>
+        {toast && (
+          <Toast 
+            message={toast.message} 
+            type={toast.type} 
+            onClose={() => setToast(null)} 
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Refund Modal */}
+      <AnimatePresence>
+        {refundModalOpen && (
+          <RefundModal
+            order={selectedOrder}
+            isOpen={refundModalOpen}
+            onClose={() => {
+              setRefundModalOpen(false);
+              setSelectedOrder(null);
+            }}
+            onSubmit={handleRequestRefund}
+            isProcessing={processingRefund !== null}
+          />
+        )}
+      </AnimatePresence>
+
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div
@@ -254,7 +532,7 @@ export default function OrdersPage() {
             <div className="text-center py-12">
               <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No Orders Yet</h3>
-              <p className="text-gray-600 mb-6">You haven't made any orders yet. Start by subscribing to Premium!</p>
+              <p className="text-gray-600 mb-6">You haven&apos;t made any orders yet. Start by subscribing to Premium!</p>
               <Link href="/pricing">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -330,6 +608,18 @@ export default function OrdersPage() {
                           ) : (
                             'Complete Payment'
                           )}
+                        </motion.button>
+                      )}
+                      {order.status === 'PAID' && (
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => openRefundModal(order)}
+                          disabled={processingRefund === order.id}
+                          className="px-4 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl font-medium transition-colors text-sm flex items-center gap-2 border border-transparent hover:border-gray-200"
+                        >
+                          <RefreshCw className="w-4 h-4" />
+                          Request Refund
                         </motion.button>
                       )}
                     </div>

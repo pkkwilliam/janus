@@ -60,10 +60,12 @@ export interface Order {
   id: string;
   createTime: string;
   items: OrderItem[];
-  status: "PAID" | "PAYMENT_PENDING" | "CANCELLED" | "REFUNDED";
+  refundAmount: number;
+  status: "PAID" | "PAYMENT_PENDING" | "CANCELLED" | "REFUNDED" | "REFUND_PENDING";
   totalAmount: number;
   updateTime: string | null;
   userId: string;
+  internalTransactionId?: string;
 }
 
 export interface Pageable {
@@ -95,6 +97,17 @@ export interface OrdersPaginationResponse {
   };
   numberOfElements: number;
   empty: boolean;
+}
+
+export interface RequestRefundRequest {
+  orderId: string;
+  requestRefundAmount: string;
+  internalTransactionId: string;
+}
+
+export interface RequestRefundResponse {
+  success: boolean;
+  message?: string;
 }
 
 export const subscriptionApi = {
@@ -157,5 +170,16 @@ export const subscriptionApi = {
   ): Promise<ApiResponse<OrdersPaginationResponse>> {
     const endpoint = `${API_ENDPOINTS.PAYMENT.ORDER_PAGINATION}?pageRequest=${pageRequest}&pageSize=${pageSize}`;
     return apiClient.get<OrdersPaginationResponse>(endpoint);
+  },
+
+  // Request refund for a paid order
+  async requestRefund(
+    internalTransactionId: string,
+    requestRefundAmount: number
+  ): Promise<ApiResponse<RequestRefundResponse>> {
+    return apiClient.post<RequestRefundResponse>(
+      API_ENDPOINTS.PAYMENT.REQUEST_REFUND,
+      { internalTransactionId, requestRefundAmount }
+    );
   },
 };
