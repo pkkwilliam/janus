@@ -289,8 +289,8 @@ function DashboardContent() {
         {!needsProfileCompletion && <WelcomeBackBanner user={user} />}
 
       {/* Profile Completion Banner */}
-      {needsProfileCompletion
-          && <CompleteProfileBanner setShowBirthInfoForm={setShowBirthInfoForm} />}
+      {/*{needsProfileCompletion*/}
+      {/*    && <CompleteProfileBanner setShowBirthInfoForm={setShowBirthInfoForm} />}*/}
 
       {/* Subscription Upgrade Banner */}
       {!planLoading && !hasActiveSubscription
@@ -411,11 +411,14 @@ function DashboardContent() {
                 {/* Show Generate Report button only when no reports exist at all */}
                 {reports.length === 0 && reportFilter === "ALL" && (
                   <div className="space-y-4">
-                    <GenericReportButton
-                        disabled={generatingReport || needsProfileCompletion}
-                        generateDailyReport={generateDailyReport}
-                        loading={generatingReport}
-                    />
+                      {!needsProfileCompletion && <GenericReportButton
+                          disabled={generatingReport || needsProfileCompletion}
+                          generateDailyReport={generateDailyReport}
+                          loading={generatingReport}
+                      />}
+
+                    {needsProfileCompletion
+                          && <CompleteProfileBanner setShowBirthInfoForm={setShowBirthInfoForm} />}
 
                     {SHOW_COMPLETE_PROFILE_ALERT
                         && needsProfileCompletion
