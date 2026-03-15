@@ -35,10 +35,15 @@ import SubscriptionSelectorOverlay from "@/app/dashboard/SubscriptionSelectorOve
 import StateBanner from "@/app/dashboard/StateBanner";
 import QuickAction from "@/app/dashboard/QuickAction";
 import ReportCard from "@/app/dashboard/ReportCard";
+import GenericNoReportText from "@/app/dashboard/GenericNoReportText";
+import CompleteProfileAlert from "@/app/dashboard/CompleteProfileAlert";
+import GenericReportButton from "@/app/dashboard/GenericReportButton";
 
 const SHOW_ORDER_HISHORY = true;
 const SHOW_ALL_REPORT_BUTTON = false;
 const SHOW_REPORT_FILTER = false;
+const SHOW_GENERIC_NO_REPORT_TEXT = false;
+const SHOW_COMPLETE_PROFILE_ALERT = false;
 
 function DashboardContent() {
   const router = useRouter();
@@ -396,76 +401,20 @@ function DashboardContent() {
 
             {filteredReports.length === 0 && (
               <div className="text-center py-12">
-                <div className="p-4 rounded-2xl bg-gray-100 w-fit mx-auto mb-4">
-                  <Calendar className="w-8 h-8 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No Reports Found
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {reportFilter === "ALL"
-                    ? reports.length === 0
-                      ? "You don't have any reports yet. Generate your first reading!"
-                      : "No reports match your filter."
-                    : `No ${reportFilter.toLowerCase()} reports found. Try a different filter.`}
-                </p>
+                  {SHOW_GENERIC_NO_REPORT_TEXT && <GenericNoReportText reportFilter={reportFilter} reportLength={reports.length}/>}
 
                 {/* Show Generate Report button only when no reports exist at all */}
                 {reports.length === 0 && reportFilter === "ALL" && (
                   <div className="space-y-4">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={generateDailyReport}
-                      disabled={generatingReport || needsProfileCompletion}
-                      className="px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-medium hover:from-purple-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 mx-auto shadow-lg"
-                    >
-                      {generatingReport ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          <div className="text-left">
-                            <div className="font-medium">
-                              Generating Your Daily Report...
-                            </div>
-                            <div className="text-xs opacity-90">
-                              This may take up to 1 minute
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="p-2 rounded-lg bg-white/20">
-                            <Sparkles className="w-5 h-5" />
-                          </div>
-                          <div className="text-left">
-                            <div className="font-medium">
-                              Reveal Your Fortune
-                            </div>
-                            <div className="text-xs opacity-90">
-                              Get your comprehensive fortune analysis
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </motion.button>
+                    <GenericReportButton
+                        disabled={generatingReport || needsProfileCompletion}
+                        generateDailyReport={generateDailyReport}
+                        loading={generatingReport}
+                    />
 
-                    {needsProfileCompletion && (
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-sm text-orange-600 bg-orange-50 px-4 py-3 rounded-lg">
-                        <p className="flex-1">
-                          Please complete your profile first to generate
-                          accurate reports
-                        </p>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => setShowBirthInfoForm(true)}
-                          className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-all text-xs flex items-center gap-2 whitespace-nowrap"
-                        >
-                          <User className="w-4 h-4" />
-                          Complete Profile
-                        </motion.button>
-                      </div>
-                    )}
+                    {SHOW_COMPLETE_PROFILE_ALERT
+                        && needsProfileCompletion
+                        && <CompleteProfileAlert setShowBirthInfoForm={setShowBirthInfoForm} />}
 
                     {generationError && (
                       <p className="text-sm text-red-600 bg-red-50 px-4 py-2 rounded-lg inline-block">
