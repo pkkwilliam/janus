@@ -301,8 +301,7 @@ export default function OrdersPage() {
       
       const response = await subscriptionApi.requestRefund(
         selectedOrder.id,
-        finalAmount,
-        selectedOrder.internalTransactionId || ''
+        Number(finalAmount)
       );
       
       if (response.error) {
@@ -575,7 +574,7 @@ export default function OrdersPage() {
                         {order.items.map(item => getProductName(item.productId)).join(', ')}
                       </h3>
                       
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
                           {formatDate(order.createTime)}
@@ -584,6 +583,12 @@ export default function OrdersPage() {
                           <DollarSign className="w-4 h-4" />
                           ${order.totalAmount.toFixed(2)}
                         </div>
+                        {(order.status === 'REFUND_PENDING' || order.status === 'REFUNDED') && order.refundAmount > 0 && (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-medium">
+                            <span>Refund processed:</span>
+                            <span className="font-semibold">${order.refundAmount.toFixed(2)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
