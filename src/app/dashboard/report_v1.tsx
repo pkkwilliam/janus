@@ -30,137 +30,8 @@ import { FeedbackButton } from "@/components/ui/feedback-button";
 import { FortuneCookieAnimation } from "@/components/fortune-cookie";
 
 const SHOW_ORDER_HISHORY = true;
-
-// Mock user data
-const mockUser = {
-  name: "Sarah Chen",
-  email: "sarah@example.com",
-  joinDate: "2024-01-15",
-  totalReports: 24,
-  averageScore: 78,
-  // Birth info - set to null to simulate incomplete profile
-  birthDate: null,
-  birthTime: null,
-  birthCity: null,
-  birthCountry: null,
-};
-
-// Mock reports data - this would come from API
-const mockReports = [
-  {
-    id: "687d8dc487151063bfe7dfbf",
-    type: "WEEKLY",
-    period: {
-      year: 2025,
-      month: 7,
-      week: 30,
-      weekStart: "2025-07-20",
-      weekEnd: "2025-07-26",
-    },
-    fortuneScore: 75,
-    keyThemes: [
-      "Career advancement",
-      "Financial opportunities",
-      "Health caution",
-      "Relationship challenges",
-    ],
-    createdAt: "2025-07-21T00:45:56.007Z",
-    status: "completed",
-  },
-  {
-    id: "687d8dc487151063bfe7dfbe",
-    type: "MONTHLY",
-    period: {
-      year: 2025,
-      month: 7,
-      monthName: "July",
-    },
-    fortuneScore: 82,
-    keyThemes: [
-      "Love & relationships",
-      "Creative energy",
-      "Financial stability",
-      "Spiritual growth",
-    ],
-    createdAt: "2025-07-14T00:45:56.007Z",
-    status: "completed",
-  },
-  {
-    id: "687d8dc487151063bfe7dfbd",
-    type: "WEEKLY",
-    period: {
-      year: 2025,
-      month: 7,
-      week: 28,
-      weekStart: "2025-07-06",
-      weekEnd: "2025-07-12",
-    },
-    fortuneScore: 68,
-    keyThemes: [
-      "Career transition",
-      "Health focus",
-      "Family matters",
-      "Learning opportunities",
-    ],
-    createdAt: "2025-07-07T00:45:56.007Z",
-    status: "completed",
-  },
-  {
-    id: "687d8dc487151063bfe7dfc0",
-    type: "YEARLY",
-    period: {
-      year: 2025,
-    },
-    fortuneScore: 88,
-    keyThemes: [
-      "Personal transformation",
-      "Major life changes",
-      "Spiritual awakening",
-      "Success & prosperity",
-      "Deep relationships",
-    ],
-    createdAt: "2025-01-01T00:00:00.000Z",
-    status: "completed",
-  },
-  {
-    id: "687d8dc487151063bfe7dfc1",
-    type: "MONTHLY",
-    period: {
-      year: 2025,
-      month: 6,
-      monthName: "June",
-    },
-    fortuneScore: 76,
-    keyThemes: [
-      "Personal growth",
-      "New beginnings",
-      "Creative expression",
-      "Inner wisdom",
-    ],
-    createdAt: "2025-06-01T00:00:00.000Z",
-    status: "completed",
-  },
-  {
-    id: "687d8dc487151063bfe7dfc2",
-    type: "WEEKLY",
-    period: {
-      year: 2025,
-      month: 6,
-      week: 25,
-      weekStart: "2025-06-15",
-      weekEnd: "2025-06-21",
-    },
-    fortuneScore: 72,
-    keyThemes: [
-      "Professional development",
-      "Communication skills",
-      "Social connections",
-      "Mental clarity",
-    ],
-    createdAt: "2025-06-16T00:00:00.000Z",
-    status: "completed",
-  },
-];
+const SHOW_ALL_REPORT_BUTTON = false;
+const SHOW_REPORT_FILTER = false;
 
 function ReportCard({
   report,
@@ -898,28 +769,28 @@ function DashboardContent() {
             Your Fortune Reports
           </h2>
           <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-            <div className="relative flex-1 min-w-0">
-              <select
-                value={reportFilter}
-                onChange={(e) =>
-                  setReportFilter(
-                    e.target.value as "ALL" | "YEARLY" | "MONTHLY" | "WEEKLY",
-                  )
-                }
-                className="w-full appearance-none bg-white/50 backdrop-blur-sm border border-white/30 rounded-xl px-3 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              >
-                <option value="ALL">All Reports</option>
-                <option value="YEARLY">🌟 Yearly</option>
-                <option value="MONTHLY">🌙 Monthly</option>
-                <option value="WEEKLY">⭐ Weekly</option>
-              </select>
-              <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            </div>
-            <Link href="/reports" className="shrink-0">
-              <button className="w-full sm:w-auto px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-800 transition-colors text-sm font-medium rounded-xl border border-indigo-200">
-                View All
-              </button>
-            </Link>
+              {SHOW_REPORT_FILTER && <div className="relative flex-1 min-w-0">
+                  <select
+                      value={reportFilter}
+                      onChange={(e) =>
+                          setReportFilter(
+                              e.target.value as "ALL" | "YEARLY" | "MONTHLY" | "WEEKLY",
+                          )
+                      }
+                      className="w-full appearance-none bg-white/50 backdrop-blur-sm border border-white/30 rounded-xl px-3 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  >
+                      <option value="ALL">All Reports</option>
+                      <option value="YEARLY">🌟 Yearly</option>
+                      <option value="MONTHLY">🌙 Monthly</option>
+                      <option value="WEEKLY">⭐ Weekly</option>
+                  </select>
+                  <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>}
+              {SHOW_ALL_REPORT_BUTTON && <Link href="/reports" className="shrink-0">
+                  <button className="w-full sm:w-auto px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-800 transition-colors text-sm font-medium rounded-xl border border-indigo-200">
+                      View All
+                  </button>
+              </Link>}
           </div>
         </div>
 
@@ -929,28 +800,28 @@ function DashboardContent() {
             Your Fortune Reports
           </h2>
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <select
-                value={reportFilter}
-                onChange={(e) =>
-                  setReportFilter(
-                    e.target.value as "ALL" | "YEARLY" | "MONTHLY" | "WEEKLY",
-                  )
-                }
-                className="appearance-none bg-white/50 backdrop-blur-sm border border-white/30 rounded-2xl px-4 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              >
-                <option value="ALL">All Reports</option>
-                <option value="YEARLY">🌟 Yearly</option>
-                <option value="MONTHLY">🌙 Monthly</option>
-                <option value="WEEKLY">⭐ Weekly</option>
-              </select>
-              <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            </div>
-            <Link href="/reports">
-              <button className="text-indigo-600 hover:text-indigo-800 transition-colors text-sm font-medium">
-                View All Reports
-              </button>
-            </Link>
+              {SHOW_REPORT_FILTER && <div className="relative">
+                  <select
+                      value={reportFilter}
+                      onChange={(e) =>
+                          setReportFilter(
+                              e.target.value as "ALL" | "YEARLY" | "MONTHLY" | "WEEKLY",
+                          )
+                      }
+                      className="appearance-none bg-white/50 backdrop-blur-sm border border-white/30 rounded-2xl px-4 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  >
+                      <option value="ALL">All Reports</option>
+                      <option value="YEARLY">🌟 Yearly</option>
+                      <option value="MONTHLY">🌙 Monthly</option>
+                      <option value="WEEKLY">⭐ Weekly</option>
+                  </select>
+                  <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>}
+              {SHOW_ALL_REPORT_BUTTON && <Link href="/reports">
+                  <button className="text-indigo-600 hover:text-indigo-800 transition-colors text-sm font-medium">
+                      View All Reports
+                  </button>
+              </Link>}
           </div>
         </div>
 
