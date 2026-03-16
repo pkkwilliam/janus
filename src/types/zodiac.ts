@@ -821,3 +821,108 @@ export function getNextZodiac(zodiac: Zodiac): Zodiac {
   const index = ZODIAC_ORDER.indexOf(zodiac);
   return ZODIAC_ORDER[(index + 1) % 12];
 }
+
+// Lunar New Year data (1900-2030)
+// Encoded as month * 100 + day for each year
+const LUNAR_DATA: number[] = [
+  131, 219, 208, 129, 216, 204, 125, 213, 202, 122, // 1900-1909
+  210, 130, 218, 206, 126, 214, 203, 123, 211, 201, // 1910-1919
+  220, 208, 128, 216, 205, 124, 213, 202, 123, 210, // 1920-1929
+  130, 217, 206, 126, 214, 204, 124, 211, 131, 219, // 1930-1939
+  208, 127, 215, 205, 125, 213, 202, 122, 210, 129, // 1940-1949
+  217, 206, 127, 214, 203, 124, 212, 131, 218, 208, // 1950-1959
+  128, 215, 205, 125, 213, 202, 121, 209, 130, 217, // 1960-1969
+  206, 127, 215, 203, 123, 211, 131, 218, 207, 128, // 1970-1979
+  216, 205, 125, 213, 202, 220, 209, 129, 217, 206, // 1980-1989
+  127, 215, 204, 123, 210, 131, 219, 207, 128, 216, // 1990-1999
+  205, 124, 212, 201, 122, 209, 129, 218, 207, 126, // 2000-2009
+  214, 203, 123, 210, 131, 219, 208, 128, 216, 205, // 2010-2019
+  125, 212, 201, 122, 210, 129, 217, 206, 126, 213, // 2020-2029
+  203, // 2030
+];
+
+/**
+ * Get Lunar New Year date for a specific year
+ * Returns the date as a string in format "YYYY-MM-DD"
+ */
+export function getLunarNewYearDate(year: number): string | null {
+  if (year < 1900 || year > 2030) return null;
+  const encoded = LUNAR_DATA[year - 1900];
+  const month = Math.floor(encoded / 100);
+  const day = encoded % 100;
+  return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+}
+
+/**
+ * Get zodiac by birth date (accounting for Lunar New Year)
+ * Uses the lunar calendar to determine the correct zodiac
+ */
+export function getZodiacByBirthDate(dateString: string): Zodiac | null {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return null;
+  
+  const year = date.getFullYear();
+  const lunarNewYearStr = getLunarNewYearDate(year);
+  
+  if (!lunarNewYearStr) {
+    // Fallback to simple year calculation for years outside 1900-2030
+    const zodiacIndex = (year - 1924) % 12;
+    return ZODIAC_ORDER[zodiacIndex < 0 ? zodiacIndex + 12 : zodiacIndex];
+  }
+  
+  const lunarNewYear = new Date(lunarNewYearStr);
+  // If birth date is before Lunar New Year, use previous year
+  const effectiveYear = date < lunarNewYear ? year - 1 : year;
+  
+  const zodiacIndex = (effectiveYear - 1924) % 12;
+  return ZODIAC_ORDER[zodiacIndex < 0 ? zodiacIndex + 12 : zodiacIndex];
+}
+
+/**
+ * Get all birth years for a specific zodiac (accounting for Lunar New Year)
+ * Returns an array of objects with year and lunar new year date
+ */
+export function getBirthYearsForZodiac(zodiac: Zodiac): Array<{ year: number; lunarNewYear: string }> {
+  const years: Array<{ year: number; lunarNewYear: string }> = [];
+  const zodiacIndex = ZODIAC_ORDER.indexOf(zodiac);
+  
+  // Calculate base years (1900-2030 range)
+  for (let year = 1900; year <= 2030; year++) {
+    const lunarNewYearStr = getLunarNewYearDate(year);
+    if (!lunarNewYearStr) continue;
+    
+    // Check what zodiac this year belongs to
+    // A year is associated with a zodiac from its Lunar New Year until the next one
+    const yearZodiacIndex = (year - 1924) % 12;
+    const adjustedIndex = yearZodiacIndex < 0 ? yearZodiacIndex + 12 : yearZodiacIndex;
+    
+    if (adjustedIndex === zodiacIndex) {
+      years.push({ year, lunarNewYear: lunarNewYearStr });
+    }
+  }
+  
+  return years;
+}
+
+/**
+ * Get birth year range text for a zodiac
+ * Returns a formatted string like "2024 (Feb 10, 2024 - Jan 28, 2025)"
+ */
+export function getZodiacYearRange(year: number): string {
+  const lunarNewYearStr = getLunarNewYearDate(year);
+  const nextYearLunarNewYearStr = getLunarNewYearDate(year + 1);
+  
+  if (!lunarNewYearStr || !nextYearLunarNewYearStr) {
+    return year.toString();
+  }
+  
+  const startDate = new Date(lunarNewYearStr);
+  const endDate = new Date(nextYearLunarNewYearStr);
+  endDate.setDate(endDate.getDate() - 1);
+  
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+  
+  return `${year} (${formatDate(startDate)} - ${formatDate(endDate)})`;
+}

@@ -16,7 +16,9 @@ import {
   ZODIAC_ORDER,
   getPreviousZodiac,
   getNextZodiac,
-  ZODIAC_INFO
+  ZODIAC_INFO,
+  getBirthYearsForZodiac,
+  getZodiacYearRange
 } from "@/types/zodiac";
 
 interface ZodiacDetailClientProps {
@@ -28,6 +30,7 @@ export default function ZodiacDetailClient({ zodiac }: ZodiacDetailClientProps) 
   const info = ZODIAC_INFO[zodiac];
   const prevZodiac = getPreviousZodiac(zodiac);
   const nextZodiac = getNextZodiac(zodiac);
+  const birthYears = getBirthYearsForZodiac(zodiac);
 
   const getSectionIcon = (header: string) => {
     switch (header) {
@@ -164,40 +167,213 @@ export default function ZodiacDetailClient({ zodiac }: ZodiacDetailClientProps) 
           ))}
         </div>
 
-        {/* Zodiac Navigation Grid */}
+        {/* Birth Years Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           className="mt-12"
         >
+          <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">
+            Birth Years for {config.english}
+          </h3>
+          <p className="text-sm text-gray-600 text-center mb-4">
+            Based on the Lunar Calendar (Chinese New Year dates)
+          </p>
+
+          {/* Horizontal scrolling container */}
+          <div className="relative">
+            {/* Gradient fade edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
+
+            <motion.div
+              className="flex gap-2 overflow-x-auto pb-3 px-2 scrollbar-hide"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              whileTap={{ cursor: 'grabbing' }}
+            >
+              {birthYears.map(({ year, lunarNewYear }, index) => {
+                const isHighlighted = year >= 1980 && year <= 2010;
+                const isRecent = year >= 1990 && year <= 2024;
+
+                // Random shake animation for each card
+                const randomDelay = Math.random() * 2;
+                const randomDuration = 2 + Math.random() * 2;
+
+                return (
+                  <motion.div
+                    key={year}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      rotate: [0, -0.5, 0.5, 0],
+                    }}
+                    transition={{
+                      opacity: { delay: index * 0.02, duration: 0.3 },
+                      x: { delay: index * 0.02, type: "spring", stiffness: 100 },
+                      rotate: {
+                        delay: randomDelay,
+                        duration: randomDuration,
+                        repeat: Infinity,
+                        repeatDelay: 1 + Math.random() * 2,
+                        ease: "easeInOut"
+                      }
+                    }}
+                    whileHover={{
+                      scale: 1.1,
+                      y: -8,
+                      rotate: 0,
+                      transition: { type: "spring", stiffness: 400 }
+                    }}
+                    whileTap={{ scale: 0.92 }}
+                    className={`flex-shrink-0 w-16 py-2 px-1 rounded-xl text-center cursor-pointer transition-shadow ${
+                      isHighlighted
+                        ? `bg-gradient-to-br ${config.bgGradient} border border-white shadow-md`
+                        : isRecent
+                          ? 'bg-white border border-gray-200 shadow-sm'
+                          : 'bg-gray-50 border border-gray-100'
+                    }`}
+                  >
+                    {/* Year */}
+                    <motion.p
+                      className={`font-bold text-sm ${
+                        isHighlighted ? config.accentColor : 'text-gray-900'
+                      }`}
+                    >
+                      {year}
+                    </motion.p>
+
+                    {/* CNY Date */}
+                    <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">
+                      {new Date(lunarNewYear).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </p>
+
+                    {/* Highlight indicator - tiny dot */}
+                    {isHighlighted && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className={`mt-1 mx-auto w-1 h-1 rounded-full bg-gradient-to-r ${config.gradient}`}
+                      />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          {/* Scroll hint */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="text-center text-xs text-gray-400 mt-1 flex items-center justify-center gap-1"
+          >
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              ←
+            </motion.span>
+            Swipe to explore
+            <motion.span
+              animate={{ x: [0, -5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.span>
+          </motion.p>
+        </motion.div>
+
+        {/* Zodiac Navigation Grid - Horizontal Swipeable */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mt-12"
+        >
           <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
             Explore Other Zodiac Signs
           </h3>
-          <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
-            {ZODIAC_ORDER.map((z) => {
-              const zConfig = ZODIAC_CONFIG[z];
-              const isActive = z === zodiac;
-              return (
-                <Link key={z} href={`/zodiac/${z.toLowerCase()}`}>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`w-full aspect-square rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${
-                      isActive
-                        ? `bg-gradient-to-br ${config.gradient} text-white shadow-lg`
-                        : 'bg-white hover:bg-gray-50 border border-gray-200'
-                    }`}
+
+          {/* Horizontal scrolling container */}
+          <div className="relative overflow-hidden rounded-2xl bg-gray-50/50 p-4">
+            <motion.div
+              className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              whileTap={{ cursor: 'grabbing' }}
+            >
+              {ZODIAC_ORDER.map((z, index) => {
+                const zConfig = ZODIAC_CONFIG[z];
+                const isActive = z === zodiac;
+
+                return (
+                  <motion.div
+                    key={z}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      delay: 0.6 + index * 0.05,
+                      duration: 0.4
+                    }}
+                    whileHover={{
+                      scale: 1.05,
+                      y: -3,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-shrink-0"
                   >
-                    <span className="text-xl">{zConfig.emoji}</span>
-                    <span className={`text-xs font-medium ${isActive ? 'text-white' : 'text-gray-600'}`}>
-                      {zConfig.english}
-                    </span>
-                  </motion.button>
-                </Link>
-              );
-            })}
+                    <Link href={`/zodiac/${z.toLowerCase()}`}>
+                      <div
+                        className={`w-20 h-24 rounded-2xl flex flex-col items-center justify-center gap-2 transition-all ${
+                          isActive
+                            ? `bg-gradient-to-br ${zConfig.gradient} text-white shadow-xl ring-2 ring-white`
+                            : 'bg-white text-gray-700 shadow-sm hover:shadow-md border border-gray-100'
+                        }`}
+                      >
+                        {/* Emoji */}
+                        <span className="text-3xl">{zConfig.emoji}</span>
+
+                        {/* English name */}
+                        <span className={`text-xs font-semibold ${isActive ? 'text-white' : 'text-gray-800'}`}>
+                          {zConfig.english}
+                        </span>
+
+                        {/* Chinese character */}
+                        <span className={`text-[10px] ${isActive ? 'text-white/70' : 'text-gray-400'}`}>
+                          {zConfig.character}
+                        </span>
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </div>
+
+          {/* Scroll hint */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="text-center text-xs text-gray-400 mt-3 flex items-center justify-center gap-1"
+          >
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              ←
+            </motion.span>
+            Swipe to explore
+            <motion.span
+              animate={{ x: [0, -5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.span>
+          </motion.p>
         </motion.div>
       </div>
     </div>
