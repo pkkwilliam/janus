@@ -66,20 +66,18 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
         }
     };
 
-    // Border animation
-    const borderVariants = {
-        animate: {
-            background: [
-                "linear-gradient(135deg, rgba(251, 146, 60, 0.3) 0%, rgba(249, 115, 22, 0.3) 100%)",
-                "linear-gradient(135deg, rgba(251, 146, 60, 0.6) 0%, rgba(249, 115, 22, 0.6) 100%)",
-                "linear-gradient(135deg, rgba(251, 146, 60, 0.3) 0%, rgba(249, 115, 22, 0.3) 100%)",
-            ],
-            transition: {
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-            }
-        }
+    const borderAnimation = {
+        background: [
+            "linear-gradient(135deg, rgba(251, 146, 60, 0.3) 0%, rgba(249, 115, 22, 0.3) 100%)",
+            "linear-gradient(135deg, rgba(251, 146, 60, 0.6) 0%, rgba(249, 115, 22, 0.6) 100%)",
+            "linear-gradient(135deg, rgba(251, 146, 60, 0.3) 0%, rgba(249, 115, 22, 0.3) 100%)",
+        ],
+    };
+
+    const borderTransition = {
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut" as const,
     };
 
     return (
@@ -97,8 +95,8 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
                 {SHOW_BORDER_ANIMATION && (
                     <motion.div
                         className="absolute -inset-[1px] rounded-xl md:rounded-3xl"
-                        variants={borderVariants}
-                        animate="animate"
+                        animate={borderAnimation}
+                        transition={borderTransition}
                     />
                 )}
                 
