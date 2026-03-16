@@ -197,480 +197,545 @@ export const ZODIAC_CONFIG: Record<Zodiac, ZodiacVisualConfig> = {
 // Zodiac information content for detail pages
 export const ZODIAC_INFO: Record<Zodiac, ZodiacInfo> = {
   [Zodiac.RAT]: {
-    title: "The Rat - Clever and Quick-Witted",
+    title: "The Rat: Low-Key, Sharp, and Totally Magnetic",
     sections: [
       {
-        header: "Personality Traits",
+        header: "Vibe & Social Strategy",
         readings: [
-          "Quick-witted, resourceful, versatile, and kind",
-          "Strong intuition and quick response to challenges",
-          "Optimistic and energetic, popular among friends",
-          "Meticulous and careful with finances and planning",
+          "People born in the Year of the Rat are super easy to be around. They’re hard workers and keep a tight grip on their wallet—unless they really vibe with you. If you get a pricey gift from a Rat, take it as a huge compliment; it means they think the world of you. They take pride in their precision but aren't out here chasing clout or desperate for fans.",
+          "On the surface, they might seem like the quiet type, but they’ve actually got a lot of fire inside. The secret to their popularity is their self-control; they keep that intensity in check, which is why everyone wants to be their friend.",
         ],
       },
       {
-        header: "Strengths",
+        header: "The Hustle & The Bag",
         readings: [
-          "Excellent problem-solving abilities",
-          "Adaptable to new environments and situations",
-          "Charming and sociable with strong communication skills",
-          "Thrifty and good at accumulating wealth",
+          "Naturally clever and industrious, Rats are masters of the 'save for a rainy day' mentality. They rarely worry about the basics. By mid-life, they usually have a solid nest egg. Because they’re cautious by nature, they aren’t big on gambling in the stock market—they’d much rather see that steady interest hitting their bank account.",
+          "The second half of their life is usually smooth sailing, often even better than the first. They have that 'Mickey Mouse' charm—honest, chill, and optimistic. Even when things get heavy, they don’t let it crush their spirit. If you see someone cracking jokes in a room full of stressed-out people, they’re probably a Rat.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "Quiet Strength",
         readings: [
-          "Ox - Complementary strengths create harmony",
-          "Dragon - Mutual respect and shared ambitions",
-          "Monkey - Fun-loving partnership full of adventure",
+          "They’ve got an iron will and a survival instinct that’s second to none. They’re adaptable and don’t feel the need to flex or dominate the room. They might not have that loud 'alpha' energy, but they are relentless. Whether it’s for their career or their family, once they set a goal, they’re locked in until it's done.",
+          "Don't let the quiet exterior fool you; they aren't just sitting there. Rats are social butterflies who genuinely cherish their inner circle. They love a good party or a hangout and are usually the ones making sure everyone is having a blast with their quick wit.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "Instincts & Lifestyle",
         readings: [
-          "Lucky Colors: Gold, blue, green",
-          "Lucky Numbers: 2, 3",
-          "Lucky Flowers: Lily, African violet",
-          "Lucky Directions: Southeast, northeast",
+          "Rats are minimalist-adjacent—they love to save and collect, ensuring their life stays organized and comfortable. You’ll rarely see a Rat truly 'down and out' because they manage their world so well.",
+          "Their intuition is top-tier. They can sense trouble from a mile away and know when to bail. On the rare occasion they ignore that gut feeling, they might hit a wall—but usually, that only happens once. They don’t mind a calculated risk here and there, and honestly? Luck usually stays on their side.",
         ],
       },
     ],
   },
   [Zodiac.OX]: {
-    title: "The Ox - Diligent and Dependable",
+    title: "The Ox: Solid, Driven, and Low-Key Powerful",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Work Ethic",
         readings: [
-          "Diligent, dependable, strong, and determined",
-          "Honest and earnest with strong moral principles",
-          "Patient and methodical in approach to life",
-          "Reliable friend and devoted family member",
+          "People born in the Year of the Ox are the ultimate definition of 'reliable.' They’re hardworking, grounded, and usually the ones the boss trusts most. When things get messy, their insane stamina kicks in, and they just push through until the job is done. They’re absolute hustlers who play for the long-term win, though they tend to keep their feelings close to the chest, making them a bit of a mystery to others. Even in a heated argument, they'd rather keep it chill and talk things out rationally than blow up.",
+          "Stability, grit, and a practical creative streak are their superpowers. But when it comes to their mindset, they can be as stubborn as... well, an ox. Their biggest hurdle is being a bit too rigid—sometimes they ignore good advice and just do things their way. Since they value tradition, learning to be a bit more flexible and empathetic to others' vibes is their key to leveling up.",
         ],
       },
       {
-        header: "Strengths",
+        header: "Romance & Connection",
         readings: [
-          "Strong sense of responsibility and duty",
-          "Excellent organizational and planning skills",
-          "Persistent and determined to achieve goals",
-          "Trustworthy and loyal in relationships",
+          "Don't expect an Ox to be all over social media posting paragraphs about their feelings. They’re pretty conservative with emotions and prefer showing love in quiet, indirect ways. They are honest and down-to-earth, but if you’re looking for a cinematic, over-the-top romance, you might find them a bit low-key. They aren't about the drama; they're about the real stuff.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "The Inner Fire",
         readings: [
-          "Rat - Harmonious partnership with mutual benefits",
-          "Snake - Deep understanding and shared values",
-          "Rooster - Complementary skills and mutual support",
+          "Most of the time they’re cool, but if you actually push an Ox to their limit, watch out—their temper is legendary and can be a bit intimidating. They know exactly who they like and who they don’t, and they won't fake a friendship with someone they find annoying. They have a natural urge to lead and take amazing care of the people who depend on them. They’re the type who wants a tight-knit crew that shares their vision.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "The Long Game",
         readings: [
-          "Lucky Colors: White, yellow, green",
-          "Lucky Numbers: 1, 4",
-          "Lucky Flowers: Tulip, evergreen, peach blossom",
-          "Lucky Directions: Southeast, south, north",
+          "The Ox is the definition of a 'late bloomer.' Their wealth and career usually peak later in life, but it's built on a foundation that won't crack. Even though they look mellow on the outside, they have a strong desire to be noticed and successful—they aren't meant to stay in the shadows forever. As long as they don't rush the process, they’re guaranteed to be the ones on top in the end.",
         ],
       },
     ],
   },
   [Zodiac.TIGER]: {
-    title: "The Tiger - Brave and Confident",
+    title: "The Tiger: Bold, Restless, and Unstoppable",
     sections: [
       {
-        header: "Personality Traits",
+        header: "Main Character Energy",
         readings: [
-          "Brave, confident, competitive, and charming",
-          "Natural leaders with magnetic personalities",
-          "Passionate and enthusiastic about life",
-          "Independent and unafraid of challenges",
+          "Ranking third in the zodiac, those born in the Year of the Tiger are the ultimate lone wolves. They’ve got high self-esteem and an independent streak that makes them natural-born leaders—the kind of person who protects their crew but expects everyone to follow their lead. They’re fast-movers and risk-takers, which can sometimes lead to messy mistakes, but here’s the thing: a Tiger never truly stays down. If they hit a wall, they just reset and go again until they win. They love a good debate and hate losing an argument; convincing a Tiger they’re wrong is basically mission impossible.",
+          "While Tiger men tend to be stubborn and competitive, Tiger women are often more detail-oriented and strategic. They think three steps ahead in both their career and personal life, making them the ultimate power partners.",
         ],
       },
       {
-        header: "Strengths",
+        header: "The Rebel Spirit",
         readings: [
-          "Courageous and willing to take risks",
-          "Charismatic and inspiring to others",
-          "Decisive and action-oriented",
-          "Generous and protective of loved ones",
+          "Tigers live life in the fast lane and can be a bit impulsive, which sometimes clouds their judgment. They aren't fans of rules—unless they’re the ones making them. It’s totally normal to meet a Tiger who’s hopped through five different careers because they can’t stand feeling stuck or restricted by outside pressure. They need room to breathe and evolve.",
+          "They have a fierce sense of justice and zero patience for beating around the bush. Even if it’s their boss, if a Tiger sees something wrong, they’re going to call it out. They aren't great at playing the corporate politics game just to get ahead; they’d rather be real than be 'safe.'",
         ],
       },
       {
-        header: "Best Matches",
+        header: "The Trendsetter",
         readings: [
-          "Dragon - Powerful alliance of two strong signs",
-          "Horse - Shared energy and adventurous spirit",
-          "Pig - Complementary balance and mutual respect",
+          "In a Tiger's eyes, following trends is for people with no original taste. They see themselves as the innovators and the ones setting the standards. Their vibe is usually way ahead of the curve because they refuse to just follow the crowd.",
+          "When they commit to something, they are all-in—literally nothing can scare them off once they’ve set their sights on a goal. Ironically, they often find themselves surrounded by other high-energy, slightly chaotic people, which makes for a wild social life that’s hard to walk away from.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "The Bag & The Hustle",
         readings: [
-          "Lucky Colors: Blue, gray, orange",
-          "Lucky Numbers: 1, 3, 4",
-          "Lucky Flowers: Cineraria, lily",
-          "Lucky Directions: East, north, south",
+          "Tigers aren't actually obsessed with money. Don’t get it twisted—they like having plenty of it—but they aren't slaves to the grind. They have this innate confidence that as long as they’re doing their thing, the cash will just be there... right up until the moment it’s gone.",
+          "They value honesty above all, even if life occasionally pushes them into grey areas. They can’t stand unfair authority or sketchy laws and will fight tooth and nail for what they believe in. Because they’re always looking for the next big move, some Tigers might not find their 'forever' role until their 50s, but they’ll have one hell of a story to tell by then.",
         ],
       },
     ],
   },
   [Zodiac.RABBIT]: {
-    title: "The Rabbit - Gentle and Elegant",
+    title: "The Rabbit: Pure Elegance and Low-Key Brilliance",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Ultimate Vibe",
         readings: [
-          "Gentle, quiet, elegant, and alert",
-          "Quick-witted with a keen eye for detail",
-          "Patient and considerate of others",
-          "Responsible and conscientious in all endeavors",
+          "Honestly, the Rabbit has the best personality in the zodiac. They’re the definition of 'chill'—gentle, quiet, and incredibly polite. But don't mistake their softness for weakness; they are sharp, detail-oriented, and have a deep sense of responsibility. People naturally gravitate toward them because they’re just so easy to be around.",
+          "When it comes to the grind, a Rabbit is all in. They’re meticulous and serious about their craft. They don’t just do the job; they do it with a level of precision and dedication that’s hard to match.",
         ],
       },
       {
-        header: "Strengths",
+        header: "Family & Home Life",
         readings: [
-          "Diplomatic and skilled at conflict resolution",
-          "Creative with refined artistic sensibilities",
-          "Compassionate and empathetic towards others",
-          "Cautious and wise in decision-making",
+          "At home, Rabbits are the ultimate parents. They’re warm and loving but know how to keep things disciplined without being overbearing. They don't look for a 'payback' from their kids; they just want to see them thrive. They also never forget where they came from—their loyalty to their parents is next-level. They’re the ones who walk into a room and instantly lift the mood, making everyone’s stress just melt away.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "The Social Circle",
         readings: [
-          "Sheep/Goat - Gentle harmony and mutual understanding",
-          "Dog - Loyal companionship and shared values",
-          "Pig - Peaceful and supportive relationship",
+          "Rabbits are all about 'real recognize real.' They are incredibly sincere and always follow through on their word. That said, they aren't an open book to everyone right away—they keep a guard up with new people until time proves they’re worth the energy. If you’ve been friends with a Rabbit since you were kids, know that they cherish that bond more than anything.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "Energy & Aesthetics",
         readings: [
-          "Lucky Colors: Red, pink, purple, blue",
-          "Lucky Numbers: 3, 4, 9",
-          "Lucky Flowers: Lily, nerve plant",
-          "Lucky Directions: East, southeast, south",
+          "The Rabbit man is the definition of suave. He’s got that gentle smile and effortless charm that makes him instantly trustworthy. He handles drama with total composure and never lets setbacks get him down. He just keeps pushing until he hits that enviable success.",
+          "The Rabbit woman is pure elegance. She’s kind-hearted and has this multi-talented 'main character' energy—whether it’s art, cooking, or style, she masters it effortlessly. Her presence is so refined that anything toxic or basic just fades into the background when she’s around.",
+        ],
+      },
+      {
+        header: "Loyalty in Love",
+        readings: [
+          "In love, a Rabbit is the most loyal partner you could ask for. They don't fall fast, and they definitely don't fall for smooth talk or players. But once they feel a genuine connection and decide you’re the one, they are 100% committed, giving their heart and soul to the person they love.",
         ],
       },
     ],
   },
   [Zodiac.DRAGON]: {
-    title: "The Dragon - Powerful and Charismatic",
+    title: "Year of the Dragon",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Legendary Dragon",
         readings: [
-          "Confident, intelligent, enthusiastic, and charismatic",
-          "Natural born leaders with strong ambitions",
-          "Energetic and unafraid of challenges",
-          "Lucky and often successful in endeavors",
+          "Among the twelve zodiac animals of the Chinese Earthly Branches, the Dragon is the only mythical creature. Since ancient times, the Chinese have regarded the Dragon, Phoenix, Qilin, and Turtle as the 'Four Sacred Spirits'—symbols of the highest fortune and blessings.",
+          "The Dragon is imagined with the long face of a horse, the body of a snake, eighty-one shimmering scales along its back, and claws like a rooster. It can soar through the sky and dive into the deepest waters, appearing and disappearing in mysterious ways. Even the number eighty-one carries a poetic meaning, symbolizing the dance of endless hope. Truly, the Dragon is a creature adored with countless blessings.",
         ],
       },
       {
-        header: "Strengths",
+        header: "Personality of Dragon-Born Individuals",
         readings: [
-          "Exceptional leadership abilities",
-          "Innovative and forward-thinking mindset",
-          "Courageous and determined to succeed",
-          "Inspiring and influential to others",
+          "People born in the Year of the Dragon often carry an air of mystery and unpredictability, much like the mythical dragon itself. They are ambitious dreamers who love adventure and romantic lifestyles. At the same time, they tend to be detached from worldly conventions, naturally giving off the aura of someone destined for big things.",
+          "Their minds are as vast and shifting as the ocean. At times they may appear relaxed—even lazy—perfectly content sitting around watching TV without worry. But once they decide to act, their energy and ambition can easily surpass that of others.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "Natural Charisma",
         readings: [
-          "Rat - Dynamic partnership with shared ambitions",
-          "Monkey - Creative collaboration full of energy",
-          "Rooster - Mutual admiration and respect",
+          "Dragon-born individuals often possess remarkable charisma. Their presence alone can draw attention, making them shine in fields like entertainment, sports, or spiritual leadership.",
+          "Many famous figures share this zodiac sign. International icon Marilyn Monroe and the influential philosopher Friedrich Nietzsche were both born in the Year of the Dragon.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "Dreamers with Intense Passion",
         readings: [
-          "Lucky Colors: Gold, silver, grayish white",
-          "Lucky Numbers: 1, 6, 7",
-          "Lucky Flowers: Bleeding heart vine, larkspur",
-          "Lucky Directions: East, north, south",
+          "Dragons are dreamers at heart. When they pursue their goals, they do so with intense passion and excitement. However, if they face major setbacks, that fiery enthusiasm can fade quickly, leaving them discouraged.",
+          "Statistics often show that among those who suddenly give up after failure, a surprisingly large portion are Dragon-born. This extreme swing between passion and discouragement means they may not thrive in rigid, long-term office environments. Instead, they shine in roles that allow freedom, creativity, and self-expression.",
+        ],
+      },
+      {
+        header: "Strength and Determination",
+        readings: [
+          "Men born in the Year of the Dragon are highly competitive and driven, while Dragon women are famously strong-willed. In fact, Dragon women sometimes display leadership and capability that surpass expectations, which can intimidate some men and delay their marriages.",
+          "But in modern society, Dragon women are often seen as classic examples of successful individuals—capable of building careers, supporting their families, and standing confidently in the world.",
+        ],
+      },
+      {
+        header: "A Powerful Presence",
+        readings: [
+          "Dragon-born people naturally carry an authoritative aura. Even if others feel overwhelmed by them, Dragons tend to demand attention wherever they go. Once they focus on someone, their enthusiasm can be relentless—but also incredibly contagious.",
+          "Nothing seems to scare a Dragon away. When it comes to their future and ambitions, they often possess a powerful sense of mission. They climb icy mountains and cross blazing seas without hesitation, ultimately emerging victorious in front of everyone.",
+        ],
+      },
+      {
+        header: "Irresistible Charm",
+        readings: [
+          "Dragons possess a magnetic charm that is hard to resist. Their charisma isn't subtle—it can completely capture attention and break through emotional defenses.",
+          "Dragon women in particular have striking attraction. Even if they are not conventionally beautiful, their presence, confidence, and way of speaking naturally draw the spotlight wherever they appear.",
+        ],
+      },
+      {
+        header: "Energy That Never Stops",
+        readings: [
+          "Dragon-born individuals seem to radiate health and endless energy. They rarely appear tired. They can leave work to attend a meeting, return to work again, show up at a dinner event, go home to take care of family, and still head out for another gathering before finally resting.",
+          "Next time you meet someone who seems unbelievably energetic and always busy, try asking their zodiac sign. There's a good chance they'll grin and say, 'I'm a Dragon.'",
+        ],
+      },
+      {
+        header: "A Surprisingly Soft Heart",
+        readings: [
+          "If a Dragon plays an important role in your life but sometimes seems distant or inattentive, there is a surprisingly simple trick—tears.",
+          "Despite their strong exterior, Dragons often have sensitive hearts. Genuine emotion can soften them quickly, because beneath their powerful image, they can be deeply sentimental.",
+        ],
+      },
+      {
+        header: "Focus and Persistence",
+        readings: [
+          "Dragon-born people can be stubborn, but they are also extremely focused. Once they make a decision—especially in their career—they push forward with determination and courage.",
+          "This relentless drive often leads them toward significant achievements.",
+        ],
+      },
+      {
+        header: "Perfectionist Idealists",
+        readings: [
+          "Dragons are idealists who want everything to be perfect. Because of this, they can be very strict with both themselves and others, sometimes to the point of being overly critical.",
+          "Their temper can also be fiery, which may give them the reputation of being a bit tyrannical at times.",
+        ],
+      },
+      {
+        header: "Sharp Minds",
+        readings: [
+          "Dragon-born individuals are often exceptionally talented. Whether in the arts, sciences, business, or spiritual studies, they tend to grasp complex ideas faster than others.",
+          "Of course, this brilliance has two sides—if they ever chose the wrong path, they could just as easily become criminal masterminds.",
+        ],
+      },
+      {
+        header: "Life Fortune",
+        readings: [
+          "Those born in the Year of the Dragon often start life with strong fortune, as if illuminated by the rising sun. After the age of thirty-five, their luck may slow down for a while.",
+          "However, this pause is not a setback—it is usually a period of gathering strength. If they break through this stage, their momentum often returns even stronger, pushing them toward greater success.",
+          "But if they lose confidence during this time and stop striving, they may end up with a 'dragon head, snake tail' outcome—starting brilliantly but finishing without achievement.",
+        ],
+      },
+      {
+        header: "Love and Relationships",
+        readings: [
+          "In matters of love, Dragon-born individuals can be surprisingly vulnerable. Even when they experience a beautiful romance, they should try to observe the relationship calmly and objectively before committing their whole future to it.",
+          "Both men and women born in the Year of the Dragon often lean toward marrying later in life.",
         ],
       },
     ],
   },
   [Zodiac.SNAKE]: {
-    title: "The Snake - Wise and Mysterious",
+    title: "The Snake: Mysterious, High-Key Magnetic, and Deeply Driven",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Cool Exterior",
         readings: [
-          "Enigmatic, intelligent, and wise",
-          "Graceful and elegant in manner and appearance",
-          "Determined and persistent in achieving goals",
-          "Intuitive with deep understanding of others",
+          "Whether guy or girl, Snakes are heavy hitters and the ultimate idealists. They feel deep gratitude and can get totally obsessed with someone, but they aren't the type to rush the chase. They’ve got a massive possessive streak—if they can’t fully read you, they get hit with a wave of anxiety. The key for them is chilling out on the curiosity and keeping those emotions steady.",
+          "On the surface, they’re calm and detached, but inside? It’s pure fire. They play it safe with new people, but once you’re in the inner circle, they’re incredibly caring. They move through life with a solid plan, hitting goals step-by-step. If they want something—or someone—they’ll go get it. They’re experts at spotting openings and jumping in first.",
         ],
       },
       {
-        header: "Strengths",
+        header: "The Deep Dive",
         readings: [
-          "Excellent analytical and problem-solving skills",
-          "Calm and composed under pressure",
-          "Resourceful and adaptable to change",
-          "Perceptive with keen insight into situations",
+          "Snakes are obsessed with the 'why.' They won’t believe a word until they’ve done their own deep dive. That curiosity is a double-edged sword, though—they sometimes get a bit too much joy out of knowing everyone’s business. While they aren't out here starting drama or spreading rumors, that nosy streak can rub people the wrong way. They're better off channeling that energy into leveling up their knowledge.",
+          "They seem mellow, but they have a will of iron. People often think Snakes are easy-going with their cash, but if you look closer, they have a weirdly effortless way of making money find its way into their pockets. It’s part of that natural 'Snake charm'—the bag just comes to them.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "The Inner Struggle",
         readings: [
-          "Ox - Stable and supportive partnership",
-          "Rooster - Intellectual connection and mutual respect",
-          "Monkey - Stimulating and dynamic relationship",
+          "Let’s be real: laziness is the Snake's biggest rival. They have massive ambitions, but they often have to fight a daily mental battle just to get moving. For a Snake to truly win, they have to stop dreaming and start taking those real-world steps every single day.",
+          "In relationships, they can be a bit 'extra.' They like to surround their partner with intensity until they’ve totally won them over with their charm and magic. They’re all about that deep, hypnotic connection.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "The Lifestyle",
         readings: [
-          "Lucky Colors: Black, red, yellow",
-          "Lucky Numbers: 2, 8, 9",
-          "Lucky Flowers: Orchid, cactus",
-          "Lucky Directions: East, west, southwest",
+          "Snakes have expensive taste. They’re famous for dropping serious cash on luxury items without blinking, yet they’ll weirdly try to save money on basic daily necessities. It’s all about the high-end life for them.",
+          "No matter the gender, someone born in the Year of the Snake is going to be well-dressed and sharp. They put a lot of effort into their look, which makes them total magnets for the opposite sex. Just watch out—sometimes that focus on style can give off a bit of a vain vibe.",
         ],
       },
     ],
   },
   [Zodiac.HORSE]: {
-    title: "The Horse - Energetic and Independent",
+    title: "The Horse: Free-Spirited, High-Energy, and Bold",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Competitive Edge",
         readings: [
-          "Animated, active, and energetic",
-          "Independent and freedom-loving",
-          "Quick-witted with a great sense of humor",
-          "Warm-hearted and enthusiastic about life",
+          "People born in the Year of the Horse are always looking to stay one step ahead. They have that 'can’t lose' attitude and are experts at hyping themselves up to grind. However, they do have a few quirks—consistency isn't always their strong suit, keeping secrets can be a struggle, and they tend to switch up their romantic interests pretty quickly.",
+          "To really level up, a Horse needs to master patience and follow through on every project they start. Building a solid skill set early on is key to keeping that career momentum going. They are naturally optimistic and great talkers, making friends effortlessly. Just a heads-up: their blunt honesty can sometimes hurt feelings without them even realizing it, so watching their words is a move.",
         ],
       },
       {
-        header: "Strengths",
+        header: "The Bag & Lifestyle",
         readings: [
-          "Excellent communication and social skills",
-          "Adaptable and flexible in changing situations",
-          "Cheerful and positive attitude",
-          "Strong determination to achieve freedom and success",
+          "When it comes to money, Horses are great at making it, but they love the high life. They have a taste for luxury and keeping up appearances, which means the cash often flows out as fast as it comes in. Saving isn't always the vibe, but they definitely know how to live well.",
+          "The Horse is often that 'difficult' kid who grows up through some growing pains, only to turn into an absolute powerhouse by their mid-30s. They hate being ignored and need an environment where they can fully express their unique style and personality.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "Independence & Freedom",
         readings: [
-          "Tiger - Dynamic and energetic partnership",
-          "Sheep/Goat - Gentle understanding and support",
-          "Dog - Loyal friendship and mutual trust",
+          "The dream for a Horse is zero restrictions. They’re often the first to leave the nest, chasing that independent city life where no one can breathe down their neck. While some think they should settle down early to stay grounded, the rebellious Horse usually chooses the path of self-struggle and total freedom over a traditional setup.",
+          "Sometimes their confidence outpaces their actual skill—they’re the type to say, 'Let's skydive next week!' without ever having touched a parachute. But the wild part? They actually have the talent to learn almost anything. Whether it’s building a house or crafting something intricate by hand, they’ve got those 'magic hands' and always look incredibly stylish while doing it.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "Relationships & Success",
         readings: [
-          "Lucky Colors: Yellow, green",
-          "Lucky Numbers: 2, 3, 7",
-          "Lucky Flowers: Jasmine, sunflower",
-          "Lucky Directions: East, west, south",
+          "Horses are top-tier partners and friends. They have an insane work ethic once they find their groove and move past those restless younger years. Most Horses are destined for success because they simply don't stop.",
+          "They carry a good amount of pride, but they are also deeply responsible. Even if a relationship isn't the perfect fairy tale they imagined, they stay grounded in reality and fulfill their duties. They keep things 100% real while holding onto just a tiny spark of romantic idealism.",
         ],
       },
     ],
   },
   [Zodiac.GOAT]: {
-    title: "The Goat - Gentle and Compassionate",
+    title: "Year of the Goat",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Warmest Zodiac Sign",
         readings: [
-          "Gentle, mild-mannered, and compassionate",
-          "Creative and artistic with refined tastes",
-          "Persistent and determined despite gentle appearance",
-          "Strong inner resilience and quiet strength",
+          "In traditional Chinese astrology, the Goat is considered the most gentle and warm-hearted of all zodiac signs. People born in this year are often known for their kindness and generosity. They tend to be sincere, friendly, and easily moved by the struggles of others.",
+          "Their personalities are soft and calm, sometimes even a little shy. When life is going well, Goat-born individuals often shine as elegant artists or creative thinkers. But when they hit rough patches in life or career, they can become sensitive, emotional, and occasionally a bit pessimistic.",
         ],
       },
       {
-        header: "Strengths",
+        header: "Quiet Strength",
         readings: [
-          "Strong creative and artistic abilities",
-          "Compassionate and caring towards others",
-          "Patient and persistent in pursuing goals",
-          "Diplomatic and skilled at maintaining harmony",
+          "People born in the Year of the Goat may appear modest and reserved on the outside, but inside they often hold very firm opinions. When pressured or intimidated, they usually won’t argue loudly. Instead, they quietly hold their ground, choosing silence over confrontation.",
+          "Many Goat-born individuals were lovingly spoiled by their parents during childhood. Fortune often smiles upon them, perhaps because they carry such pure and kind hearts.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "Generous Souls",
         readings: [
-          "Rabbit - Gentle harmony and shared sensibilities",
-          "Horse - Complementary energies and mutual support",
-          "Pig - Peaceful and nurturing relationship",
+          "Goat-born people are generous not only with money but also with their time and care. If you ever find yourself struggling or in need, a friend born in the Year of the Goat is unlikely to ignore you.",
+          "They seem to carry life’s basic blessings wherever they go—food, shelter, and clothing rarely become serious worries. They enjoy socializing and treat collaborators with sincerity and warmth.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "Love and Family Blessings",
         readings: [
-          "Lucky Colors: Green, red, purple",
-          "Lucky Numbers: 2, 7",
-          "Lucky Flowers: Carnation, primrose",
-          "Lucky Directions: East, southeast, south",        ],
+          "Being born in the Year of the Goat is often associated with a happy marriage. Goat-born individuals tend to be deeply loved not only by their partners but also by extended family members.",
+          "Their gentle nature naturally attracts affection and support from people around them.",
+        ],
+      },
+      {
+        header: "Winter Goats and Life Challenges",
+        readings: [
+          "It is sometimes said that those born in winter during the Year of the Goat may face more life challenges. In nature, winter is a difficult season for goats because food is scarce.",
+          "Even so, Goat-born individuals rarely need to worry about life’s basic necessities. During difficult times, people around them often step in to offer support and care.",
+        ],
+      },
+      {
+        header: "A Lucky Path",
+        readings: [
+          "People born under the Goat sign often enjoy surprisingly good fortune. Many people willingly help them, sometimes offering financial support or valuable gifts from family and relatives.",
+          "Influential individuals may even become their mentors or protectors. When Goat-born individuals encounter setbacks, someone usually appears to help them recover and move forward again.",
+        ],
+      },
+      {
+        header: "Gentle Strategies",
+        readings: [
+          "When pursuing something they care about, Goat-born individuals prefer subtle and non-forceful approaches. If they don’t want to do something, they rarely refuse directly—instead they politely delay or decline with patience and calm explanations.",
+          "They are also very good at calming tense situations and smoothing conflicts between others.",
+        ],
+      },
+      {
+        header: "A Roundabout Personality",
+        readings: [
+          "Sometimes their indirect way of communicating can frustrate others. Goat-born individuals often express themselves slowly and carefully, revealing their thoughts little by little.",
+          "To communicate well with them, patience is key. Show understanding, listen attentively, and give them space to express themselves comfortably.",
+        ],
+      },
+      {
+        header: "Needing the Right Environment",
+        readings: [
+          "Goat-born individuals often perform best when working alongside strong and decisive people who can guide and organize them. With the right structure and encouragement, their talents can shine much more brightly.",
+          "Firm leadership and disciplined environments can actually help them reach their full potential.",
+        ],
+      },
+      {
+        header: "Love for Comfort and Family",
+        readings: [
+          "Goat-born people tend to stay close to their personal comfort zone. Family, favorite foods, and familiar surroundings are very important to them.",
+          "They also cherish special occasions. Birthdays and holidays are meaningful moments they love to celebrate with style and enthusiasm.",
+        ],
+      },
+      {
+        header: "Sensitive and Thoughtful Minds",
+        readings: [
+          "Goat-born individuals can be emotional and reflective. Sometimes they see the darker side of situations and worry more than others might.",
+          "Because of this, they appreciate supportive friends who bring positive energy and encouragement into their lives.",
+        ],
+      },
+      {
+        header: "A Gentle Weakness",
+        readings: [
+          "One of their common weaknesses is hesitation. They sometimes struggle to make quick decisions and may spend money in ways that aren’t always practical.",
+          "Even so, their sincerity and kind spirit often win people over.",
+        ],
+      },
+      {
+        header: "Graceful Style",
+        readings: [
+          "Young women born in the Year of the Goat often have a love for fashion and elegant details. They may spend time carefully preparing their appearance, choosing clothing with decorative touches and accessories.",
+          "Their manner is graceful and refined, often creating a calm and beautiful atmosphere around them.",
+        ],
+      },
+      {
+        header: "Elegant Living",
+        readings: [
+          "Many Goat-born women value cleanliness and personal presentation. Their homes and daily routines often reflect a strong sense of order, beauty, and care.",
+          "They enjoy surrounding themselves with pleasant details—fresh flowers, tasteful decorations, and stylish clothing.",
+        ],
+      },
+      {
+        header: "Loyal in Love",
+        readings: [
+          "When a Goat-born woman falls in love, she expresses her feelings openly and sincerely. She enjoys spending time with the person she trusts most and values emotional closeness deeply.",
+          "Her partner often becomes someone she fully believes in and relies upon.",
+        ],
+      },
+      {
+        header: "Quiet Cleverness",
+        readings: [
+          "People born in the Year of the Goat often use subtle intelligence to compensate for their weaknesses. They are surprisingly skilled at using gentle persuasion to achieve what they want.",
+          "Their calm attitude and compassionate tone can slowly break down even the strongest emotional defenses, making them more influential than people might initially realize.",
+        ],
       },
     ],
   },
   [Zodiac.MONKEY]: {
-    title: "The Monkey - Clever and Versatile",
+    title: "The Monkey: Driven, Charismatic, and Living Life to the Fullest",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Intellectual Drive",
         readings: [
-          "Sharp, smart, curious, and mischievous",
-          "Quick-witted with excellent problem-solving skills",
-          "Versatile and adaptable to any situation",
-          "Energetic and always ready for new challenges",
+          "People born in the Year of the Monkey have a serious drive to succeed. From a young age, they tend to be lifelong learners, pouring their intelligence and energy into their studies. They aren't fans of falling behind and always aim for the top, though their quick minds sometimes move faster than the details. With a bit of focus, they have the potential to achieve greatness.",
+          "When it comes to the professional world, it is all about the passion. If they aren't feeling a task, they might just cruise through it. But once a project sparks their interest? They are all in. They'll push through any obstacle and stay focused until they reach that win.",
         ],
       },
       {
-        header: "Strengths",
+        header: "Family and Social Vibes",
         readings: [
-          "Exceptional intelligence and quick learning ability",
-          "Creative and innovative thinking",
-          "Excellent social skills and sense of humor",
-          "Resourceful and able to find solutions quickly",
+          "Family harmony is a top priority. They are naturally devoted to their parents and put everything into raising their children, often being quite indulgent parents. In a marriage, they value deep, lifelong connections and mutual affection, though they do appreciate it when their partner takes their ideas to heart.",
+          "As friends, they are the ultimate hosts—straightforward, sincere, and always treating people as equals. They have a natural instinct to help others and stand up for what is right. While they are great with peers, navigating traditional workplace hierarchies can sometimes be their biggest challenge.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "Style and Substance",
         readings: [
-          "Rat - Clever partnership with shared wit",
-          "Dragon - Dynamic and powerful alliance",
-          "Snake - Intellectual stimulation and mutual respect",
+          "The Monkey man is sharp, capable, and carries himself with a certain effortless charm. He is often so focused on his career and goals that he doesn't worry about being perfectly polished, yet his ambition naturally draws people in. He prefers to build his own success rather than asking for favors. He is great at creating wealth, though he can be a big spender, often benefiting from a partner who helps keep the lifestyle balanced.",
+          "The Monkey woman is the perfect blend of intelligence and grace. She has an effortless, natural style and a magnetic personality. Gifted in the arts and highly articulate, she is someone who knows her worth. She has a strong sense of self-respect and expects to be treated with dignity. When respected, she is the most incredible and supportive partner to have by your side.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "The Free-Spirited Life",
         readings: [
-          "Lucky Colors: White, blue, gold",
-          "Lucky Numbers: 4, 9",
-          "Lucky Flowers: Chrysanthemum, crape myrtle",
-          "Lucky Directions: North, northwest, west",
+          "Monkeys live life with a sense of freedom and energy. They are curious about the world, love a good adventure, and are always looking for the next big discovery. They are optimistic, full of wit, and prefer a life without too many restrictions. Their open-hearted nature and resilience mean that even when life gets a bit tricky, they usually find their way to a happy, healthy, and fulfilling ending.",
         ],
       },
     ],
   },
   [Zodiac.ROOSTER]: {
-    title: "The Rooster - Observant and Hardworking",
+    title: "The Rooster: Sharp, Stylish, and Always One Step Ahead",
     sections: [
       {
-        header: "Personality Traits",
+        header: "Social Intelligence",
         readings: [
-          "Observant, hardworking, courageous, and talented",
-          "Confident and unafraid to speak their mind",
-          "Meticulous and detail-oriented in all endeavors",
-          "Honest and straightforward in communication",
+          "Roosters are total experts at reading the room. They’ve got a sharp intuition and can sniff out what people are thinking from a mile away. No matter what life throws at them, they’ve got a backup plan ready to go in seconds. They are social chameleons who can vibe with anyone, making them super approachable and friendly—though, in the wrong hands, that same sharpness can turn into a bit of a cunning streak.",
+          "They are bright and reliable, which usually earns them a lot of points with the higher-ups. Their career path looks solid, but they have a tendency to set some wild, borderline impossible goals. When they shoot too close to the sun, they might face a reality check, but their ambition is undeniable.",
         ],
       },
       {
-        header: "Strengths",
+        header: "The Aesthetic & Vibe",
         readings: [
-          "Strong organizational and planning abilities",
-          "Excellent attention to detail",
-          "Courageous and willing to take on challenges",
-          "Reliable and responsible in fulfilling duties",
+          "Whether they are at school or in the office, a Rooster keeps their space immaculate. Everything is organized and on-point. They do have a flair for the dramatic, though; they love to talk big, drop names, and maybe exaggerate a story or two to keep things interesting. To them, looking good isn't just a hobby—it's a lifestyle. They truly believe that a killer first impression is everything.",
+          "They have a natural eye for color and style, especially the women. Their fashion sense is top-tier, and they have this intuitive knack for mixing and matching outfits that leave everyone else impressed.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "The Creative Adventurer",
         readings: [
-          "Ox - Stable and complementary partnership",
-          "Snake - Intellectual connection and mutual understanding",
-          "Dragon - Mutual respect and shared ambitions",
+          "Roosters live for the thrill—think traveling, exploring, and taking risks. They aren't big fans of rigid authority and would much rather spend their energy helping others (sometimes even a bit too much). They’re the life of the party, always ready with a joke or a witty comeback.",
+          "They are low-key creative geniuses. Even though they have insane talent for music, art, or writing, they often keep these as side hustles or hobbies rather than full-time gigs. They have a bit of a 'fortune teller' vibe too; they can spot trends before they happen and always have a carefully thought-out plan for the future.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "The Fast Lane",
         readings: [
-          "Lucky Colors: Gold, brown, yellow",
-          "Lucky Numbers: 5, 7, 8",
-          "Lucky Flowers: Gladiola, cockscomb",
-          "Lucky Directions: South, southeast",
+          "A Rooster’s mind moves at 100 mph. They are incredibly quick-witted, but their main struggle is their impatience. If they don't slow down and focus, they risk rushing through things and ending up with nothing to show for it. However, when they channel that energy correctly, their ability to execute complex ideas is unmatched.",
         ],
       },
     ],
   },
   [Zodiac.DOG]: {
-    title: "The Dog - Loyal and Honest",
+    title: "The Dog: Loyal, Low-Key, and Fiercely Protective",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Inner Circle",
         readings: [
-          "Loyal, honest, cautious, and kind",
-          "Strong sense of justice and fairness",
-          "Reliable and trustworthy in all relationships",
-          "Caring and protective of loved ones",
+          "People born in the Year of the Dog are the definition of 'quality over quantity.' They’re pretty conservative and cautious, so it takes a minute to get into their inner circle. But once you’re in? You’re in for life. They bring that same ride-or-die loyalty to their friends, partners, and even their bosses. They don't just build connections; they build foundations.",
+          "They have a massive sense of justice and will go to the ends of the earth for the people who matter most. The catch? They aren't always the best at putting their feelings into words. Because they struggle to express what’s on their mind, they can sometimes come off as a bit stubborn or stuck in their ways.",
         ],
       },
       {
-        header: "Strengths",
+        header: "The Skeptical Visionary",
         readings: [
-          "Unwavering loyalty and devotion",
-          "Strong moral compass and integrity",
-          "Excellent judgment and intuition",
-          "Reliable and responsible nature",
+          "Dogs spend a fair amount of time stuck in their own heads, overthinking things. They sometimes feel like the world is a bit chaotic or out to get them, which makes them feel like they personally need to step in and fix everything. It’s a heavy weight to carry, but it comes from a place of wanting things to be right.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "The Heart of Gold",
         readings: [
-          "Rabbit - Gentle harmony and mutual understanding",
-          "Tiger - Loyal friendship with shared values",
-          "Horse - Energetic partnership with mutual respect",
+          "With a natural instinct to serve, Dogs thrive in roles where they can help others. They aren't out here chasing clout or shady deals; they just want a peaceful life and a happy home to escape the noise of the world. They’ll often drop everything to help a friend, totally forgetting to look out for themselves. This makes it a total shock to their system if they ever get played by someone less sincere.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "The Perfectionist Streak",
         readings: [
-          "Lucky Colors: Red, green, purple",
-          "Lucky Numbers: 3, 4, 9",
-          "Lucky Flowers: Rose, orchid",
-          "Lucky Directions: East, southeast, south",
+          "Deep down, Dogs are pure-hearted, but they can be pretty sharp critics. They have a tendency to over-analyze and pick things apart instead of looking at the big picture. Because they sometimes struggle with self-confidence, they might get defensive or point the finger when things go south. At the end of the day, they just want to feel secure and understood.",
         ],
       },
     ],
   },
   [Zodiac.PIG]: {
-    title: "The Pig - Compassionate and Generous",
+    title: "The Pig: Cool, Classy, and Low-Key Powerful",
     sections: [
       {
-        header: "Personality Traits",
+        header: "The Vibe Check",
         readings: [
-          "Compassionate, generous, and diligent",
-          "Peace-loving and harmonious nature",
-          "Sincere and honest in all dealings",
-          "Optimistic and able to see the good in others",
+          "Generally speaking, those born in the Year of the Pig have a seriously chill head on their shoulders. No matter how messy things get, they stay calm and handle business with total precision. Socially, they’re warm and welcoming, which is why they’ve always got a loyal squad ready to back them up when life gets tough. Plus, they’re the type to roll up their sleeves and get things done themselves—if they start a project, they’re seeing it through to the finish line.",
         ],
       },
       {
-        header: "Strengths",
+        header: "The High Life",
         readings: [
-          "Genuine kindness and generosity",
-          "Strong work ethic and determination",
-          "Ability to maintain peace and harmony",
-          "Loyal and devoted to family and friends",
+          "Pigs are a mix of strength and warmth, and they usually know how to secure the bag. They have a massive appreciation for the finer things in life and aren't afraid to indulge in a little luxury. You’ll see their high-end taste reflected in everything they do; they just know how to live comfortably.",
         ],
       },
       {
-        header: "Best Matches",
+        header: "The Hustle & Heart",
         readings: [
-          "Tiger - Complementary balance of strength and gentleness",
-          "Rabbit - Peaceful and harmonious partnership",
-          "Sheep/Goat - Gentle understanding and mutual support",
+          "If a Pig hit some bumps in the road during their younger years, it only fueled their drive to build a secure, stable future. They’re low-key intellectuals who love soaking up culture and knowledge, even if they aren't the loudest people in the room. They have a strong will and know how to look out for their own interests in a deal, though deep down, they find it hard to say 'no' to people they care about.",
         ],
       },
       {
-        header: "Lucky Elements",
+        header: "Moods & Connections",
         readings: [
-          "Lucky Colors: Yellow, gray, brown",
-          "Lucky Numbers: 2, 5, 8",
-          "Lucky Flowers: Hydrangea, daisy",
-          "Lucky Directions: Southeast, northeast",
+          "Their one real kryptonite? A short fuse. They can go from 'zen master' to 'total storm' in a heartbeat. Pro tip: if a Pig is mad, good food is the only way back to their heart.",
+          "They are naturally optimistic and kind-hearted, sometimes to a fault. They tend to trust people a bit too easily, which can lead to them getting played. When they lock onto a goal, they give it 100% energy. And while they’re always down to help a friend, they hate asking for favors themselves. If you aren't being real with them, don't expect to stay in their life for long.",
         ],
       },
     ],
@@ -724,16 +789,21 @@ export function getYearsForZodiac(zodiac: Zodiac): number[] {
  * Check if two zodiacs are compatible
  * Returns compatibility level: 'best', 'good', 'neutral', 'challenging'
  */
-export function getZodiacCompatibility(zodiac1: Zodiac, zodiac2: Zodiac): 'best' | 'good' | 'neutral' | 'challenging' {
-  if (zodiac1 === zodiac2) return 'good';
-  
+export function getZodiacCompatibility(
+  zodiac1: Zodiac,
+  zodiac2: Zodiac,
+): "best" | "good" | "neutral" | "challenging" {
+  if (zodiac1 === zodiac2) return "good";
+
   // Same element is generally good
-  if (ZODIAC_CONFIG[zodiac1].element === ZODIAC_CONFIG[zodiac2].element) return 'good';
-  
+  if (ZODIAC_CONFIG[zodiac1].element === ZODIAC_CONFIG[zodiac2].element)
+    return "good";
+
   // Yin-Yang balance is good
-  if (ZODIAC_CONFIG[zodiac1].yinYang !== ZODIAC_CONFIG[zodiac2].yinYang) return 'good';
-  
-  return 'neutral';
+  if (ZODIAC_CONFIG[zodiac1].yinYang !== ZODIAC_CONFIG[zodiac2].yinYang)
+    return "good";
+
+  return "neutral";
 }
 
 /**
