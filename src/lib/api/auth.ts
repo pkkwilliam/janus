@@ -1,5 +1,6 @@
 import { API_ENDPOINTS } from "./config";
 import { apiClient, ApiResponse } from "./client";
+import { Zodiac } from "@/types/zodiac";
 
 // In-memory cache for user profile (cleared on page refresh/revisit)
 class UserProfileCache {
@@ -77,6 +78,7 @@ export interface UserProfileResponse {
   accountNonLocked: boolean;
   credentialsNonExpired: boolean;
   authorities: string[];
+  zodiac: Zodiac;
 }
 
 export interface OAuthLoginRequest {

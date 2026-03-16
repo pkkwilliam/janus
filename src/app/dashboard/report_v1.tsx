@@ -29,6 +29,7 @@ import { useAppInit } from "@/hooks/useAppInit";
 import { FeedbackButton } from "@/components/ui/feedback-button";
 import { FortuneCookieAnimation } from "@/components/fortune-cookie";
 import WelcomeBackBanner from "@/app/dashboard/WelcomeBackBanner";
+import { ZodiacBanner, GeneralZodiacBanner } from "@/components/zodiac";
 import CompleteProfileBanner from "@/app/dashboard/CompleteProfileBanner";
 import SubscriptionUpgradeBanner from "@/app/dashboard/SubscriptionUpgradeBanner";
 import SubscriptionSelectorOverlay from "@/app/dashboard/SubscriptionSelectorOverlay";
@@ -44,6 +45,8 @@ const SHOW_ALL_REPORT_BUTTON = false;
 const SHOW_REPORT_FILTER = false;
 const SHOW_GENERIC_NO_REPORT_TEXT = false;
 const SHOW_COMPLETE_PROFILE_ALERT = false;
+const SHOW_USER_ZODIAC_BANNER = false;
+const SHOW_GENERAL_ZODIAC_BANNER = true;
 
 function DashboardContent() {
   const router = useRouter();
@@ -287,6 +290,23 @@ function DashboardContent() {
     <div className="min-h-screen px-4 py-4 md:py-8 max-w-7xl mx-auto">
       {/* Header */}
         {!needsProfileCompletion && <WelcomeBackBanner user={user} />}
+
+      {/* Zodiac Banner - Shows user's Chinese zodiac */}
+      {SHOW_USER_ZODIAC_BANNER && user?.zodiac && (
+          <div className="mt-4 mb-4">
+              <ZodiacBanner
+                  userZodiac={user.zodiac}
+                  birthYear={user.birthDate ? parseInt(user.birthDate.split('/')[0]) : undefined}
+              />
+          </div>
+      )}
+
+      {/* Attractive Zodiac Banner - Entices user to explore */}
+      {SHOW_GENERAL_ZODIAC_BANNER && user?.zodiac && (
+          <div className="mb-4">
+              <GeneralZodiacBanner userZodiac={user.zodiac} />
+          </div>
+      )}
 
       {/* Profile Completion Banner */}
       {/*{needsProfileCompletion*/}

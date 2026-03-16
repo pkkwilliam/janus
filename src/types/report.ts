@@ -1,5 +1,10 @@
 // TypeScript interfaces for report-related types to improve type safety
 
+import { Zodiac } from "@/types/zodiac";
+
+// Re-export for backward compatibility
+export type ZodiacAnimal = Zodiac;
+
 export interface GlossaryItem {
   term: string;
   meaning: string;
@@ -33,6 +38,7 @@ export interface Report {
   period: ReportPeriod | null;
   endTime: string;
   displayType?: "PARTIAL" | "FULL";
+  zodiacYear?: Zodiac;
 }
 
 export interface TranslatedContent {

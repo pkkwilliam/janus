@@ -1,162 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-export type ZodiacAnimal =
-  | "RAT"
-  | "OX"
-  | "TIGER"
-  | "RABBIT"
-  | "DRAGON"
-  | "SNAKE"
-  | "HORSE"
-  | "GOAT"
-  | "MONKEY"
-  | "ROOSTER"
-  | "DOG"
-  | "PIG";
-
-interface ZodiacConfig {
-  emoji: string;
-  character: string;
-  english: string;
-  gradient: string;
-  shadowColor: string;
-  bgGradient: string;
-  accentColor: string;
-}
-
-const ZODIAC_MAP: Record<ZodiacAnimal, ZodiacConfig> = {
-  RAT: {
-    emoji: "🐀",
-    character: "鼠",
-    english: "Rat",
-    gradient: "from-slate-600 via-gray-600 to-zinc-700",
-    shadowColor: "rgba(100, 116, 139, 0.4)",
-    bgGradient: "from-slate-100 via-gray-50 to-zinc-100",
-    accentColor: "text-slate-700",
-  },
-  OX: {
-    emoji: "🐂",
-    character: "牛",
-    english: "Ox",
-    gradient: "from-stone-600 via-amber-800 to-yellow-900",
-    shadowColor: "rgba(146, 64, 14, 0.4)",
-    bgGradient: "from-stone-100 via-amber-50 to-yellow-50",
-    accentColor: "text-amber-900",
-  },
-  TIGER: {
-    emoji: "🐅",
-    character: "虎",
-    english: "Tiger",
-    gradient: "from-orange-500 via-amber-500 to-yellow-500",
-    shadowColor: "rgba(251, 146, 60, 0.5)",
-    bgGradient: "from-orange-50 via-amber-50 to-yellow-50",
-    accentColor: "text-orange-700",
-  },
-  RABBIT: {
-    emoji: "🐇",
-    character: "兔",
-    english: "Rabbit",
-    gradient: "from-pink-400 via-rose-400 to-fuchsia-400",
-    shadowColor: "rgba(244, 114, 182, 0.5)",
-    bgGradient: "from-pink-50 via-rose-50 to-fuchsia-50",
-    accentColor: "text-pink-700",
-  },
-  DRAGON: {
-    emoji: "🐉",
-    character: "龍",
-    english: "Dragon",
-    gradient: "from-amber-400 via-yellow-400 to-orange-400",
-    shadowColor: "rgba(251, 191, 36, 0.5)",
-    bgGradient: "from-amber-50 via-yellow-50 to-orange-50",
-    accentColor: "text-amber-700",
-  },
-  SNAKE: {
-    emoji: "🐍",
-    character: "蛇",
-    english: "Snake",
-    gradient: "from-emerald-600 via-green-600 to-teal-600",
-    shadowColor: "rgba(16, 185, 129, 0.4)",
-    bgGradient: "from-emerald-50 via-green-50 to-teal-50",
-    accentColor: "text-emerald-800",
-  },
-  HORSE: {
-    emoji: "🐎",
-    character: "馬",
-    english: "Horse",
-    gradient: "from-red-500 via-rose-500 to-pink-500",
-    shadowColor: "rgba(239, 68, 68, 0.4)",
-    bgGradient: "from-red-50 via-rose-50 to-pink-50",
-    accentColor: "text-red-700",
-  },
-  GOAT: {
-    emoji: "🐐",
-    character: "羊",
-    english: "Goat",
-    gradient: "from-lime-500 via-green-500 to-emerald-500",
-    shadowColor: "rgba(132, 204, 22, 0.4)",
-    bgGradient: "from-lime-50 via-green-50 to-emerald-50",
-    accentColor: "text-lime-800",
-  },
-  MONKEY: {
-    emoji: "🐒",
-    character: "猴",
-    english: "Monkey",
-    gradient: "from-yellow-500 via-amber-500 to-orange-500",
-    shadowColor: "rgba(234, 179, 8, 0.5)",
-    bgGradient: "from-yellow-50 via-amber-50 to-orange-50",
-    accentColor: "text-yellow-800",
-  },
-  ROOSTER: {
-    emoji: "🐓",
-    character: "雞",
-    english: "Rooster",
-    gradient: "from-blue-500 via-indigo-500 to-violet-500",
-    shadowColor: "rgba(99, 102, 241, 0.4)",
-    bgGradient: "from-blue-50 via-indigo-50 to-violet-50",
-    accentColor: "text-indigo-700",
-  },
-  DOG: {
-    emoji: "🐕",
-    character: "狗",
-    english: "Dog",
-    gradient: "from-amber-700 via-yellow-700 to-orange-700",
-    shadowColor: "rgba(180, 83, 9, 0.4)",
-    bgGradient: "from-amber-50 via-yellow-50 to-orange-50",
-    accentColor: "text-amber-900",
-  },
-  PIG: {
-    emoji: "🐖",
-    character: "豬",
-    english: "Pig",
-    gradient: "from-pink-500 via-rose-400 to-red-400",
-    shadowColor: "rgba(236, 72, 153, 0.4)",
-    bgGradient: "from-pink-50 via-rose-50 to-red-50",
-    accentColor: "text-pink-700",
-  },
-};
-
-// Export for external use
-export { ZODIAC_MAP };
+import { Zodiac, ZODIAC_CONFIG, normalizeZodiac } from "@/types/zodiac";
 
 interface BornYearSectionProps {
   zodiac: string;
   bornYear?: string;
-}
-
-function normalizeZodiac(input: string): ZodiacAnimal | null {
-  const normalized = input.toUpperCase().trim();
-  if (normalized in ZODIAC_MAP) {
-    return normalized as ZodiacAnimal;
-  }
-  // Try to match by English name
-  for (const [key, config] of Object.entries(ZODIAC_MAP)) {
-    if (config.english.toUpperCase() === normalized) {
-      return key as ZodiacAnimal;
-    }
-  }
-  return null;
 }
 
 export default function BornYearSection({
@@ -166,10 +15,10 @@ export default function BornYearSection({
   if (!zodiac) return null;
 
   const zodiacKey = normalizeZodiac(zodiac);
-  const zodiacConfig = zodiacKey ? ZODIAC_MAP[zodiacKey] : null;
+  const zodiacConfig = zodiacKey ? ZODIAC_CONFIG[zodiacKey] : null;
 
   // Fallback for unknown zodiac
-  const fallbackZodiac: ZodiacConfig = {
+  const fallbackConfig = {
     emoji: "✨",
     character: "命",
     english: zodiac,
@@ -177,9 +26,11 @@ export default function BornYearSection({
     shadowColor: "rgba(139, 92, 246, 0.4)",
     bgGradient: "from-purple-50 via-indigo-50 to-blue-50",
     accentColor: "text-purple-700",
+    element: "Earth" as const,
+    yinYang: "Yang" as const,
   };
 
-  const config = zodiacConfig || fallbackZodiac;
+  const config = zodiacConfig || fallbackConfig;
 
   return (
     <motion.div
