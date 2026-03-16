@@ -20,7 +20,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
             transition: {
                 duration: intensity.duration,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         bounce: {
@@ -28,7 +28,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
             transition: {
                 duration: 1.5,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         glow: {
@@ -40,7 +40,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
             transition: {
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         shake: {
@@ -49,7 +49,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
                 duration: 0.5,
                 repeat: Infinity,
                 repeatDelay: 3,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         none: {},
@@ -63,7 +63,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
             transition: {
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         }
     };
@@ -93,7 +93,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
                         transition={{
                             duration: 3,
                             repeat: Infinity,
-                            ease: "linear",
+                            ease: "linear" as const,
                         }}
                     />
                 )}

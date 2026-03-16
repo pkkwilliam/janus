@@ -18,7 +18,7 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
             transition: {
                 duration: intensity.duration,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         slide: {
@@ -26,7 +26,7 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
             transition: {
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         glow: {
@@ -38,7 +38,7 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
             transition: {
                 duration: 2.5,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         shake: {
@@ -47,7 +47,7 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
                 duration: 0.6,
                 repeat: Infinity,
                 repeatDelay: 4,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         },
         none: {},
@@ -61,7 +61,7 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
             transition: {
                 duration: 2.5,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "easeInOut" as const,
             }
         }
     };
@@ -128,7 +128,7 @@ function CompleteProfileBanner({setShowBirthInfoForm}: ProfileCompletionBannerPr
                         </div>
                         <motion.div
                             animate={{ x: [0, 4, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" as const }}
                         >
                             <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
                         </motion.div>
