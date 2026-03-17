@@ -302,7 +302,7 @@ function DashboardContent() {
       )}
 
       {/* Attractive Zodiac Banner - Entices user to explore */}
-      {SHOW_GENERAL_ZODIAC_BANNER && user?.zodiac && (
+      {SHOW_GENERAL_ZODIAC_BANNER && !needsProfileCompletion && reports.length > 0 && user?.zodiac && (
           <div className="mb-4">
               <GeneralZodiacBanner userZodiac={user.zodiac} />
           </div>
