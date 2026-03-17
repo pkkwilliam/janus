@@ -1,645 +1,466 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
-  Moon,
-  Stars,
-  Heart,
   ArrowRight,
   Clock,
   Users,
   Shield,
-  Play,
-  Quote,
+  ChevronRight,
+  Star,
+  Zap,
+  Gift,
+  TrendingUp,
+  Moon,
+  Sun,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { useAppInit } from "@/hooks/useAppInit";
-import { ContactForm } from "@/components/ui/contact-form";
 import { Footer } from "@/components/ui/footer";
+import { Zodiac, ZODIAC_CONFIG, ZODIAC_ORDER, ZODIAC_INFO } from "@/types/zodiac";
 
-const SHOW_WATCH_DEMO_BUTTON = false;
-
-// Component to handle OAuth redirect logic
 function OAuthRedirectHandler() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [oauthProcessing, setOauthProcessing] = useState(false);
 
-  // Handle OAuth redirect on homepage
   useEffect(() => {
-    const handleOAuthRedirect = async () => {
-      // Check if we have OAuth parameters from Google
-      const code = searchParams.get("code");
-      const error = searchParams.get("error");
+    const code = searchParams.get("code");
+    const error = searchParams.get("error");
 
-      if (code || error) {
-        setOauthProcessing(true);
-
-        // Redirect to callback page with all OAuth parameters
-        const params = new URLSearchParams();
-        searchParams.forEach((value, key) => {
-          params.set(key, value);
-        });
-
-        // Add provider parameter for Google since backend response indicates Google OAuth
-        if (code) {
-          params.set("provider", "google");
-        }
-
-        router.replace(`/auth/callback?${params.toString()}`);
-      }
-    };
-
-    handleOAuthRedirect();
+    if (code || error) {
+      const params = new URLSearchParams();
+      searchParams.forEach((value, key) => params.set(key, value));
+      if (code) params.set("provider", "google");
+      router.replace(`/auth/callback?${params.toString()}`);
+    }
   }, [searchParams, router]);
 
-  return null; // This component doesn't render anything
+  return null;
+}
+
+// Floating background elements
+function FloatingElements() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Floating orbs */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full blur-3xl"
+          style={{
+            width: 100 + Math.random() * 200,
+            height: 100 + Math.random() * 200,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            background: i % 2 === 0 
+              ? 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)' 
+              : 'radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%)',
+          }}
+          animate={{
+            x: [0, 30, -20, 0],
+            y: [0, -40, 20, 0],
+            scale: [1, 1.1, 0.9, 1],
+          }}
+          transition={{
+            duration: 15 + Math.random() * 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: Math.random() * 5,
+          }}
+        />
+      ))}
+
+      {/* Floating bubbles - gentle floating motion */}
+      {[...Array(12)].map((_, i) => {
+        const size = 20 + Math.random() * 30;
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        
+        return (
+          <motion.div
+            key={`bubble-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: size,
+              height: size,
+              left: `${startX}%`,
+              top: `${startY}%`,
+              background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.1))',
+              boxShadow: 'inset -2px -2px 6px rgba(0,0,0,0.1), 0 0 20px rgba(255,255,255,0.3)',
+            }}
+            animate={{
+              y: [0, -30 - Math.random() * 40, 0],
+              x: [0, (Math.random() - 0.5) * 60, 0],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 10 + Math.random() * 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 5,
+            }}
+          />
+        );
+      })}
+
+      {/* Floating icons */}
+      {[Sparkles, Moon, Sun, Star].map((Icon, i) => (
+        <motion.div
+          key={`icon-${i}`}
+          className="absolute text-indigo-200/30"
+          style={{
+            left: `${10 + i * 25}%`,
+            top: `${20 + (i % 2) * 50}%`,
+          }}
+          animate={{
+            y: [0, -30, 0],
+            rotate: [0, 10, -10, 0],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 8 + i * 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 1.5,
+          }}
+        >
+          <Icon className="w-8 h-8" />
+        </motion.div>
+      ))}
+
+      {/* Shooting stars */}
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={`shooting-${i}`}
+          className="absolute h-0.5 bg-gradient-to-r from-transparent via-indigo-300 to-transparent"
+          style={{
+            width: 100,
+            top: `${20 + i * 30}%`,
+            left: -100,
+          }}
+          animate={{
+            x: ['0vw', '120vw'],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatDelay: 7 + i * 3,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default function HomeClient() {
-  const { user, isLoading, isAuthenticated } = useAppInit({
-    requireAuth: false,
-  });
+  const { isLoading, isAuthenticated } = useAppInit({ requireAuth: false });
   const router = useRouter();
-  const [showContactForm, setShowContactForm] = useState(false);
+  const [activeZodiac, setActiveZodiac] = useState<Zodiac>(Zodiac.DRAGON);
+  
+  // Config: Number of birth years to display (change this to show more/less)
+  const BIRTH_YEARS_COUNT = 5;
 
-  // Automatically redirect logged-in users to dashboard
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       router.push("/dashboard");
     }
   }, [isAuthenticated, isLoading, router]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveZodiac((prev) => {
+        const currentIndex = ZODIAC_ORDER.indexOf(prev);
+        return ZODIAC_ORDER[(currentIndex + 1) % 12];
+      });
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Get preview text from zodiac info
+  const getZodiacPreview = (zodiac: Zodiac) => {
+    const info = ZODIAC_INFO[zodiac];
+    const firstReading = info.sections[0]?.readings[0] || '';
+    return firstReading.length > 120 ? firstReading.substring(0, 120) + '...' : firstReading;
+  };
+
+  // Get birth years for a zodiac
+  const getBirthYears = (zodiac: Zodiac) => {
+    const zodiacIndex = ZODIAC_ORDER.indexOf(zodiac);
+    // Find the base year for this zodiac (1924 is Rat = index 0)
+    const baseYear = 1924 + zodiacIndex;
+    const years: number[] = [];
+    // Generate years from 2024 backwards
+    for (let year = 2024; year >= 1930; year--) {
+      if ((year - baseYear) % 12 === 0) {
+        years.push(year);
+      }
+    }
+    return years.slice(0, BIRTH_YEARS_COUNT);
+  };
+
   return (
-    <div className="relative min-h-screen">
-      {/* OAuth Redirect Handler (wrapped in Suspense) */}
+    <div className="relative min-h-screen bg-white">
       <Suspense fallback={null}>
         <OAuthRedirectHandler />
       </Suspense>
 
       {/* Hero Section */}
-      <div className="relative min-h-screen overflow-hidden">
-        {/* Apple-style Background with Liquid Glass Effect */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Subtle mesh gradient background */}
-          <div className="absolute inset-0 opacity-40">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50" />
-            <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-radial from-blue-200/20 to-transparent rounded-full blur-3xl" />
-            <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-gradient-radial from-purple-200/20 to-transparent rounded-full blur-3xl" />
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-radial from-pink-200/15 to-transparent rounded-full blur-2xl" />
-          </div>
+      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+        <FloatingElements />
 
-          {/* Floating Glass Orbs */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute"
-              style={{
-                top: `${20 + Math.random() * 60}%`,
-                left: `${10 + Math.random() * 80}%`,
-              }}
-              animate={{
-                y: [0, -20, 0],
-                x: [0, 10, 0],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 6 + Math.random() * 4,
-                repeat: Infinity,
-                delay: Math.random() * 3,
-                ease: "easeInOut",
-              }}
-            >
-              <div
-                className="w-16 h-16 rounded-full"
-                style={{
-                  background: "rgba(255, 255, 255, 0.1)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-                }}
-              />
-            </motion.div>
-          ))}
-        </div>
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 text-indigo-700 text-sm font-medium mb-8"
+          >
+            <Sparkles className="w-4 h-4" />
+            Trusted by 10,000+ Fortune Seekers
+          </motion.div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 container mx-auto px-4 py-12">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight"
+          >
+            Discover Your
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              Cosmic Destiny
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto"
+          >
+            Your Chinese Zodiac holds the key to your career, love life, and fortune. 
+            Get personalized insights that actually make sense.
+          </motion.p>
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center space-y-12"
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            {/* Hero Section */}
-            <div className="space-y-8 max-w-4xl mx-auto">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1, delay: 0.2 }}
-                className="flex justify-center"
+            <Link href="/auth/login" className="w-full sm:w-auto">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-2xl font-semibold text-lg shadow-xl shadow-indigo-200 flex items-center justify-center gap-2"
               >
-                <div
-                  className="relative p-8 rounded-3xl"
-                  style={{
-                    background: "rgba(255, 255, 255, 0.15)",
-                    backdropFilter: "blur(20px)",
-                    border: "1px solid rgba(255, 255, 255, 0.2)",
-                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-                  }}
+                Get Your Free Reading
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-500"
+          >
+            <span className="flex items-center gap-1"><Shield className="w-4 h-4" /> Private & Secure</span>
+            <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> Takes 2 Minutes</span>
+            <span className="flex items-center gap-1"><Users className="w-4 h-4" /> 10,000+ Users</span>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Zodiac Showcase */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Which Zodiac Are You?</h2>
+            <p className="text-gray-600">Click to explore your sign</p>
+          </div>
+
+          <div className="flex justify-start md:justify-center gap-3 overflow-x-auto pb-4 px-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {ZODIAC_ORDER.map((z) => {
+              const config = ZODIAC_CONFIG[z];
+              const isActive = z === activeZodiac;
+              return (
+                <motion.div
+                  key={z}
+                  onClick={() => setActiveZodiac(z)}
+                  className={`flex-shrink-0 cursor-pointer ${isActive ? 'scale-110' : 'opacity-60 hover:opacity-100'}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <motion.div
-                    animate={{
-                      rotate: [0, 5, -5, 0],
-                      scale: [1, 1.05, 1],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
+                  <div className={`w-16 h-20 rounded-2xl flex flex-col items-center justify-center gap-1 ${isActive ? `bg-gradient-to-br ${config.gradient} text-white` : 'bg-white text-gray-700'}`}>
+                    <span className="text-2xl">{config.emoji}</span>
+                    <span className="text-xs font-medium">{config.english}</span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeZodiac}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="max-w-2xl mx-auto mt-8"
+            >
+              <div className={`p-8 rounded-3xl bg-gradient-to-br ${ZODIAC_CONFIG[activeZodiac].bgGradient}`}>
+                <div className="text-center">
+                  <div className="text-6xl mb-4">{ZODIAC_CONFIG[activeZodiac].emoji}</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    Year of the {ZODIAC_CONFIG[activeZodiac].english}
+                  </h3>
+                  <p className="text-gray-600 mb-4">{ZODIAC_CONFIG[activeZodiac].character} • {ZODIAC_CONFIG[activeZodiac].element} • {ZODIAC_CONFIG[activeZodiac].yinYang}</p>
+                  
+                  {/* Preview text from zodiac info */}
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-gray-700 text-sm leading-relaxed mb-4 max-w-lg mx-auto"
                   >
-                    <Moon className="w-16 h-16 text-indigo-600" />
+                    &ldquo;{getZodiacPreview(activeZodiac)}&rdquo;
+                  </motion.p>
+
+                  {/* Birth years */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="mb-6"
+                  >
+                    <p className="text-xs text-gray-500 mb-2">Born in these years:</p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {getBirthYears(activeZodiac).map((year) => (
+                        <span
+                          key={year}
+                          className="px-3 py-1 bg-white/60 rounded-full text-sm font-medium text-gray-700"
+                        >
+                          {year}
+                        </span>
+                      ))}
+                    </div>
                   </motion.div>
 
-                  {/* Subtle glow effect */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-xl -z-10" />
-                </div>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.4 }}
-                className="text-6xl md:text-8xl font-light tracking-tight text-gray-900 leading-tight"
-                style={{
-                  fontWeight: "200",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Your Chinese zodiac
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.6 }}
-                className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed"
-              >
-                Unlock clarity in career, love, and life through ancient Chinese
-                zodiac wisdom, updated monthly and yearly.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.8 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              >
-                {!isAuthenticated ? (
-                  <>
-                    <Link href="/auth/login">
-                      <motion.button
-                        whileHover={{ scale: 1.02, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="group relative px-8 py-4 rounded-2xl text-white font-medium overflow-hidden text-lg"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                          boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)",
-                        }}
-                      >
-                        <span className="relative z-10 flex items-center gap-2">
-                          <Sparkles className="w-5 h-5" />
-                          Start Your Journey
-                        </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </motion.button>
-                    </Link>
-                    {SHOW_WATCH_DEMO_BUTTON && (
-                      <motion.button
-                        whileHover={{ scale: 1.02, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="px-8 py-4 rounded-2xl font-medium text-gray-700 transition-all duration-300 text-lg flex items-center gap-2"
-                        style={{
-                          background: "rgba(255, 255, 255, 0.7)",
-                          backdropFilter: "blur(20px)",
-                          border: "1px solid rgba(255, 255, 255, 0.3)",
-                        }}
-                        onClick={() => setShowContactForm(!showContactForm)}
-                      >
-                        <Play className="w-5 h-5" />
-                        Watch Demo
-                      </motion.button>
-                    )}
-                  </>
-                ) : (
-                  <Link href="/dashboard">
+                  <Link href="/auth/login">
                     <motion.button
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group relative px-8 py-4 rounded-2xl text-white font-medium overflow-hidden text-lg"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                        boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)",
-                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-6 py-3 bg-gray-900 text-white rounded-xl font-medium flex items-center gap-2 mx-auto"
                     >
-                      <span className="relative z-10 flex items-center gap-2">
-                        <ArrowRight className="w-5 h-5" />
-                        Continue Your Journey
-                      </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      Read Full {ZODIAC_CONFIG[activeZodiac].english} Fortune
+                      <ChevronRight className="w-4 h-4" />
                     </motion.button>
                   </Link>
-                )}
-              </motion.div>
-
-              {/* Trust Indicators */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1.0 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-8"
-              >
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Users className="w-5 h-5" />
-                  <span className="text-sm">10,000+ Happy Users</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Shield className="w-5 h-5" />
-                  <span className="text-sm">100% Private & Secure</span>
-                </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Stars className="w-5 h-5" />
-                  <span className="text-sm">5-Star Experience</span>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Chinese Zodiac Fortune Features
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover the perfect blend of ancient Chinese zodiac wisdom and
-              modern AI technology
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {features.map((feature, index) => (
-              <FeatureCard
-                key={feature.title}
-                feature={feature}
-                index={index}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Your Chinese Zodiac Journey in Three Steps
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Getting started with Chinese zodiac fortune readings has never
-              been easier
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {steps.map((step, index) => (
-              <StepCard key={step.title} step={step} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              What Our Users Say
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Real stories from people who've transformed their lives with
-              Chinese zodiac fortune telling
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={testimonial.name}
-                testimonial={testimonial}
-                index={index}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-                Get in Touch
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Have questions about your Chinese zodiac fortune? We're here to
-                help you every step of the way.
-              </p>
+              </div>
             </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      {/* Benefits - Mobile Optimized */}
+      <section className="py-12 md:py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">Why 10,000+ People Trust Us</h2>
+          </div>
+
+          <div className="flex flex-col md:grid md:grid-cols-3 gap-4 md:gap-8">
+            {[
+              { icon: Zap, title: "Instant Insights", desc: "Get your personalized reading in under 2 minutes" },
+              { icon: TrendingUp, title: "Proven Accuracy", desc: "92% of users say our predictions helped them" },
+              { icon: Gift, title: "Completely Free", desc: "Your first reading is on us, no credit card needed" },
+            ].map((item, i) => (
               <motion.div
-                initial={{ opacity: 0, x: -40 }}
+                key={item.title}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="space-y-8"
+                transition={{ delay: i * 0.1 }}
+                className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl md:flex-col md:text-center md:p-6 md:bg-transparent"
               >
+                <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <item.icon className="w-6 h-6 text-indigo-600" />
+                </div>
                 <div>
-                  <h3 className="text-2xl font-medium text-gray-900 mb-4">
-                    Connect With Us
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Whether you're seeking Chinese zodiac guidance, have
-                    technical questions, or want to share your fortune-telling
-                    experience, our team is always ready to listen and help.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-indigo-100">
-                      <Clock className="w-5 h-5 text-indigo-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">Response Time</p>
-                      <p className="text-gray-600">Usually within 24 hours</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-green-100">
-                      <Shield className="w-5 h-5 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">Privacy First</p>
-                      <p className="text-gray-600">
-                        Your information is always secure
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">{item.title}</h3>
+                  <p className="text-gray-600 text-sm">{item.desc}</p>
                 </div>
               </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                <ContactForm />
-              </motion.div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Testimonials */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">What People Are Saying</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { name: "Sarah L.", text: "Predicted my promotion 3 months before it happened. Spooky accurate!", stars: 5 },
+              { name: "Mike T.", text: "Helped me navigate a tough career decision. The monthly updates are gold.", stars: 5 },
+              { name: "Emily R.", text: "Finally understood why certain patterns kept happening in my life.", stars: 5 },
+            ].map((review, i) => (
+              <motion.div
+                key={review.name}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white p-6 rounded-2xl shadow-sm"
+              >
+                <div className="flex gap-1 mb-3">
+                  {[...Array(review.stars)].map((_, j) => (
+                    <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-4 text-sm">&ldquo;{review.text}&rdquo;</p>
+                <p className="font-medium text-gray-900">{review.name}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-20 bg-indigo-600">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="max-w-2xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Ready to Unlock Your Fortune?
+            </h2>
+            <p className="text-indigo-100 text-lg mb-8">
+              Join thousands who&apos;ve discovered their cosmic path. Your first reading is free.
+            </p>
+            <Link href="/auth/login">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-white text-indigo-600 rounded-2xl font-semibold text-lg shadow-xl"
+              >
+                Start Your Free Reading
+              </motion.button>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       <Footer />
     </div>
-  );
-}
-
-const features = [
-  {
-    icon: Sparkles,
-    title: "Monthly Fortune Reports",
-    description:
-      "Get personalized Chinese zodiac insights every month. Discover what the stars have in store for your career, love life, and personal growth.",
-    color: "from-blue-500 to-indigo-600",
-  },
-  {
-    icon: Moon,
-    title: "Yearly Zodiac Reports",
-    description:
-      "Comprehensive yearly fortune analysis based on your Chinese zodiac sign. Plan ahead with ancient wisdom tailored to your birth year.",
-    color: "from-purple-500 to-pink-600",
-  },
-  {
-    icon: Heart,
-    title: "Personalized Insights",
-    description:
-      "AI-powered fortune analysis tailored to your Chinese zodiac sign, birth year, and current circumstances for accurate guidance.",
-    color: "from-pink-500 to-rose-500",
-  },
-];
-
-const steps = [
-  {
-    number: "01",
-    title: "Enter Your Birth Date",
-    description:
-      "Tell us your birth date and we'll reveal your Chinese zodiac sign and birth year for personalized readings.",
-    icon: Users,
-  },
-  {
-    number: "02",
-    title: "Get Your Monthly Fortune",
-    description:
-      "Receive monthly Chinese zodiac insights tailored to your sign. Know what to expect this month in career, love, and life.",
-    icon: Stars,
-  },
-  {
-    number: "03",
-    title: "Plan Your Year Ahead",
-    description:
-      "Get comprehensive yearly fortune reports to navigate the year with clarity and confidence based on your zodiac wisdom.",
-    icon: Heart,
-  },
-];
-
-const testimonials = [
-  {
-    name: "Sarah Chen",
-    role: "Marketing Director",
-    content:
-      "The monthly Chinese zodiac readings are spot-on. I've been following my Dragon sign's guidance for 6 months and it's helped me make better career decisions.",
-    avatar: "SC",
-  },
-  {
-    name: "Maria Rodriguez",
-    role: "Entrepreneur",
-    content:
-      "I was skeptical about Chinese zodiac, but the yearly report was surprisingly accurate. It predicted a major business opportunity that came true!",
-    avatar: "MR",
-  },
-  {
-    name: "Emma Thompson",
-    role: "Creative Director",
-    content:
-      "The personalized insights based on my Chinese zodiac sign have helped me understand myself better. The monthly updates are like having a wise friend guiding me.",
-    avatar: "ET",
-  },
-];
-
-function FeatureCard({
-  feature,
-  index,
-}: {
-  feature: (typeof features)[0];
-  index: number;
-}) {
-  const Icon = feature.icon;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.2 }}
-      whileHover={{ y: -8, transition: { duration: 0.2 } }}
-      className="group relative p-8 rounded-3xl cursor-pointer"
-      style={{
-        background: "rgba(255, 255, 255, 0.8)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255, 255, 255, 0.4)",
-        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15)",
-      }}
-    >
-      <div className="space-y-4">
-        <div
-          className="w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-          style={{
-            background: `linear-gradient(135deg, ${
-              feature.color.split(" ")[1]
-            }, ${feature.color.split(" ")[3]})`,
-          }}
-        >
-          <Icon className="w-7 h-7 text-white" />
-        </div>
-
-        <h3 className="text-xl font-medium text-gray-900 group-hover:text-indigo-700 transition-colors">
-          {feature.title}
-        </h3>
-
-        <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-      </div>
-
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-pink-400/10 opacity-50 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-    </motion.div>
-  );
-}
-
-function StepCard({ step, index }: { step: (typeof steps)[0]; index: number }) {
-  const Icon = step.icon;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.2 }}
-      className="text-center space-y-6"
-    >
-      <div className="relative">
-        <div
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
-          style={{
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          }}
-        >
-          <Icon className="w-10 h-10 text-white" />
-        </div>
-        <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center text-sm font-bold text-indigo-600">
-          {step.number}
-        </div>
-      </div>
-
-      <h3 className="text-xl font-medium text-gray-900">{step.title}</h3>
-      <p className="text-gray-600 leading-relaxed">{step.description}</p>
-    </motion.div>
-  );
-}
-
-function TestimonialCard({
-  testimonial,
-  index,
-}: {
-  testimonial: (typeof testimonials)[0];
-  index: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.2 }}
-      className="p-6 rounded-3xl"
-      style={{
-        background: "rgba(255, 255, 255, 0.6)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid rgba(255, 255, 255, 0.3)",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <Quote className="w-8 h-8 text-indigo-400 mb-4" />
-      <p className="text-gray-700 leading-relaxed mb-6">
-        {testimonial.content}
-      </p>
-
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white font-medium">
-          {testimonial.avatar}
-        </div>
-        <div>
-          <p className="font-medium text-gray-900">{testimonial.name}</p>
-          <p className="text-sm text-gray-600">{testimonial.role}</p>
-        </div>
-      </div>
-    </motion.div>
   );
 }

@@ -120,43 +120,38 @@ export function Footer() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Footer Content */}
-        <div className="py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+        {/* Main Footer Content - Mobile Optimized */}
+        <div className="py-8 md:py-16">
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-6 gap-6 md:gap-8">
             {/* Brand Section */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 text-center md:text-left">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <LogoSvg size="lg" className="mb-6" />
-                <p className="text-gray-600 text-sm leading-relaxed mb-6 max-w-sm">
-                  Discover your fortune with personalized readings, lucky
-                  insights, and ancient wisdom designed for your spiritual
-                  journey.
+                <div className="flex justify-center md:justify-start">
+                  <LogoSvg size="md" className="mb-4" />
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed mb-4 max-w-sm mx-auto md:mx-0">
+                  Discover your fortune with personalized readings and ancient wisdom.
                 </p>
 
                 {/* Social Links */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center md:justify-start gap-3">
                   {socialLinks.map((social) => {
                     const Icon = social.icon;
                     return (
                       <motion.a
                         key={social.name}
                         href={social.href}
-                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
-                        className="p-3 rounded-xl text-gray-600 hover:text-indigo-600 transition-colors"
-                        style={{
-                          background: "rgba(255, 255, 255, 0.6)",
-                          backdropFilter: "blur(10px)",
-                          border: "1px solid rgba(255, 255, 255, 0.3)",
-                        }}
+                        className="p-2 rounded-lg text-gray-600 hover:text-indigo-600 transition-colors bg-white/60"
                         title={social.name}
                       >
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-4 h-4" />
                       </motion.a>
                     );
                   })}
@@ -164,75 +159,77 @@ export function Footer() {
               </motion.div>
             </div>
 
-            {/* Footer Links */}
-            {filteredFooterSections.map((section, sectionIndex) => (
-              <motion.div
-                key={section.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: sectionIndex * 0.1 }}
-                className="space-y-4"
-              >
-                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">
-                  {section.title}
-                </h3>
-                <ul className="space-y-3">
-                  {section.links.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-gray-600 hover:text-indigo-600 transition-colors"
-                        {...(link.external && {
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                        })}
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
+            {/* Footer Links - Mobile: 2 columns */}
+            <div className="grid grid-cols-2 gap-4 md:contents">
+              {filteredFooterSections.map((section, sectionIndex) => (
+                <motion.div
+                  key={section.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: sectionIndex * 0.1 }}
+                  className="space-y-2"
+                >
+                  <h3 className="text-xs font-semibold text-gray-900 tracking-wider uppercase">
+                    {section.title}
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {section.links.slice(0, 3).map((link) => (
+                      <li key={link.name}>
+                        <Link
+                          href={link.href}
+                          className="text-xs text-gray-600 hover:text-indigo-600 transition-colors"
+                          {...(link.external && {
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                          })}
+                        >
+                          {link.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Trust Badges */}
+        {/* Trust Badges - Mobile Compact */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="py-8 border-t border-gray-200"
+          className="py-4 md:py-8 border-t border-gray-200"
         >
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Shield className="w-4 h-4 text-green-500" />
-              <span>Secure & Private</span>
+          <div className="flex flex-row items-center justify-center gap-4 md:gap-8">
+            <div className="flex items-center gap-1.5 text-xs md:text-sm text-gray-600">
+              <Shield className="w-3 h-3 md:w-4 md:h-4 text-green-500" />
+              <span>Secure</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Heart className="w-4 h-4 text-red-500" />
+            <div className="flex items-center gap-1.5 text-xs md:text-sm text-gray-600">
+              <Heart className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
               <span>Made with Love</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Star className="w-4 h-4 text-yellow-500" />
-              <span>5-Star Experience</span>
+            <div className="flex items-center gap-1.5 text-xs md:text-sm text-gray-600">
+              <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-500" />
+              <span>5-Star</span>
             </div>
           </div>
         </motion.div>
 
-        {/* Bottom Bar */}
-        <div className="py-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Bottom Bar - Mobile Compact */}
+        <div className="py-4 md:py-8 border-t border-gray-200">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex items-center gap-4 text-sm text-gray-600"
+              className="text-xs md:text-sm text-gray-600"
             >
-              <p>&copy; 2024 Fortune-Cookie.me. All rights reserved.</p>
+              <p>&copy; 2024 Fortune-Cookie.me</p>
             </motion.div>
 
             <motion.div
@@ -240,11 +237,11 @@ export function Footer() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex items-center gap-2 text-sm text-gray-500"
+              className="flex items-center gap-1 text-xs text-gray-500"
             >
-              <Moon className="w-4 h-4" />
-              <span>Fortune insights for your journey</span>
-              <Sparkles className="w-4 h-4" />
+              <Moon className="w-3 h-3" />
+              <span>Fortune insights</span>
+              <Sparkles className="w-3 h-3" />
             </motion.div>
           </div>
         </div>
