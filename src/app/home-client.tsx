@@ -285,7 +285,7 @@ export default function HomeClient() {
             <p className="text-gray-600">Click to explore your sign</p>
           </div>
 
-          <div className="flex justify-start md:justify-center gap-3 overflow-x-auto pb-4 px-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="flex justify-start md:justify-center gap-3 overflow-x-auto py-4 px-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {ZODIAC_ORDER.map((z) => {
               const config = ZODIAC_CONFIG[z];
               const isActive = z === activeZodiac;
