@@ -33,7 +33,7 @@ export interface ReportPeriod {
 
 export interface Report {
   id: string;
-  type: "YEARLY" | "MONTHLY" | "WEEKLY";
+  type: "YEARLY" | "MONTHLY" | "WEEKLY" | "DAILY";
   reportContent: ReportContent;
   period: ReportPeriod | null;
   endTime: string;

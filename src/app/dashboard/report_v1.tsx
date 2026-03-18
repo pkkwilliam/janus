@@ -180,14 +180,14 @@ function DashboardContent() {
     }
   };
 
-  const generateDailyReport = async () => {
+  const generateYearlyReport = async () => {
     if (generatingReport) return;
 
     setGeneratingReport(true);
     setGenerationError(null);
 
     try {
-      const response = await reportsApi.generateReport("DAILY");
+      const response = await reportsApi.generateReport("YEARLY");
 
       if (response.error) {
         setGenerationError(response.error.message);
@@ -434,7 +434,7 @@ function DashboardContent() {
                   <div className="space-y-4">
                       {!needsProfileCompletion && <GenericReportButton
                           disabled={generatingReport || needsProfileCompletion}
-                          generateDailyReport={generateDailyReport}
+                          generateYearlyReport={generateYearlyReport}
                           loading={generatingReport}
                       />}
 

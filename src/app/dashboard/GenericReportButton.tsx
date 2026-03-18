@@ -5,11 +5,11 @@ import {DASHBOARD_FLAGS, getAnimationIntensity} from "./featureFlags";
 
 type GenericReportButtonProps = {
     disabled: boolean;
-    generateDailyReport: () => void;
+    generateYearlyReport: () => void;
     loading: boolean;
 }
 
-function GenericReportButton({disabled, generateDailyReport, loading}: GenericReportButtonProps) {
+function GenericReportButton({disabled, generateYearlyReport, loading}: GenericReportButtonProps) {
     const { ATTRACT_ANIMATION, SHOW_CONTINUOUS_ANIMATION, ANIMATION_INTENSITY } = DASHBOARD_FLAGS.GENERIC_REPORT_BUTTON;
     const intensity = getAnimationIntensity(ANIMATION_INTENSITY);
 
@@ -79,7 +79,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
                     boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)" 
                 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={generateDailyReport}
+                onClick={generateYearlyReport}
                 disabled={disabled}
                 className="relative px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-medium hover:from-purple-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 mx-auto shadow-lg overflow-hidden"
             >
@@ -103,7 +103,7 @@ function GenericReportButton({disabled, generateDailyReport, loading}: GenericRe
                         <Loader2 className="w-5 h-5 animate-spin relative z-10"/>
                         <div className="text-left relative z-10">
                             <div className="font-medium">
-                                Generating Your Daily Report...
+                                Generating Your Yearly Report...
                             </div>
                             <div className="text-xs opacity-90">
                                 This may take up to 1 minute
