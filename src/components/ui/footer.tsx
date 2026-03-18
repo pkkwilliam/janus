@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LogoSvg } from "./logo";
 import {
   Mail,
+  Phone,
   MessageCircle,
   Shield,
   Heart,
@@ -15,6 +16,7 @@ import {
 import { useState, useEffect } from "react";
 import { authAPI } from "@/lib/api/auth";
 import { userAPI } from "@/lib/api/user";
+import { CONTACT_EMAIL, CONTACT_PHONE_RAW } from "@/components/ui/contact-info";
 
 interface FooterLink {
   name: string;
@@ -67,7 +69,8 @@ const footerSections: FooterSection[] = [
 ];
 
 const socialLinks = [
-  { name: "Email", href: "mailto:hello@fortune-cookie.me", icon: Mail },
+  { name: "Email", href: `mailto:${CONTACT_EMAIL}`, icon: Mail },
+  { name: "Phone", href: `tel:${CONTACT_PHONE_RAW}`, icon: Phone },
   { name: "Contact", href: "#contact", icon: MessageCircle },
 ];
 

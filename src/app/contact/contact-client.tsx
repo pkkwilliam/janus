@@ -1,8 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, MessageCircle, Clock } from 'lucide-react';
+import { MessageCircle, Clock } from 'lucide-react';
 import { ContactForm } from '@/components/ui/contact-form';
+import { ContactInfo } from '@/components/ui/contact-info';
 
 export function ContactClient() {
   return (
@@ -68,25 +69,7 @@ export function ContactClient() {
               </div>
 
               <div className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1 }}
-                  className="backdrop-blur-lg bg-white/10 rounded-2xl p-6 border border-white/20"
-                >
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
-                      <Mail className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold">Email Support</h3>
-                      <p className="text-purple-300">support@mysticalfortune.com</p>
-                    </div>
-                  </div>
-                  <p className="text-purple-200 text-sm">
-                    For general inquiries, technical support, and account assistance.
-                  </p>
-                </motion.div>
+                <ContactInfo variant="default" />
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}

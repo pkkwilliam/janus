@@ -27,6 +27,7 @@ import { reportsApi, Report } from "@/lib/api/reports";
 // import { reportsApi, ReportV2 as Report } from "@/lib/api/report_v2";
 import { useAppInit } from "@/hooks/useAppInit";
 import { FeedbackButton } from "@/components/ui/feedback-button";
+import { ContactInfo } from "@/components/ui/contact-info";
 import { FortuneCookieAnimation } from "@/components/fortune-cookie";
 import WelcomeBackBanner from "@/app/dashboard/WelcomeBackBanner";
 import { ZodiacBanner, GeneralZodiacBanner } from "@/components/zodiac";
@@ -494,6 +495,28 @@ function DashboardContent() {
 
       {/* Feedback Button */}
       <FeedbackButton />
+
+      {/* Contact Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mt-8 mb-4"
+      >
+        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                Need Help?
+              </h3>
+              <p className="text-sm text-gray-600">
+                Our support team is here to assist you with any questions.
+              </p>
+            </div>
+            <ContactInfo variant="compact" />
+          </div>
+        </div>
+      </motion.div>
 
       {/* Fortune Cookie Animation Overlay */}
       <FortuneCookieAnimation
