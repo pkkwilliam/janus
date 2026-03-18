@@ -25,6 +25,36 @@ export const metadata: Metadata = {
     images: ["/og-about.jpg"],
   },
 };
+
+// Organization Schema for structured data
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Fortune Cookie",
+  "url": "https://fortune-cookie.me",
+  "logo": "https://fortune-cookie.me/logo.svg",
+  "description": "Fortune Cookie brings personalized fortune telling and lucky insights through ancient wisdom and modern AI technology.",
+  "foundingDate": "2019",
+  "sameAs": [
+    "https://fortune-cookie.me/about",
+    "https://fortune-cookie.me/contact"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "email": "fcookie.me@gmail.com",
+    "contactType": "customer support",
+    "availableLanguage": "English"
+  }
+};
+
 export default function AboutUs() {
-  return <AboutClient />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <AboutClient />
+    </>
+  );
 }
