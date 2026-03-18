@@ -158,8 +158,7 @@ export default function Snake2026BlogPost() {
             </div>
           </div>
 
-          <div className="mt-12 pt-8
-          <div className="border-t border-white/20">
+          <div className="mt-12 pt-8 border-t border-white/20">
             <h3 className="text-xl font-bold text-white mb-4">Related Articles</h3>
             <div className="flex flex-wrap gap-4">
               <Link href="/blog/chinese-zodiac-compatibility" className="text-cyan-400 hover:text-cyan-300">
