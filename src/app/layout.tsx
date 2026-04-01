@@ -4,6 +4,9 @@ import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
 import { Navigation } from "@/components/ui/navigation";
 
+// Feature toggle: Show/hide navigation header
+const SHOW_NAVIGATION = false;
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -117,8 +120,8 @@ export default function RootLayout({
         }}
       >
         <QueryProvider>
-          <Navigation />
-          <main className="pt-16 md:pt-16 pb-16 md:pb-0 min-h-screen">
+          {SHOW_NAVIGATION && <Navigation />}
+          <main className={`min-h-screen ${SHOW_NAVIGATION ? 'pt-16 md:pt-16 pb-16 md:pb-0' : ''}`}>
             {children}
           </main>
         </QueryProvider>

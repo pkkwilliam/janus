@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Moon,
   Sun,
+  Calendar,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,6 +22,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useAppInit } from "@/hooks/useAppInit";
 import { Footer } from "@/components/ui/footer";
 import { Zodiac, ZODIAC_CONFIG, ZODIAC_ORDER, ZODIAC_INFO } from "@/types/zodiac";
+import { getZodiac, ZODIAC_CHINESE, ZODIAC_EMOJI } from "@/lib/zodiacCalculator";
 
 function OAuthRedirectHandler() {
   const router = useRouter();
@@ -157,13 +159,43 @@ function FloatingElements() {
   );
 }
 
+// Feature toggle: Show birth date input on landing page
+const SHOW_HERO_BIRTH_DATE_INPUT = true;
+
 export default function HomeClient() {
   const { isLoading, isAuthenticated } = useAppInit({ requireAuth: false });
   const router = useRouter();
   const [activeZodiac, setActiveZodiac] = useState<Zodiac>(Zodiac.DRAGON);
   
+  // Hero birth date input state
+  const [birthDate, setBirthDate] = useState('1998-08-18');
+  const [zodiacPreview, setZodiacPreview] = useState<string>('');
+  const today = new Date().toISOString().split('T')[0];
+  
   // Config: Number of birth years to display (change this to show more/less)
   const BIRTH_YEARS_COUNT = 5;
+
+  // Calculate zodiac preview when birth date changes
+  useEffect(() => {
+    if (birthDate && SHOW_HERO_BIRTH_DATE_INPUT) {
+      const date = new Date(birthDate);
+      const zodiac = getZodiac(date);
+      setZodiacPreview(`${zodiac} (${ZODIAC_CHINESE[zodiac]}) ${ZODIAC_EMOJI[zodiac]}`);
+    }
+  }, [birthDate]);
+
+  const handleHeroSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (birthDate) {
+      const selectedDate = new Date(birthDate);
+      const now = new Date();
+      if (selectedDate > now) {
+        alert('Please select a date in the past');
+        return;
+      }
+      router.push(`/report?birthDate=${birthDate}`);
+    }
+  };
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -246,23 +278,70 @@ export default function HomeClient() {
             Get personalized insights that actually make sense.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-          >
-            <Link href="/auth/login" className="w-full sm:w-auto">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-2xl font-semibold text-lg shadow-xl shadow-indigo-200 flex items-center justify-center gap-2"
-              >
-                Get Your Free Reading
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-            </Link>
-          </motion.div>
+          {/* Birth Date Input Form - Toggle with SHOW_HERO_BIRTH_DATE_INPUT */}
+          {SHOW_HERO_BIRTH_DATE_INPUT ? (
+            <motion.form
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              onSubmit={handleHeroSubmit}
+              className="max-w-md mx-auto w-full"
+            >
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-white/50">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex-1 relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      type="date"
+                      value={birthDate}
+                      max={today}
+                      onChange={(e) => setBirthDate(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition text-gray-700"
+                      required
+                    />
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2 whitespace-nowrap"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Reveal
+                  </motion.button>
+                </div>
+              </div>
+              {zodiacPreview && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-3 text-center text-amber-600"
+                >
+                  <span className="text-sm font-medium text-gray-500">Your Zodiac</span>
+                  <br />
+                  <span className="text-lg font-semibold">{zodiacPreview}</span>
+                </motion.p>
+              )}
+            </motion.form>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+              <Link href="/fortune" className="w-full sm:w-auto">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold text-lg shadow-xl shadow-orange-200 flex items-center justify-center gap-2"
+                >
+                  Get Your Free Reading
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+              </Link>
+            </motion.div>
+          )}
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -352,13 +431,13 @@ export default function HomeClient() {
                     </div>
                   </motion.div>
 
-                  <Link href="/auth/login">
+                  <Link href="/fortune">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-6 py-3 bg-gray-900 text-white rounded-xl font-medium flex items-center gap-2 mx-auto"
+                      className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium flex items-center gap-2 mx-auto"
                     >
-                      Read Full {ZODIAC_CONFIG[activeZodiac].english} Fortune
+                      Read Your Free Fortune
                       <ChevronRight className="w-4 h-4" />
                     </motion.button>
                   </Link>
@@ -447,11 +526,11 @@ export default function HomeClient() {
             <p className="text-indigo-100 text-lg mb-8">
               Join thousands who&apos;ve discovered their cosmic path. Your first reading is free.
             </p>
-            <Link href="/auth/login">
+            <Link href="/fortune">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white text-indigo-600 rounded-2xl font-semibold text-lg shadow-xl"
+                className="px-8 py-4 bg-white text-amber-600 rounded-2xl font-semibold text-lg shadow-xl"
               >
                 Start Your Free Reading
               </motion.button>
