@@ -1,0 +1,35 @@
+[
+  {
+    "general": "Year of the Horse",
+    "career": "Are you OK",
+    "financial": "finance",
+    "health": "healthy",
+    "relationship": "Friendship",
+    "monthly": [
+      {
+        "fromDate": "2026-12-07",
+        "toDate": "2027-01-04",
+        "generalReference": "",
+        "reading": "Good financial trend"
+      },
+      {
+        "fromDate": "2027-01-05",
+        "toDate": "2027-02-03",
+        "generalReference": "",
+        "reading": "There is still room for improvement in one's career."
+      }
+    ],
+    "bornYear": [
+      {
+        "bornYear": 1934,
+        "generalReference": "",
+        "reading": "In the year when the fire was at its peak"
+      },
+      {
+        "bornYear": 1946,
+        "generalReference": "",
+        "reading": "Among the older generation, those who belong to"
+      }
+    ]
+  }
+]
