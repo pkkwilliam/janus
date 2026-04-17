@@ -38,7 +38,7 @@ import {
   ReadingBlurOverlay,
   LuckyElementsBlurOverlay,
 } from "./components";
-import YearlyPaymentButton from "@/components/payment/YearlyPaymentButton";
+import { YearlyPaymentButton } from "@/components/payment/YearlyPaymentButton";
 import TranslationToggleV2 from "@/app/report/components/TranslationToggleV2";
 import { getZodiac, ZODIAC_CHINESE, ZODIAC_EMOJI } from "@/lib/zodiacCalculator";
 
@@ -601,7 +601,7 @@ function ReportContent() {
 
     try {
       const response =
-          await reportsApi.getReportById(reportId, currentLanguage.code);
+          await reportsApi.getReportById(reportId);
 
       if (response.error) {
         setReportError(response.error.message);

@@ -4,6 +4,6 @@ type YearlyPaymentButtonProps = {
   children?: ReactNode;
 };
 
-function YearlyPaymentButton(props: YearlyPaymentButtonProps) {
+export function YearlyPaymentButton(props: YearlyPaymentButtonProps) {
   return <div>Reveal Full Report</div>;
 }
