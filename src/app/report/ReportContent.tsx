@@ -40,7 +40,11 @@ import {
 } from "./components";
 import { YearlyPaymentButton } from "@/components/payment/YearlyPaymentButton";
 import TranslationToggleV2 from "@/app/report/components/TranslationToggleV2";
-import { getZodiac, ZODIAC_CHINESE, ZODIAC_EMOJI } from "@/lib/zodiacCalculator";
+import {
+  getZodiac,
+  ZODIAC_CHINESE,
+  ZODIAC_EMOJI,
+} from "@/lib/zodiacCalculator";
 
 // Extended LanguageCode type to include Thai and Vietnamese (for cached reports only)
 type ExtendedLanguageCode = LanguageCode | "THAI" | "VIETNAMESE";
@@ -69,43 +73,62 @@ const FOLDER_TO_LANGUAGE_CODE: Record<string, LanguageCode> = {
   "en-US": "ENGLISH",
   "zh-CN": "CHINESE_SIMPLIFIED",
   "zh-HK": "CHINESE_TRADITIONAL",
-  "es": "SPANISH",
-  "fr": "FRENCH",
-  "de": "GERMAN",
-  "it": "ITALIAN",
-  "pt": "PORTUGUESE",
-  "ru": "RUSSIAN",
-  "ja": "JAPANESE",
-  "ko": "KOREAN",
-  "ar": "ARABIC",
-  "hi": "HINDI",
+  es: "SPANISH",
+  fr: "FRENCH",
+  de: "GERMAN",
+  it: "ITALIAN",
+  pt: "PORTUGUESE",
+  ru: "RUSSIAN",
+  ja: "JAPANESE",
+  ko: "KOREAN",
+  ar: "ARABIC",
+  hi: "HINDI",
 };
 
 // Available cached report languages (folders that exist)
 const AVAILABLE_CACHED_LANGUAGES = [
-  "en-US", "zh-CN", "zh-HK", "es", "fr", "de", 
-  "it", "pt", "ru", "ja", "ko", "ar", "hi", "th", "vi"
+  "en-US",
+  "zh-CN",
+  "zh-HK",
+  "es",
+  "fr",
+  "de",
+  "it",
+  "pt",
+  "ru",
+  "ja",
+  "ko",
+  "ar",
+  "hi",
+  "th",
+  "vi",
 ];
 
 // Extended languages that exist in cache but not in translation API
 // These will map to English in the UI but load their respective cached reports
 const EXTENDED_LANGUAGE_FALLBACK: Record<string, LanguageCode> = {
-  "th": "ENGLISH",
-  "vi": "ENGLISH",
+  th: "ENGLISH",
+  vi: "ENGLISH",
 };
 
 // Detect user's preferred language from browser
 // Returns a LanguageCode that exists in SUPPORTED_LANGUAGES
 function detectUserLanguage(): LanguageCode {
   if (typeof window === "undefined") return "ENGLISH";
-  
-  const browserLang = navigator.language || (navigator as any).userLanguage || "en";
+
+  const browserLang =
+    navigator.language || (navigator as any).userLanguage || "en";
   const langLower = browserLang.toLowerCase();
-  
+
   // Map browser language to our LanguageCode
   if (langLower.startsWith("zh")) {
     // Check for traditional Chinese variants
-    if (langLower.includes("hk") || langLower.includes("tw") || langLower.includes("mo") || langLower.includes("hant")) {
+    if (
+      langLower.includes("hk") ||
+      langLower.includes("tw") ||
+      langLower.includes("mo") ||
+      langLower.includes("hant")
+    ) {
       return "CHINESE_TRADITIONAL";
     }
     return "CHINESE_SIMPLIFIED";
@@ -122,7 +145,7 @@ function detectUserLanguage(): LanguageCode {
   if (langLower.startsWith("hi")) return "HINDI";
   // Note: Thai and Vietnamese are not in SUPPORTED_LANGUAGES, so they fall back to English
   // But we still load their cached reports via getLanguageFolderFromBrowserLang
-  
+
   return "ENGLISH"; // Default fallback
 }
 
@@ -130,14 +153,15 @@ function detectUserLanguage(): LanguageCode {
 // This can return th/vi even though they're not in SUPPORTED_LANGUAGES
 function getLanguageFolderFromBrowserLang(): string {
   if (typeof window === "undefined") return "en-US";
-  
-  const browserLang = navigator.language || (navigator as any).userLanguage || "en";
+
+  const browserLang =
+    navigator.language || (navigator as any).userLanguage || "en";
   const langLower = browserLang.toLowerCase();
-  
+
   // Check for Thai and Vietnamese first (not in SUPPORTED_LANGUAGES)
   if (langLower.startsWith("th")) return "th";
   if (langLower.startsWith("vi")) return "vi";
-  
+
   // For other languages, use the standard mapping
   const langCode = detectUserLanguage();
   return getLanguageFolder(langCode);
@@ -408,18 +432,24 @@ function ReportContent() {
   const searchParams = useSearchParams();
   const { user, isLoading } = useAppInit({ requireAuth: false });
   const [report, setReport] = useState<ReportV2 | null>(null);
-  const [cachedFortune, setCachedFortune] = useState<CachedZodiacFortune | null>(null);
-  
+  const [cachedFortune, setCachedFortune] =
+    useState<CachedZodiacFortune | null>(null);
+
   // Initialize language based on device detection for cached mode, or default to English
   const getInitialLanguage = (): Language => {
     const detectedLangCode = detectUserLanguage();
-    const detectedLang = SUPPORTED_LANGUAGES.find(l => l.code === detectedLangCode);
+    const detectedLang = SUPPORTED_LANGUAGES.find(
+      (l) => l.code === detectedLangCode,
+    );
     return detectedLang || SUPPORTED_LANGUAGES[0];
   };
-  
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(getInitialLanguage());
+
+  const [currentLanguage, setCurrentLanguage] =
+    useState<Language>(getInitialLanguage());
   // Store the actual folder to load from (may differ from currentLanguage for th/vi)
-  const [cachedLanguageFolder, setCachedLanguageFolder] = useState<string>(getLanguageFolderFromBrowserLang());
+  const [cachedLanguageFolder, setCachedLanguageFolder] = useState<string>(
+    getLanguageFolderFromBrowserLang(),
+  );
   const [reportLoading, setReportLoading] = useState(true);
   const [reportError, setReportError] = useState<string | null>(null);
 
@@ -445,14 +475,17 @@ function ReportContent() {
   const getCachedContent = () => {
     if (!cachedFortune) return null;
     const birthYear = birthDate ? new Date(birthDate).getFullYear() : 0;
-    const bornYearReading = cachedFortune.bornYear?.find(by => by.bornYear === birthYear)?.reading;
+    const bornYearReading = cachedFortune.bornYear?.find(
+      (by) => by.bornYear === birthYear,
+    )?.reading;
 
     // Transform monthly data to match FortuneByMonth interface
-    const transformedMonthly = cachedFortune.monthly?.map(m => ({
-      dateStart: m.fromDate,
-      dateEnd: m.toDate,
-      reading: m.reading,
-    })) || [];
+    const transformedMonthly =
+      cachedFortune.monthly?.map((m) => ({
+        dateStart: m.fromDate,
+        dateEnd: m.toDate,
+        reading: m.reading,
+      })) || [];
 
     return {
       general: cachedFortune.general,
@@ -526,7 +559,7 @@ function ReportContent() {
         borderColor: "border-violet-100",
         show: !!reportContent?.bornYear,
       },
-    ].filter(item => item.show);
+    ].filter((item) => item.show);
   };
 
   // Load cached fortune data from language-specific folder
@@ -539,16 +572,27 @@ function ReportContent() {
     try {
       const date = new Date(birthDate);
       const zodiac = getZodiacForDate(date);
+
+      // Build the file path - zh-HK files don't have the language suffix
+      const fileName = cachedLanguageFolder === "zh-HK" 
+        ? `${zodiac}.json` 
+        : `${zodiac}_${cachedLanguageFolder}.json`;
       
       // Use the cached language folder (which may be different from currentLanguage for th/vi)
-      const response = await fetch(`/cached_report/${cachedLanguageFolder}/${zodiac}_${cachedLanguageFolder}.json`);
+      const response = await fetch(
+        `/cached_report/${cachedLanguageFolder}/${fileName}`,
+      );
       if (!response.ok) {
         // Fallback to English if the language file doesn't exist
         if (cachedLanguageFolder !== "en-US") {
-          console.log(`Language ${cachedLanguageFolder} not available, falling back to en-US`);
-          const fallbackResponse = await fetch(`/cached_report/en-US/${zodiac}_en-US.json`);
+          console.log(
+            `Language ${cachedLanguageFolder} not available, falling back to en-US`,
+          );
+          const fallbackResponse = await fetch(
+            `/cached_report/en-US/${zodiac}_en-US.json`,
+          );
           if (!fallbackResponse.ok) {
-            throw new Error('Failed to load fortune data');
+            throw new Error("Failed to load fortune data");
           }
           const data: CachedZodiacFortune[] = await fallbackResponse.json();
           const randomIndex = Math.floor(Math.random() * data.length);
@@ -556,7 +600,7 @@ function ReportContent() {
           // Update the cached folder to English since that's what we loaded
           setCachedLanguageFolder("en-US");
         } else {
-          throw new Error('Failed to load fortune data');
+          throw new Error("Failed to load fortune data");
         }
       } else {
         const data: CachedZodiacFortune[] = await response.json();
@@ -584,7 +628,7 @@ function ReportContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, reportId, birthDate, cachedLanguageFolder, router]);
-  
+
   // Handle language change for cached mode - update the folder and reload
   const handleLanguageChange = (language: Language) => {
     setCurrentLanguage(language);
@@ -600,8 +644,7 @@ function ReportContent() {
     setReportError(null);
 
     try {
-      const response =
-          await reportsApi.getReportById(reportId);
+      const response = await reportsApi.getReportById(reportId);
 
       if (response.error) {
         setReportError(response.error.message);
@@ -668,8 +711,10 @@ function ReportContent() {
 
   // Handle cached fortune display
   const isCachedMode = !!cachedFortune;
-  const reportContent = isCachedMode ? getCachedContent() : report?.reportContent;
-  const type = isCachedMode ? 'YEARLY' : report?.type;
+  const reportContent = isCachedMode
+    ? getCachedContent()
+    : report?.reportContent;
+  const type = isCachedMode ? "YEARLY" : report?.type;
   // Determine display type - you might want to check user's subscription status here
   const displayType = "FULL";
 
@@ -691,16 +736,19 @@ function ReportContent() {
           </button>
 
           <div className="flex">
-              {/* Translation Toggle - for both cached and non-cached reports */}
-              {SHOW_TRANSLATION_TOGGLE && (
-                  <TranslationToggleV2
-                      currentLanguage={currentLanguage}
-                      onLanguageSelected={isCachedMode ? handleLanguageChange : setCurrentLanguage}
-                  />
-              )}
-              {!isCachedMode && report?.accessType === 'FREE' && <YearlyPaymentButton />}
+            {/* Translation Toggle - for both cached and non-cached reports */}
+            {SHOW_TRANSLATION_TOGGLE && (
+              <TranslationToggleV2
+                currentLanguage={currentLanguage}
+                onLanguageSelected={
+                  isCachedMode ? handleLanguageChange : setCurrentLanguage
+                }
+              />
+            )}
+            {!isCachedMode && report?.accessType === "FREE" && (
+              <YearlyPaymentButton />
+            )}
           </div>
-
         </div>
 
         <div
@@ -716,24 +764,30 @@ function ReportContent() {
             <div className="flex items-center gap-3">
               <div
                 className={`p-2 sm:p-3 rounded-xl sm:rounded-2xl ${getTypeGradient(
-                  type || 'YEARLY',
+                  type || "YEARLY",
                 )}`}
               >
-                {getTypeIcon(type || 'YEARLY')}
+                {getTypeIcon(type || "YEARLY")}
               </div>
               <div className="min-w-0 flex-1 text-center">
                 <h1 className="text-lg sm:text-2xl font-light text-gray-900 flex items-center justify-center gap-2">
-                  {isCachedMode 
-                    ? `2026 ${birthDate ? ZODIAC_CHINESE[getZodiacForDate(new Date(birthDate))] : ''} Fortune` 
-                    : getReportTitle(type || 'YEARLY')}
+                  {isCachedMode
+                    ? `2026 ${birthDate ? ZODIAC_CHINESE[getZodiacForDate(new Date(birthDate))] : ""} Fortune`
+                    : getReportTitle(type || "YEARLY")}
                   {isCachedMode && birthDate && (
-                    <span className="text-2xl sm:text-3xl">{ZODIAC_EMOJI[getZodiacForDate(new Date(birthDate))]}</span>
+                    <span className="text-2xl sm:text-3xl">
+                      {ZODIAC_EMOJI[getZodiacForDate(new Date(birthDate))]}
+                    </span>
                   )}
                 </h1>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                   <span className="text-xs sm:text-sm truncate">
-                    {isCachedMode ? (birthDate ? `Born: ${birthDate}` : '2026') : formatReportPeriod(report!)}
+                    {isCachedMode
+                      ? birthDate
+                        ? `Born: ${birthDate}`
+                        : "2026"
+                      : formatReportPeriod(report!)}
                   </span>
                 </div>
               </div>
@@ -745,7 +799,7 @@ function ReportContent() {
                 Fortune Score
               </div>
               <div className="text-2xl sm:text-3xl font-light text-indigo-600 sm:order-1">
-                {(reportContent as any)?.fortuneScore || '88'}%
+                {(reportContent as any)?.fortuneScore || "88"}%
               </div>
             </div>
           </div>
@@ -788,203 +842,255 @@ function ReportContent() {
         {/* Reading Cards Grid */}
         <div className="flex flex-col gap-6">
           {getCurrentContentV2()
-              .filter(section => section.show)
-              .map((section, index) => {
-            const IconComponent = section.icon;
-            const isLoveSection = section.title === "Love & Relationships";
+            .filter((section) => section.show)
+            .map((section, index) => {
+              const IconComponent = section.icon;
+              const isLoveSection = section.title === "Love & Relationships";
 
-            // Get love section styles from merged config
-            const loveShowAnimation = LOVE_STYLE.showAnimation;
-            const loveBorderColor = LOVE_STYLE.borderColor;
-            const loveRingColor = LOVE_STYLE.ringColor;
-            const loveBgGradient = LOVE_STYLE.bgGradient;
-            const loveBgColor = LOVE_STYLE.bgColor;
-            const loveTitleColor = LOVE_STYLE.titleColor;
-            const loveTextColor = LOVE_STYLE.textColor;
-            const loveHeartSize = LOVE_STYLE.heartSize;
-            const loveSmallHeartSize = LOVE_STYLE.smallHeartSize;
-            const loveHeartOpacity = LOVE_STYLE.heartOpacity;
-            const loveBadgeGradient = LOVE_STYLE.badgeGradient;
-            const loveBadgeText = LOVE_STYLE.badgeText;
-            const loveChromaAnimation = LOVE_STYLE.chromaAnimation;
-            const loveCardBgOpacity = LOVE_STYLE.cardBgOpacity;
+              // Get love section styles from merged config
+              const loveShowAnimation = LOVE_STYLE.showAnimation;
+              const loveBorderColor = LOVE_STYLE.borderColor;
+              const loveRingColor = LOVE_STYLE.ringColor;
+              const loveBgGradient = LOVE_STYLE.bgGradient;
+              const loveBgColor = LOVE_STYLE.bgColor;
+              const loveTitleColor = LOVE_STYLE.titleColor;
+              const loveTextColor = LOVE_STYLE.textColor;
+              const loveHeartSize = LOVE_STYLE.heartSize;
+              const loveSmallHeartSize = LOVE_STYLE.smallHeartSize;
+              const loveHeartOpacity = LOVE_STYLE.heartOpacity;
+              const loveBadgeGradient = LOVE_STYLE.badgeGradient;
+              const loveBadgeText = LOVE_STYLE.badgeText;
+              const loveChromaAnimation = LOVE_STYLE.chromaAnimation;
+              const loveCardBgOpacity = LOVE_STYLE.cardBgOpacity;
 
-            return (
-              <motion.div
-                key={`section-${index}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + index * 0.05 }}
-                className="group"
-              >
-                <div
-                  className={`relative rounded-2xl border ${isLoveSection ? loveBorderColor : section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-${section.bgColor}/50 ${isLoveSection ? `ring-2 ${loveRingColor}` : ""}`}
-                  style={{
-                    background: isLoveSection
-                      ? `rgba(255, 245, 250, ${loveCardBgOpacity})`
-                      : "rgba(255, 255, 255, 0.7)",
-                    backdropFilter: "blur(20px)",
-                  }}
+              return (
+                <motion.div
+                  key={`section-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + index * 0.05 }}
+                  className="group"
                 >
-                  {/* Chroma Color Cycling Background - Only for Love Section */}
-                  {isLoveSection && loveChromaAnimation && (
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      <motion.div
-                        className="absolute inset-0 opacity-30"
-                        animate={{
-                          background: [
-                            "radial-gradient(circle at 30% 30%, rgba(244, 63, 94, 0.4) 0%, transparent 50%)",
-                            "radial-gradient(circle at 70% 70%, rgba(168, 85, 247, 0.4) 0%, transparent 50%)",
-                            "radial-gradient(circle at 30% 70%, rgba(236, 72, 153, 0.4) 0%, transparent 50%)",
-                            "radial-gradient(circle at 70% 30%, rgba(244, 63, 94, 0.4) 0%, transparent 50%)",
-                          ],
-                        }}
-                        transition={{
-                          duration: 8,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      />
-                      <motion.div
-                        className="absolute inset-0 opacity-20"
-                        animate={{
-                          background: [
-                            "linear-gradient(45deg, rgba(244, 63, 94, 0.3) 0%, rgba(168, 85, 247, 0.3) 50%, rgba(236, 72, 153, 0.3) 100%)",
-                            "linear-gradient(45deg, rgba(168, 85, 247, 0.3) 0%, rgba(236, 72, 153, 0.3) 50%, rgba(244, 63, 94, 0.3) 100%)",
-                            "linear-gradient(45deg, rgba(236, 72, 153, 0.3) 0%, rgba(244, 63, 94, 0.3) 50%, rgba(168, 85, 247, 0.3) 100%)",
-                            "linear-gradient(45deg, rgba(244, 63, 94, 0.3) 0%, rgba(168, 85, 247, 0.3) 50%, rgba(236, 72, 153, 0.3) 100%)",
-                          ],
-                        }}
-                        transition={{
-                          duration: 6,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {/* Floating Hearts Animation - Only for Love & Relationships */}
-                  {isLoveSection && loveShowAnimation && (
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      {/* Large floating hearts with chroma colors */}
-                      {[...Array(8)].map((_, i) => (
-                        <motion.div
-                          key={`heart-${i}`}
-                          className="absolute"
-                          style={{
-                            left: `${10 + Math.random() * 80}%`,
-                            bottom: "-20px",
-                          }}
-                          animate={{
-                            y: [0, -400 - Math.random() * 200],
-                            x: [0, (Math.random() - 0.5) * 100],
-                            opacity: [0, loveHeartOpacity, loveHeartOpacity, 0],
-                            scale: [0.5, 1, 1, 0.8],
-                            rotate: [0, (Math.random() - 0.5) * 30],
-                            color: loveChromaAnimation
-                              ? [
-                                  "rgb(244, 63, 94)",
-                                  "rgb(168, 85, 247)",
-                                  "rgb(236, 72, 153)",
-                                  "rgb(244, 63, 94)",
-                                ]
-                              : undefined,
-                          }}
-                          transition={{
-                            duration: 8 + Math.random() * 4,
-                            repeat: Infinity,
-                            delay: i * 1.2,
-                            ease: "easeOut",
-                          }}
-                        >
-                          <Heart
-                            className={`${loveHeartSize} ${loveChromaAnimation ? "text-rose-500" : "text-rose-400"} ${loveChromaAnimation ? "fill-rose-400/50" : "fill-rose-300/40"}`}
-                            style={{
-                              filter: loveChromaAnimation
-                                ? "drop-shadow(0 0 8px rgba(244, 63, 94, 0.5)) drop-shadow(0 0 16px rgba(168, 85, 247, 0.3))"
-                                : "drop-shadow(0 2px 4px rgba(244, 63, 94, 0.25))",
-                            }}
-                          />
-                        </motion.div>
-                      ))}
-                      {/* Smaller floating hearts */}
-                      {[...Array(6)].map((_, i) => (
-                        <motion.div
-                          key={`small-heart-${i}`}
-                          className="absolute"
-                          style={{
-                            left: `${15 + Math.random() * 70}%`,
-                            bottom: "-15px",
-                          }}
-                          animate={{
-                            y: [0, -350 - Math.random() * 150],
-                            x: [0, (Math.random() - 0.5) * 60],
-                            opacity: [
-                              0,
-                              loveHeartOpacity * 0.7,
-                              loveHeartOpacity * 0.7,
-                              0,
-                            ],
-                            scale: [0.3, 0.7, 0.7, 0.5],
-                          }}
-                          transition={{
-                            duration: 6 + Math.random() * 3,
-                            repeat: Infinity,
-                            delay: i * 0.8 + 0.5,
-                            ease: "easeOut",
-                          }}
-                        >
-                          <Heart
-                            className={`${loveSmallHeartSize} ${loveChromaAnimation ? "text-fuchsia-400" : "text-pink-400"} ${loveChromaAnimation ? "fill-fuchsia-300/40" : "fill-pink-300/30"}`}
-                          />
-                        </motion.div>
-                      ))}
-                      {/* Sparkle effects with chroma colors */}
-                      {[...Array(5)].map((_, i) => (
-                        <motion.div
-                          key={`sparkle-${i}`}
-                          className="absolute"
-                          style={{
-                            left: `${20 + Math.random() * 60}%`,
-                            bottom: `${20 + Math.random() * 60}%`,
-                          }}
-                          animate={{
-                            opacity: [0, 1, 0],
-                            scale: [0, 1, 0],
-                            rotate: [0, 180, 360],
-                          }}
-                          transition={{
-                            duration: 2 + Math.random() * 2,
-                            repeat: Infinity,
-                            delay: i * 0.7,
-                            ease: "easeInOut",
-                          }}
-                        >
-                          <Sparkles
-                            className={`w-3 h-3 ${loveChromaAnimation ? "text-fuchsia-400" : "text-rose-400"}`}
-                          />
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Card Header with Gradient */}
                   <div
-                    className={`relative px-6 py-4 ${isLoveSection ? loveBgColor : section.bgColor} border-b ${isLoveSection ? loveBorderColor : section.borderColor} ${isLoveSection ? `bg-gradient-to-r ${loveBgGradient}` : ""}`}
+                    className={`relative rounded-2xl border ${isLoveSection ? loveBorderColor : section.borderColor} overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-${section.bgColor}/50 ${isLoveSection ? `ring-2 ${loveRingColor}` : ""}`}
+                    style={{
+                      background: isLoveSection
+                        ? `rgba(255, 245, 250, ${loveCardBgOpacity})`
+                        : "rgba(255, 255, 255, 0.7)",
+                      backdropFilter: "blur(20px)",
+                    }}
                   >
-                    <div className="flex items-center gap-4">
-                      {/* Icon Container with chroma glow */}
+                    {/* Chroma Color Cycling Background - Only for Love Section */}
+                    {isLoveSection && loveChromaAnimation && (
+                      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <motion.div
+                          className="absolute inset-0 opacity-30"
+                          animate={{
+                            background: [
+                              "radial-gradient(circle at 30% 30%, rgba(244, 63, 94, 0.4) 0%, transparent 50%)",
+                              "radial-gradient(circle at 70% 70%, rgba(168, 85, 247, 0.4) 0%, transparent 50%)",
+                              "radial-gradient(circle at 30% 70%, rgba(236, 72, 153, 0.4) 0%, transparent 50%)",
+                              "radial-gradient(circle at 70% 30%, rgba(244, 63, 94, 0.4) 0%, transparent 50%)",
+                            ],
+                          }}
+                          transition={{
+                            duration: 8,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        />
+                        <motion.div
+                          className="absolute inset-0 opacity-20"
+                          animate={{
+                            background: [
+                              "linear-gradient(45deg, rgba(244, 63, 94, 0.3) 0%, rgba(168, 85, 247, 0.3) 50%, rgba(236, 72, 153, 0.3) 100%)",
+                              "linear-gradient(45deg, rgba(168, 85, 247, 0.3) 0%, rgba(236, 72, 153, 0.3) 50%, rgba(244, 63, 94, 0.3) 100%)",
+                              "linear-gradient(45deg, rgba(236, 72, 153, 0.3) 0%, rgba(244, 63, 94, 0.3) 50%, rgba(168, 85, 247, 0.3) 100%)",
+                              "linear-gradient(45deg, rgba(244, 63, 94, 0.3) 0%, rgba(168, 85, 247, 0.3) 50%, rgba(236, 72, 153, 0.3) 100%)",
+                            ],
+                          }}
+                          transition={{
+                            duration: 6,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Floating Hearts Animation - Only for Love & Relationships */}
+                    {isLoveSection && loveShowAnimation && (
+                      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        {/* Large floating hearts with chroma colors */}
+                        {[...Array(8)].map((_, i) => (
+                          <motion.div
+                            key={`heart-${i}`}
+                            className="absolute"
+                            style={{
+                              left: `${10 + Math.random() * 80}%`,
+                              bottom: "-20px",
+                            }}
+                            animate={{
+                              y: [0, -400 - Math.random() * 200],
+                              x: [0, (Math.random() - 0.5) * 100],
+                              opacity: [
+                                0,
+                                loveHeartOpacity,
+                                loveHeartOpacity,
+                                0,
+                              ],
+                              scale: [0.5, 1, 1, 0.8],
+                              rotate: [0, (Math.random() - 0.5) * 30],
+                              color: loveChromaAnimation
+                                ? [
+                                    "rgb(244, 63, 94)",
+                                    "rgb(168, 85, 247)",
+                                    "rgb(236, 72, 153)",
+                                    "rgb(244, 63, 94)",
+                                  ]
+                                : undefined,
+                            }}
+                            transition={{
+                              duration: 8 + Math.random() * 4,
+                              repeat: Infinity,
+                              delay: i * 1.2,
+                              ease: "easeOut",
+                            }}
+                          >
+                            <Heart
+                              className={`${loveHeartSize} ${loveChromaAnimation ? "text-rose-500" : "text-rose-400"} ${loveChromaAnimation ? "fill-rose-400/50" : "fill-rose-300/40"}`}
+                              style={{
+                                filter: loveChromaAnimation
+                                  ? "drop-shadow(0 0 8px rgba(244, 63, 94, 0.5)) drop-shadow(0 0 16px rgba(168, 85, 247, 0.3))"
+                                  : "drop-shadow(0 2px 4px rgba(244, 63, 94, 0.25))",
+                              }}
+                            />
+                          </motion.div>
+                        ))}
+                        {/* Smaller floating hearts */}
+                        {[...Array(6)].map((_, i) => (
+                          <motion.div
+                            key={`small-heart-${i}`}
+                            className="absolute"
+                            style={{
+                              left: `${15 + Math.random() * 70}%`,
+                              bottom: "-15px",
+                            }}
+                            animate={{
+                              y: [0, -350 - Math.random() * 150],
+                              x: [0, (Math.random() - 0.5) * 60],
+                              opacity: [
+                                0,
+                                loveHeartOpacity * 0.7,
+                                loveHeartOpacity * 0.7,
+                                0,
+                              ],
+                              scale: [0.3, 0.7, 0.7, 0.5],
+                            }}
+                            transition={{
+                              duration: 6 + Math.random() * 3,
+                              repeat: Infinity,
+                              delay: i * 0.8 + 0.5,
+                              ease: "easeOut",
+                            }}
+                          >
+                            <Heart
+                              className={`${loveSmallHeartSize} ${loveChromaAnimation ? "text-fuchsia-400" : "text-pink-400"} ${loveChromaAnimation ? "fill-fuchsia-300/40" : "fill-pink-300/30"}`}
+                            />
+                          </motion.div>
+                        ))}
+                        {/* Sparkle effects with chroma colors */}
+                        {[...Array(5)].map((_, i) => (
+                          <motion.div
+                            key={`sparkle-${i}`}
+                            className="absolute"
+                            style={{
+                              left: `${20 + Math.random() * 60}%`,
+                              bottom: `${20 + Math.random() * 60}%`,
+                            }}
+                            animate={{
+                              opacity: [0, 1, 0],
+                              scale: [0, 1, 0],
+                              rotate: [0, 180, 360],
+                            }}
+                            transition={{
+                              duration: 2 + Math.random() * 2,
+                              repeat: Infinity,
+                              delay: i * 0.7,
+                              ease: "easeInOut",
+                            }}
+                          >
+                            <Sparkles
+                              className={`w-3 h-3 ${loveChromaAnimation ? "text-fuchsia-400" : "text-rose-400"}`}
+                            />
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Card Header with Gradient */}
+                    <div
+                      className={`relative px-6 py-4 ${isLoveSection ? loveBgColor : section.bgColor} border-b ${isLoveSection ? loveBorderColor : section.borderColor} ${isLoveSection ? `bg-gradient-to-r ${loveBgGradient}` : ""}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        {/* Icon Container with chroma glow */}
+                        <motion.div
+                          className={`p-2.5 rounded-xl bg-gradient-to-br ${section.gradient} shadow-md group-hover:scale-110 transition-transform duration-300 ${isLoveSection ? "shadow-rose-200" : ""}`}
+                          animate={
+                            isLoveSection && loveChromaAnimation
+                              ? {
+                                  boxShadow: [
+                                    "0 0 20px rgba(244, 63, 94, 0.4)",
+                                    "0 0 20px rgba(168, 85, 247, 0.4)",
+                                    "0 0 20px rgba(236, 72, 153, 0.4)",
+                                    "0 0 20px rgba(244, 63, 94, 0.4)",
+                                  ],
+                                }
+                              : {}
+                          }
+                          transition={
+                            isLoveSection && loveChromaAnimation
+                              ? {
+                                  duration: 3,
+                                  repeat: Infinity,
+                                  ease: "linear",
+                                }
+                              : {}
+                          }
+                        >
+                          <IconComponent className="w-5 h-5 text-white" />
+                        </motion.div>
+
+                        {/* Title */}
+                        <h3
+                          className={`text-lg font-medium ${isLoveSection ? loveTitleColor : "text-gray-900"}`}
+                        >
+                          {section.title}
+                        </h3>
+
+                        {/* Special badge for Love section */}
+                        {isLoveSection && (
+                          <motion.span
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className={`ml-auto px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${loveBadgeGradient} text-white shadow-md`}
+                          >
+                            {loveBadgeText}
+                          </motion.span>
+                        )}
+                      </div>
+
+                      {/* Decorative gradient line with chroma animation */}
                       <motion.div
-                        className={`p-2.5 rounded-xl bg-gradient-to-br ${section.gradient} shadow-md group-hover:scale-110 transition-transform duration-300 ${isLoveSection ? "shadow-rose-200" : ""}`}
+                        className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${section.gradient} opacity-30 ${isLoveSection ? "opacity-60" : ""}`}
                         animate={
                           isLoveSection && loveChromaAnimation
                             ? {
-                                boxShadow: [
-                                  "0 0 20px rgba(244, 63, 94, 0.4)",
-                                  "0 0 20px rgba(168, 85, 247, 0.4)",
-                                  "0 0 20px rgba(236, 72, 153, 0.4)",
-                                  "0 0 20px rgba(244, 63, 94, 0.4)",
+                                background: [
+                                  "linear-gradient(90deg, rgba(244, 63, 94, 0.8) 0%, rgba(168, 85, 247, 0.8) 100%)",
+                                  "linear-gradient(90deg, rgba(168, 85, 247, 0.8) 0%, rgba(236, 72, 153, 0.8) 100%)",
+                                  "linear-gradient(90deg, rgba(236, 72, 153, 0.8) 0%, rgba(244, 63, 94, 0.8) 100%)",
+                                  "linear-gradient(90deg, rgba(244, 63, 94, 0.8) 0%, rgba(168, 85, 247, 0.8) 100%)",
                                 ],
                               }
                             : {}
@@ -992,82 +1098,38 @@ function ReportContent() {
                         transition={
                           isLoveSection && loveChromaAnimation
                             ? {
-                                duration: 3,
+                                duration: 4,
                                 repeat: Infinity,
                                 ease: "linear",
                               }
                             : {}
                         }
-                      >
-                        <IconComponent className="w-5 h-5 text-white" />
-                      </motion.div>
-
-                      {/* Title */}
-                      <h3
-                        className={`text-lg font-medium ${isLoveSection ? loveTitleColor : "text-gray-900"}`}
-                      >
-                        {section.title}
-                      </h3>
-
-                      {/* Special badge for Love section */}
-                      {isLoveSection && (
-                        <motion.span
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className={`ml-auto px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${loveBadgeGradient} text-white shadow-md`}
-                        >
-                          {loveBadgeText}
-                        </motion.span>
-                      )}
+                      />
                     </div>
 
-                    {/* Decorative gradient line with chroma animation */}
-                    <motion.div
-                      className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${section.gradient} opacity-30 ${isLoveSection ? "opacity-60" : ""}`}
-                      animate={
-                        isLoveSection && loveChromaAnimation
-                          ? {
-                              background: [
-                                "linear-gradient(90deg, rgba(244, 63, 94, 0.8) 0%, rgba(168, 85, 247, 0.8) 100%)",
-                                "linear-gradient(90deg, rgba(168, 85, 247, 0.8) 0%, rgba(236, 72, 153, 0.8) 100%)",
-                                "linear-gradient(90deg, rgba(236, 72, 153, 0.8) 0%, rgba(244, 63, 94, 0.8) 100%)",
-                                "linear-gradient(90deg, rgba(244, 63, 94, 0.8) 0%, rgba(168, 85, 247, 0.8) 100%)",
-                              ],
-                            }
-                          : {}
-                      }
-                      transition={
-                        isLoveSection && loveChromaAnimation
-                          ? {
-                              duration: 4,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }
-                          : {}
-                      }
+                    {/* Card Content */}
+                    <div className="p-6 relative z-10">
+                      <p
+                        className={`leading-relaxed text-[16px] font-normal whitespace-pre-line ${isLoveSection ? loveTextColor : "text-gray-700"}`}
+                      >
+                        {processTextWithGlossary(
+                          truncateReadingForPreview(
+                            section?.reading ?? "",
+                            displayType,
+                          ),
+                          report?.reportContent?.glossary || [],
+                        )}
+                      </p>
+                    </div>
+
+                    {/* Subtle corner decoration */}
+                    <div
+                      className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${section.gradient} opacity-5 rounded-bl-full pointer-events-none ${isLoveSection ? "opacity-10" : ""}`}
                     />
                   </div>
-
-                  {/* Card Content */}
-                  <div className="p-6 relative z-10">
-                    <p
-                      className={`leading-relaxed text-[16px] font-normal whitespace-pre-line ${isLoveSection ? loveTextColor : "text-gray-700"}`}
-                    >
-                      {processTextWithGlossary(
-                        truncateReadingForPreview(section?.reading ?? "", displayType),
-                        report?.reportContent?.glossary || [],
-                      )}
-                    </p>
-                  </div>
-
-                  {/* Subtle corner decoration */}
-                  <div
-                    className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${section.gradient} opacity-5 rounded-bl-full pointer-events-none ${isLoveSection ? "opacity-10" : ""}`}
-                  />
-                </div>
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
         </div>
 
         {/* Show blur overlay for non-premium users */}
@@ -1083,9 +1145,12 @@ function ReportContent() {
       )}
 
       {/* Monthly Breakdown - Collapsible List - only show if monthly data exists */}
-      {getCurrentContent()?.monthly && getCurrentContent()!.monthly.length > 0 && (
-        <MonthlyBreakdownSection monthly={getCurrentContent()?.monthly || []} />
-      )}
+      {getCurrentContent()?.monthly &&
+        getCurrentContent()!.monthly.length > 0 && (
+          <MonthlyBreakdownSection
+            monthly={getCurrentContent()?.monthly || []}
+          />
+        )}
 
       {/* Key Themes - Redesigned */}
       <motion.div
@@ -1112,30 +1177,31 @@ function ReportContent() {
           </div>
 
           {/* Themes Grid - only show if keyThemes exist */}
-          {(getCurrentContent() as any)?.keyThemes && (getCurrentContent() as any)!.keyThemes.length > 0 && (
-            <div className="p-6">
-              <div className="flex flex-wrap gap-3">
-                {((getCurrentContent() as any)?.keyThemes || []).map(
-                  (theme: string, index: number) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.3 + index * 0.05 }}
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      className="group"
-                    >
-                      <div className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 hover:border-indigo-300 hover:shadow-md hover:shadow-indigo-100 transition-all duration-300 cursor-default">
-                        <span className="text-sm font-medium text-indigo-700 group-hover:text-indigo-800">
-                          {theme}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ),
-                )}
+          {(getCurrentContent() as any)?.keyThemes &&
+            (getCurrentContent() as any)!.keyThemes.length > 0 && (
+              <div className="p-6">
+                <div className="flex flex-wrap gap-3">
+                  {((getCurrentContent() as any)?.keyThemes || []).map(
+                    (theme: string, index: number) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.3 + index * 0.05 }}
+                        whileHover={{ scale: 1.02, y: -2 }}
+                        className="group"
+                      >
+                        <div className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 hover:border-indigo-300 hover:shadow-md hover:shadow-indigo-100 transition-all duration-300 cursor-default">
+                          <span className="text-sm font-medium text-indigo-700 group-hover:text-indigo-800">
+                            {theme}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ),
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </motion.div>
 
