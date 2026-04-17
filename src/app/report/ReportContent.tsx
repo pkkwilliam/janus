@@ -42,6 +42,116 @@ import YearlyPaymentButton from "@/components/payment/YearlyPaymentButton";
 import TranslationToggleV2 from "@/app/report/components/TranslationToggleV2";
 import { getZodiac, ZODIAC_CHINESE, ZODIAC_EMOJI } from "@/lib/zodiacCalculator";
 
+// Extended LanguageCode type to include Thai and Vietnamese (for cached reports only)
+type ExtendedLanguageCode = LanguageCode | "THAI" | "VIETNAMESE";
+
+// Language code mapping: LanguageCode -> folder name
+const LANGUAGE_CODE_TO_FOLDER: Record<ExtendedLanguageCode, string> = {
+  ENGLISH: "en-US",
+  CHINESE_SIMPLIFIED: "zh-CN",
+  CHINESE_TRADITIONAL: "zh-HK",
+  SPANISH: "es",
+  FRENCH: "fr",
+  GERMAN: "de",
+  ITALIAN: "it",
+  PORTUGUESE: "pt",
+  RUSSIAN: "ru",
+  JAPANESE: "ja",
+  KOREAN: "ko",
+  ARABIC: "ar",
+  HINDI: "hi",
+  THAI: "th",
+  VIETNAMESE: "vi",
+};
+
+// Folder name -> LanguageCode reverse mapping (only for supported translation languages)
+const FOLDER_TO_LANGUAGE_CODE: Record<string, LanguageCode> = {
+  "en-US": "ENGLISH",
+  "zh-CN": "CHINESE_SIMPLIFIED",
+  "zh-HK": "CHINESE_TRADITIONAL",
+  "es": "SPANISH",
+  "fr": "FRENCH",
+  "de": "GERMAN",
+  "it": "ITALIAN",
+  "pt": "PORTUGUESE",
+  "ru": "RUSSIAN",
+  "ja": "JAPANESE",
+  "ko": "KOREAN",
+  "ar": "ARABIC",
+  "hi": "HINDI",
+};
+
+// Available cached report languages (folders that exist)
+const AVAILABLE_CACHED_LANGUAGES = [
+  "en-US", "zh-CN", "zh-HK", "es", "fr", "de", 
+  "it", "pt", "ru", "ja", "ko", "ar", "hi", "th", "vi"
+];
+
+// Extended languages that exist in cache but not in translation API
+// These will map to English in the UI but load their respective cached reports
+const EXTENDED_LANGUAGE_FALLBACK: Record<string, LanguageCode> = {
+  "th": "ENGLISH",
+  "vi": "ENGLISH",
+};
+
+// Detect user's preferred language from browser
+// Returns a LanguageCode that exists in SUPPORTED_LANGUAGES
+function detectUserLanguage(): LanguageCode {
+  if (typeof window === "undefined") return "ENGLISH";
+  
+  const browserLang = navigator.language || (navigator as any).userLanguage || "en";
+  const langLower = browserLang.toLowerCase();
+  
+  // Map browser language to our LanguageCode
+  if (langLower.startsWith("zh")) {
+    // Check for traditional Chinese variants
+    if (langLower.includes("hk") || langLower.includes("tw") || langLower.includes("mo") || langLower.includes("hant")) {
+      return "CHINESE_TRADITIONAL";
+    }
+    return "CHINESE_SIMPLIFIED";
+  }
+  if (langLower.startsWith("es")) return "SPANISH";
+  if (langLower.startsWith("fr")) return "FRENCH";
+  if (langLower.startsWith("de")) return "GERMAN";
+  if (langLower.startsWith("it")) return "ITALIAN";
+  if (langLower.startsWith("pt")) return "PORTUGUESE";
+  if (langLower.startsWith("ru")) return "RUSSIAN";
+  if (langLower.startsWith("ja")) return "JAPANESE";
+  if (langLower.startsWith("ko")) return "KOREAN";
+  if (langLower.startsWith("ar")) return "ARABIC";
+  if (langLower.startsWith("hi")) return "HINDI";
+  // Note: Thai and Vietnamese are not in SUPPORTED_LANGUAGES, so they fall back to English
+  // But we still load their cached reports via getLanguageFolderFromBrowserLang
+  
+  return "ENGLISH"; // Default fallback
+}
+
+// Get the actual language folder to load from browser language
+// This can return th/vi even though they're not in SUPPORTED_LANGUAGES
+function getLanguageFolderFromBrowserLang(): string {
+  if (typeof window === "undefined") return "en-US";
+  
+  const browserLang = navigator.language || (navigator as any).userLanguage || "en";
+  const langLower = browserLang.toLowerCase();
+  
+  // Check for Thai and Vietnamese first (not in SUPPORTED_LANGUAGES)
+  if (langLower.startsWith("th")) return "th";
+  if (langLower.startsWith("vi")) return "vi";
+  
+  // For other languages, use the standard mapping
+  const langCode = detectUserLanguage();
+  return getLanguageFolder(langCode);
+}
+
+// Get language folder for a LanguageCode, fallback to en-US if not available
+function getLanguageFolder(langCode: LanguageCode): string {
+  const folder = LANGUAGE_CODE_TO_FOLDER[langCode as ExtendedLanguageCode];
+  if (folder && AVAILABLE_CACHED_LANGUAGES.includes(folder)) {
+    return folder;
+  }
+  return "en-US"; // Fallback to English
+}
+
 // Cached report types
 interface CachedMonthlyReading {
   fromDate: string;
@@ -299,7 +409,17 @@ function ReportContent() {
   const { user, isLoading } = useAppInit({ requireAuth: false });
   const [report, setReport] = useState<ReportV2 | null>(null);
   const [cachedFortune, setCachedFortune] = useState<CachedZodiacFortune | null>(null);
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(SUPPORTED_LANGUAGES[0]);
+  
+  // Initialize language based on device detection for cached mode, or default to English
+  const getInitialLanguage = (): Language => {
+    const detectedLangCode = detectUserLanguage();
+    const detectedLang = SUPPORTED_LANGUAGES.find(l => l.code === detectedLangCode);
+    return detectedLang || SUPPORTED_LANGUAGES[0];
+  };
+  
+  const [currentLanguage, setCurrentLanguage] = useState<Language>(getInitialLanguage());
+  // Store the actual folder to load from (may differ from currentLanguage for th/vi)
+  const [cachedLanguageFolder, setCachedLanguageFolder] = useState<string>(getLanguageFolderFromBrowserLang());
   const [reportLoading, setReportLoading] = useState(true);
   const [reportError, setReportError] = useState<string | null>(null);
 
@@ -409,7 +529,7 @@ function ReportContent() {
     ].filter(item => item.show);
   };
 
-  // Load cached fortune data
+  // Load cached fortune data from language-specific folder
   const loadCachedFortune = async () => {
     if (!birthDate) return;
 
@@ -419,14 +539,30 @@ function ReportContent() {
     try {
       const date = new Date(birthDate);
       const zodiac = getZodiacForDate(date);
-
-      const response = await fetch(`/cached_report/${zodiac}.json`);
+      
+      // Use the cached language folder (which may be different from currentLanguage for th/vi)
+      const response = await fetch(`/cached_report/${cachedLanguageFolder}/${zodiac}_${cachedLanguageFolder}.json`);
       if (!response.ok) {
-        throw new Error('Failed to load fortune data');
+        // Fallback to English if the language file doesn't exist
+        if (cachedLanguageFolder !== "en-US") {
+          console.log(`Language ${cachedLanguageFolder} not available, falling back to en-US`);
+          const fallbackResponse = await fetch(`/cached_report/en-US/${zodiac}_en-US.json`);
+          if (!fallbackResponse.ok) {
+            throw new Error('Failed to load fortune data');
+          }
+          const data: CachedZodiacFortune[] = await fallbackResponse.json();
+          const randomIndex = Math.floor(Math.random() * data.length);
+          setCachedFortune(data[randomIndex]);
+          // Update the cached folder to English since that's what we loaded
+          setCachedLanguageFolder("en-US");
+        } else {
+          throw new Error('Failed to load fortune data');
+        }
+      } else {
+        const data: CachedZodiacFortune[] = await response.json();
+        const randomIndex = Math.floor(Math.random() * data.length);
+        setCachedFortune(data[randomIndex]);
       }
-      const data: CachedZodiacFortune[] = await response.json();
-      const randomIndex = Math.floor(Math.random() * data.length);
-      setCachedFortune(data[randomIndex]);
     } catch (error) {
       console.error("Failed to load cached fortune:", error);
       setReportError("Failed to load fortune data");
@@ -446,7 +582,16 @@ function ReportContent() {
       // No report ID provided, redirect to dashboard
       router.push("/dashboard");
     }
-  }, [user, reportId, birthDate, currentLanguage, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, reportId, birthDate, cachedLanguageFolder, router]);
+  
+  // Handle language change for cached mode - update the folder and reload
+  const handleLanguageChange = (language: Language) => {
+    setCurrentLanguage(language);
+    const newFolder = getLanguageFolder(language.code);
+    setCachedLanguageFolder(newFolder);
+    // The useEffect will trigger a reload when cachedLanguageFolder changes
+  };
 
   const loadReport = async () => {
     if (!reportId) return;
@@ -546,11 +691,11 @@ function ReportContent() {
           </button>
 
           <div className="flex">
-              {/* Translation Toggle - only for non-cached reports */}
-              {SHOW_TRANSLATION_TOGGLE && report && !isCachedMode && (
+              {/* Translation Toggle - for both cached and non-cached reports */}
+              {SHOW_TRANSLATION_TOGGLE && (
                   <TranslationToggleV2
                       currentLanguage={currentLanguage}
-                      onLanguageSelected={setCurrentLanguage}
+                      onLanguageSelected={isCachedMode ? handleLanguageChange : setCurrentLanguage}
                   />
               )}
               {!isCachedMode && report?.accessType === 'FREE' && <YearlyPaymentButton />}
