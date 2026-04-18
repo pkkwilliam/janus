@@ -70,7 +70,7 @@ export interface Language {
 export const SUPPORTED_LANGUAGES: Language[] = [
   { code: "ENGLISH", name: "English", flag: "🇺🇸" },
   { code: "CHINESE_SIMPLIFIED", name: "简体中文", flag: "🇨🇳" },
-  { code: "CHINESE_TRADITIONAL", name: "繁體中文", flag: "🇭🇰" },
+  { code: "CHINESE_TRADITIONAL", name: "繁體中文", flag: "🇲🇴🇭🇰" },
   { code: "SPANISH", name: "Español", flag: "🇪🇸" },
   { code: "FRENCH", name: "Français", flag: "🇫🇷" },
   { code: "GERMAN", name: "Deutsch", flag: "🇩🇪" },
@@ -91,7 +91,7 @@ export const translationApi = {
   async translateContent(
     content: TranslationRequest["content"],
     targetLanguage: LanguageCode,
-    sourceLanguage: LanguageCode = "ENGLISH"
+    sourceLanguage: LanguageCode = "ENGLISH",
   ): Promise<ApiResponse<TranslationResponse>> {
     const requestBody: TranslationRequest = {
       content,
@@ -109,7 +109,7 @@ export const translationApi = {
 
     return await apiClient.post<TranslationResponse>(
       API_ENDPOINTS.USER.TRANSLATE,
-      requestBody
+      requestBody,
     );
   },
 
@@ -137,7 +137,7 @@ export const translationApi = {
       console.log("  - Token exists:", !!token);
       console.log(
         "  - Token preview:",
-        token ? token.substring(0, 20) + "..." : "null"
+        token ? token.substring(0, 20) + "..." : "null",
       );
       console.log("  - Token length:", token ? token.length : 0);
       console.log("  - localStorage keys:", Object.keys(localStorage));
@@ -153,7 +153,7 @@ export const translationApi = {
   async translateContentManual(
     content: TranslationRequest["content"],
     targetLanguage: LanguageCode,
-    sourceLanguage: LanguageCode = "ENGLISH"
+    sourceLanguage: LanguageCode = "ENGLISH",
   ): Promise<ApiResponse<TranslationResponse>> {
     if (typeof window === "undefined") {
       return {
@@ -187,7 +187,7 @@ export const translationApi = {
     console.log("🔧 Manual fetch - URL:", url);
     console.log(
       "🔧 Manual fetch - Token preview:",
-      token.substring(0, 20) + "..."
+      token.substring(0, 20) + "...",
     );
 
     try {
@@ -204,7 +204,7 @@ export const translationApi = {
       console.log("🔧 Manual fetch - Response status:", response.status);
       console.log(
         "🔧 Manual fetch - Response headers:",
-        Object.fromEntries(response.headers.entries())
+        Object.fromEntries(response.headers.entries()),
       );
 
       if (!response.ok) {
