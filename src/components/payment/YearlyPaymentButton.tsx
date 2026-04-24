@@ -7,3 +7,5 @@ type YearlyPaymentButtonProps = {
 export function YearlyPaymentButton(props: YearlyPaymentButtonProps) {
   return <div>Reveal Full Report</div>;
 }
+
+export default YearlyPaymentButton;
